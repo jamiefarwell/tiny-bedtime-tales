@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import StoryArt from '@/components/StoryArt';
 
 const THEMES = [
   ['Moon','🌙'],['Dragon','🐉'],['Ocean','🐳'],['Forest','🦊'],
@@ -33,16 +34,7 @@ function uid(){return String(Date.now())+'-'+Math.random().toString(36).slice(2,
 function initial(name){return (String(name||'').trim()[0]||'★').toUpperCase();}
 
 function Art({theme='Moon',page=0,large=false}){
-  const palette={Moon:['#153b68','#081a36'],Dragon:['#174b48','#0a2431'],Ocean:['#10617a','#06283e'],Forest:['#1e5b44','#0b2b25'],Dinosaur:['#4a5e3c','#172b29'],Castle:['#453d6f','#15182f'],Space:['#293a78','#090e2b'],Pirates:['#2a5970','#102a3e']}[theme]||['#153b68','#081a36'];
-  const stars=Array.from({length:large?15:8},(_,i)=>i);
-  const hero=EMOJI[theme]||'🌙';
-  return <div style={{position:'absolute',inset:0,overflow:'hidden',background:'linear-gradient(145deg,'+palette[0]+','+palette[1]+')'}}>
-    <div style={{position:'absolute',right:'8%',top:'7%',width:large?150:90,height:large?150:90,borderRadius:'50%',background:'radial-gradient(circle,#ffe09a 0%,rgba(255,213,125,.18) 55%,transparent 72%)'}} />
-    {stars.map(function(i){return <span key={i} style={{position:'absolute',left:(7+(i*37)%87)+'%',top:(6+(i*29+page*11)%55)+'%',fontSize:(i%3===0?10:6),opacity:.72,color:'#fff5cf'}}>✦</span>;})}
-    <div style={{position:'absolute',left:'-8%',right:'-8%',bottom:'-17%',height:'45%',borderRadius:'50% 50% 0 0',background:'rgba(2,14,30,.48)',transform:'rotate('+(page%2?'-2':'2')+'deg)'}} />
-    <div style={{position:'absolute',left:large?'52%':'50%',top:large?'35%':'33%',transform:'translate(-50%,-50%)',fontSize:large?118:70,filter:'drop-shadow(0 15px 18px rgba(0,0,0,.28))'}}>{hero}</div>
-    {large&&<><div style={{position:'absolute',left:'19%',bottom:'15%',fontSize:78}}>🧒⚔️</div><div style={{position:'absolute',left:'38%',bottom:'13%',fontSize:78}}>👸✨</div><div style={{position:'absolute',right:'9%',bottom:'14%',fontSize:72}}>🏰</div></>}
-  </div>;
+  return <StoryArt theme={theme} page={page} className="storybookScene" />;
 }
 
 function ProfileFields({profile,setProfile}){
