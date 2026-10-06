@@ -7,26 +7,32 @@ on:
 jobs:
   smoke:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 8
     steps:
-      - name: Wait for production deployment and check health
+      - name: Wait for this exact production deployment
         shell: bash
         run: |
           set -euo pipefail
-          for i in {1..18}; do
+          for i in {1..30}; do
             if curl -fsS --max-time 15 https://tiny-bedtime-tales.vercel.app/api/health -o /tmp/health.json; then
               cat /tmp/health.json
-              grep -q '"ok":true' /tmp/health.json
-              exit 0
+              DEPLOYED_SHA=$(node -e "const fs=require('fs');const h=JSON.parse(fs.readFileSync('/tmp/health.json','utf8'));process.stdout.write(h.commit||'')")
+              if [ "$DEPLOYED_SHA" = "$GITHUB_SHA" ]; then
+                node -e "const fs=require('fs');const h=JSON.parse(fs.readFileSync('/tmp/health.json','utf8'));if(!h.ok)process.exit(1);console.log('AI gateway auth:',h.aiGatewayAuth);console.log('Cloud database:',h.cloudDatabase);"
+                exit 0
+              fi
             fi
             sleep 10
           done
-          echo "Production health endpoint did not become ready"
+          echo "Production never reached expected commit $GITHUB_SHA"
           exit 1
 
       - name: Generate a safe test story
         shell: bash
         run: |
           set -euo pipefail
-          curl -fsS --max-time 90 -X POST https://tiny-bedtime-tales.vercel.app/api/story             -H 'Content-Type: application/json'             --data '{"profile":{"childName":"Milo","ageBand":"6–7","interests":"space, puzzles","pets":"","friends":"","favouriteThings":"stars","preferredTone":"Magical and adventurous","storyLength":"Quick — about 4 minutes","avoid":""},"brief":{"theme":"Moon","format":"standalone","request":"a gentle moon treasure hunt","packageType":"illustrated"}}'             -o /tmp/story.json
+          curl -fsS --max-time 120 -X POST https://tiny-bedtime-tales.vercel.app/api/story \
+            -H 'Content-Type: application/json' \
+            --data '{"profile":{"childName":"Milo","ageBand":"6–7","interests":"space, puzzles","pets":"","friends":"","favouriteThings":"stars","preferredTone":"Magical and adventurous","storyLength":"Quick — about 4 minutes","avoid":""},"brief":{"theme":"Moon","format":"standalone","request":"a gentle moon treasure hunt","packageType":"illustrated"}}' \
+            -o /tmp/story.json
           node -e "const fs=require('fs');const s=JSON.parse(fs.readFileSync('/tmp/story.json','utf8'));if(!s.title||!Array.isArray(s.pages)||s.pages.length<3)throw new Error('Invalid story response');console.log('Story:',s.title);console.log('Pages:',s.pages.length);console.log('Engine:',s.engine);console.log('Model:',s.model||'fallback');"
