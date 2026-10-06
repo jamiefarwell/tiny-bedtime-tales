@@ -131,6 +131,8 @@ async function ai(data){
   return null;
 }
 export async function POST(request){
+  const size=Number(request.headers.get('content-length')||0);
+  if(size>16000) return Response.json({error:'That story request is too large. Keep the profile short and general.'},{status:413,headers:{'Cache-Control':'no-store'}});
   const limit=allowedRequest(request);
   if(!limit.ok) return Response.json({error:'That is a lot of adventures at once. Give the story engine a little rest and try again later.'},{status:429,headers:{'Cache-Control':'no-store','Retry-After':String(Math.max(60,Math.ceil((limit.reset-Date.now())/1000)))}});
   try{const data=normalise(await request.json());const story=await ai(data).catch(()=>null)||fallback(data);return Response.json(story,{headers:{'Cache-Control':'no-store'}});}
