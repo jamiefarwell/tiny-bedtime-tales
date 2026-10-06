@@ -128,6 +128,6 @@ export default function Home(){
       {screen==='story'&&story&&<StoryView story={story} onBack={function(){go('library');}} onRegenerate={function(){generate(true);}} onContinue={continueStory}/>}
       {screen==='story'&&!story&&<div className="empty"><div className="emptyIcon">🌙</div><h3>Pick a story from the library</h3><button className="btn small" onClick={function(){go('library');}}>Open library</button></div>}
     </div></div></main>}
-    <footer className="footer"><div className="shell footerInner"><div><div className="footerBrand">☾ Tiny Bedtime Tales</div><small>Development preview. Parent-led personalised storytelling with deliberately minimal child data.</small></div><div className="footerLinks"><button className="ghost" onClick={function(){go('profile');}}>Privacy approach</button><button className="ghost" onClick={start}>Create story</button></div></div></footer>
+    <footer className="footer"><div className="shell footerInner"><div><div className="footerBrand">☾ Tiny Bedtime Tales</div><small>Development preview. Parent-led personalised storytelling with deliberately minimal child data.</small></div><div className="footerLinks"><a className="ghost" href="/privacy">Privacy approach</a><button className="ghost" onClick={start}>Create story</button></div></div></footer>
   </>;
 }
