@@ -4,6 +4,17 @@ const THEMES = new Set(['Moon','Dragon','Ocean','Forest','Dinosaur','Castle','Sp
 const FORMATS = new Set(['standalone','continue','special','support']);
 const BAD = /\b(?:sex(?:ual)?|porn(?:ography)?|nude|suicide|self[- ]?harm|murder|torture|rape|cocaine|heroin|gun|knife attack)\b/i;
 
+const rateStore = globalThis.__tinyBedtimeRateStore || (globalThis.__tinyBedtimeRateStore = new Map());
+function allowedRequest(request){
+  const raw=(request.headers.get('x-forwarded-for')||request.headers.get('x-real-ip')||'unknown').split(',')[0].trim().slice(0,80);
+  const now=Date.now(), windowMs=60*60*1000, limit=12;
+  let item=rateStore.get(raw);
+  if(!item || item.reset<now){item={count:0,reset:now+windowMs};}
+  item.count+=1; rateStore.set(raw,item);
+  if(rateStore.size>500){for(const [k,v] of rateStore){if(v.reset<now)rateStore.delete(k);}}
+  return {ok:item.count<=limit,reset:item.reset};
+}
+
 function cleanName(value=''){
   const first = String(value).trim().split(/\s+/)[0] || 'Little Hero';
   return first.replace(/[^a-zA-ZÀ-ÿ'’-]/g,'').slice(0,24) || 'Little Hero';
@@ -113,6 +124,8 @@ async function ai(data){
   try{return validate(JSON.parse(String(raw).trim().replace(/^```(?:json)?\s*/i,'').replace(/\s*```$/,'')),data);}catch{return null;}
 }
 export async function POST(request){
+  const limit=allowedRequest(request);
+  if(!limit.ok) return Response.json({error:'That is a lot of adventures at once. Give the story engine a little rest and try again later.'},{status:429,headers:{'Cache-Control':'no-store','Retry-After':String(Math.max(60,Math.ceil((limit.reset-Date.now())/1000)))}});
   try{const data=normalise(await request.json());const story=await ai(data).catch(()=>null)||fallback(data);return Response.json(story,{headers:{'Cache-Control':'no-store'}});}
-  catch(e){return Response.json({error:e?.message||'We could not make that story just now.'},{status:400});}
+  catch(e){return Response.json({error:e?.message||'We could not make that story just now.'},{status:400,headers:{'Cache-Control':'no-store'}});}
 }
