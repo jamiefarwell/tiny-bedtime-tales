@@ -94,13 +94,13 @@ export default function Home(){
     setError('');setLoading(true);
     try{
       const previous=regenerate&&story?{title:story.title,pages:story.pages.map(function(p){return p.text;}).join(' ').slice(0,1600)}:null;
-      const r=await fetch('/api/story',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({profile:profile,brief:brief,seriesMemory:brief.format==='continue'?latestSeriesMemory:'',previousStory:previous})});
+      const r=await fetch('/api/story',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({profile:profile,brief:brief,seriesMemory:brief.format==='continue'?(brief.seriesMemory||latestSeriesMemory):'',previousStory:previous})});
       const data=await r.json();if(!r.ok)throw new Error(data.error||'We could not make that story just now.');
       const saved=Object.assign({},data,{id:uid(),createdAt:new Date().toISOString(),packageType:brief.packageType,format:brief.format,profileSnapshot:{childName:profile.childName,ageBand:profile.ageBand}});
-      setStory(saved);setLibrary(function(items){return [saved].concat(items).slice(0,60);});setScreen('story');if(typeof window!=='undefined')window.scrollTo({top:0,behavior:'smooth'});
+      setStory(saved);setLibrary(function(items){const kept=regenerate&&story?items.filter(function(x){return x.id!==story.id;}):items;return [saved].concat(kept).slice(0,60);});setScreen('story');if(typeof window!=='undefined')window.scrollTo({top:0,behavior:'smooth'});
     }catch(e){setError(e.message||'Something went wrong while making the story.');}finally{setLoading(false);}
   }
-  function continueStory(){setBrief(Object.assign({},brief,{format:'continue',theme:story?story.theme:brief.theme,request:'Continue the adventure from “'+(story?story.title:'the last story')+'”.'}));go('create');}
+  function continueStory(){setBrief(Object.assign({},brief,{format:'continue',theme:story?story.theme:brief.theme,seriesMemory:story?.seriesMemory||'',request:'Continue the adventure from “'+(story?story.title:'the last story')+'”.'}));go('create');}
   const tabs=[['home','Home'],['create','Create'],['library','Library'+(library.length?' ('+library.length+')':'')],['profile','Child profile']];
 
   return <>
