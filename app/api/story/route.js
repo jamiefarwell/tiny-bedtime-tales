@@ -118,10 +118,17 @@ function fallback(data){
 async function ai(data){
   const token=process.env.AI_GATEWAY_API_KEY||process.env.VERCEL_OIDC_TOKEN;
   if(!token)return null;
-  const r=await fetch('https://ai-gateway.vercel.sh/v1/chat/completions',{method:'POST',headers:{Authorization:`Bearer ${token}`,'Content-Type':'application/json'},body:JSON.stringify({model:'openai/gpt-5.6-sol',messages:[{role:'system',content:'You are the story engine for Tiny Bedtime Tales, a parent-led UK children’s bedtime story product. Follow safety and privacy rules exactly. Output JSON only.'},{role:'user',content:prompt(data)}],max_completion_tokens:2400,response_format:{type:'json_object'}}),cache:'no-store'});
-  if(!r.ok)return null;
-  const body=await r.json(); const raw=body?.choices?.[0]?.message?.content; if(!raw)return null;
-  try{return validate(JSON.parse(String(raw).trim().replace(/^```(?:json)?\s*/i,'').replace(/\s*```$/,'')),data);}catch{return null;}
+  const models=['openai/gpt-5.6-sol','anthropic/claude-sonnet-5'];
+  for(const model of models){
+    try{
+      const r=await fetch('https://ai-gateway.vercel.sh/v1/chat/completions',{method:'POST',headers:{Authorization:`Bearer ${token}`,'Content-Type':'application/json'},body:JSON.stringify({model,messages:[{role:'system',content:'You are the story engine for Tiny Bedtime Tales, a parent-led UK children’s bedtime story product. Follow safety and privacy rules exactly. Output JSON only.'},{role:'user',content:prompt(data)}],max_completion_tokens:2400,response_format:{type:'json_object'}}),cache:'no-store'});
+      if(!r.ok)continue;
+      const body=await r.json(); const raw=body?.choices?.[0]?.message?.content; if(!raw)continue;
+      const story=validate(JSON.parse(String(raw).trim().replace(/^```(?:json)?\s*/i,'').replace(/\s*```$/,'')),data);
+      if(story)return {...story,model};
+    }catch{}
+  }
+  return null;
 }
 export async function POST(request){
   const limit=allowedRequest(request);
