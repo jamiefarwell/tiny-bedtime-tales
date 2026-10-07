@@ -330,6 +330,8 @@ function HomeScreen({start,go,library,setBrief}){
       <button className="exampleBook" onClick={()=>launch('special','Space')}><ThemeCover theme="Space"/><div><small>BIG LITTLE MOMENT</small><strong>The Rocket to Tomorrow Morning</strong><span>About 7 min · first-day magic</span></div></button>
     </div></section>
 
+    <section className="appSection readyHomeShelf"><div className="sectionTitle"><div><span className="kicker">Included for subscribers</span><h2>Ready to read.</h2><p>Pick a finished story and jump straight into bedtime — no characters or setup needed.</p></div><button className="textBtn" onClick={()=>go('ready')}>Explore library</button></div><button className="readyHomeCard" onClick={()=>go('ready')}><div><ReadyArt scene={0} tile/></div><div><small>AGES 5–8 · 10 MIN</small><strong>Jasper & Buddy and the Valley of Lost Light</strong><span>Illustrated · Narrated · Complete bedtime adventure</span><b>Read the showcase story →</b></div></button></section>
+
     <section className="sampleSection"><div className="samplePhoto"><img src={PHOTOS.family} alt="Family reading together at bedtime"/></div><div className="sampleCopy"><span className="kicker">Made to read together</span><h2>A story that feels like it was written just for them.</h2><p>Tell us a little about who they are and what they love. We turn that into a complete bedtime adventure you can read together, listen to, revisit and continue another night.</p><div className="benefitRow"><span>✓ First story free</span><span>✓ Language matched to them</span><span>✓ Happy, cosy endings</span></div><button className="secondaryBtn" onClick={start}>Make tonight’s story</button></div></section>
 
     <section className="appSection"><div className="sectionTitle"><div><span className="kicker">A world that remembers</span><h2>Not just another one-off story.</h2></div></div><div className="featureStack"><article><span>📚</span><div><h3>Continue the adventure</h3><p>Characters, places and little promises can return in the next chapter.</p></div></article><article><span>🎈</span><div><h3>Turn real moments into magic</h3><p>First day of school, a new sibling, birthdays, holidays or losing a tooth.</p></div></article><article><span>💛</span><div><h3>Gentle stories for wobbly moments</h3><p>Bedtime nerves, trying something new or simply needing a calmer ending to the day.</p></div></article></div></section>
@@ -376,6 +378,8 @@ export default function Home(){
   const [brief,setBrief]=useState(DEFAULT_BRIEF);
   const [library,setLibrary]=useState([]);
   const [story,setStory]=useState(null);
+  const [readyBook,setReadyBook]=useState(READY_BOOKS[0]);
+  const [readyNarrate,setReadyNarrate]=useState(false);
   const [loading,setLoading]=useState(false);
   const [error,setError]=useState('');
   const [hydrated,setHydrated]=useState(false);
@@ -399,15 +403,21 @@ export default function Home(){
   }
   function continueStory(){setBrief(current=>({...current,format:'continue',theme:story?.theme||current.theme,seriesMemory:story?.seriesMemory||'',request:`Continue the adventure from “${story?.title||'the last story'}”.`}));go('create');}
 
+  function openReadyBook(book){setReadyBook(book);go('readyDetail');}
+  function startReadyBook(withNarration){setReadyNarrate(withNarration);go('readyReader');}
+
   return <div className="appShell">
-    <AppHeader screen={screen} go={go} start={start}/>
+    {screen!=='readyReader'&&<AppHeader screen={screen} go={go} start={start}/>} 
     {screen==='home'&&<HomeScreen start={start} go={go} library={library} setBrief={setBrief}/>} 
     {screen==='create'&&<CreateScreen profile={profile} setProfile={setProfile} brief={brief} setBrief={setBrief} generate={generate} loading={loading} error={error} go={go}/>} 
+    {screen==='ready'&&<ReadyLibraryScreen openBook={openReadyBook}/>}
+    {screen==='readyDetail'&&<ReadyDetailScreen book={readyBook} onBack={()=>go('ready')} onRead={startReadyBook}/>}
+    {screen==='readyReader'&&<ReadyReader book={readyBook} initialNarration={readyNarrate} onClose={()=>go('readyDetail')}/>}
     {screen==='library'&&<LibraryScreen library={library} setLibrary={setLibrary} setStory={setStory} go={go} start={start}/>} 
     {screen==='profile'&&<ProfileScreen profile={profile} setProfile={setProfile} start={start}/>} 
     {screen==='story'&&story&&<main className="screenPage readerPage"><StoryView story={story} onBack={()=>go('library')} onRegenerate={()=>generate(true)} onContinue={continueStory}/></main>}
     {screen==='story'&&!story&&<main className="screenPage"><div className="emptyState"><span>🌙</span><h2>Pick a story from your library.</h2><button className="primaryBtn" onClick={()=>go('library')}>Open library</button></div></main>}
-    <footer className="footer"><div><strong>☾ Tiny Bedtime Tales</strong><small>Parent-led personalised storytelling with deliberately minimal child data.</small></div><a href="/privacy">Privacy approach</a></footer>
-    <BottomNav screen={screen} go={go} start={start} libraryCount={library.length}/>
+    {screen!=='readyReader'&&<footer className="footer"><div><strong>☾ Tiny Bedtime Tales</strong><small>Stories made for bedtime — personalised or ready to read.</small></div><a href="/privacy">Privacy approach</a></footer>}
+    {screen!=='readyReader'&&<BottomNav screen={screen} go={go} start={start} libraryCount={library.length}/>} 
   </div>;
 }
