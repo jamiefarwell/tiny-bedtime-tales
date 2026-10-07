@@ -1,3 +1,5 @@
+import { generateText } from 'ai';
+
 export const runtime = 'nodejs';
 
 const THEMES = new Set(['Moon','Dragon','Ocean','Forest','Dinosaur','Castle','Space','Pirates']);
@@ -116,14 +118,16 @@ function fallback(data){
   return {title:titles[t]||`${n} and the Tiny Bedtime Adventure`,strapline:`A ${t.toLowerCase()} adventure about noticing the little things and taking one brave step at a time.`,readingMinutes:minutes(p.storyLength),pages,seriesMemory:clean(`${n} entered a hidden ${t.toLowerCase()} world with ${companion}. They chose the quiet path, solved a problem by noticing a clue linked to ${likes}, and learned that bravery can mean taking one small next step. ${n} returned home with the memory of ${object}. ${companion} hinted another chapter is waiting. ${data.seriesMemory?'Earlier world memory remains relevant: '+data.seriesMemory:''}`,1400),bedtimeLine:`Sleep tight, ${n}. The next tiny adventure can wait until tomorrow.`,theme:t,engine:'smart-fallback'};
 }
 async function ai(data){
-  const token=process.env.AI_GATEWAY_API_KEY||process.env.VERCEL_OIDC_TOKEN;
-  if(!token)return null;
   const models=['openai/gpt-5.6-sol','anthropic/claude-sonnet-5'];
   for(const model of models){
     try{
-      const r=await fetch('https://ai-gateway.vercel.sh/v1/chat/completions',{method:'POST',headers:{Authorization:`Bearer ${token}`,'Content-Type':'application/json'},body:JSON.stringify({model,messages:[{role:'system',content:'You are the story engine for Tiny Bedtime Tales, a parent-led UK children’s bedtime story product. Follow safety and privacy rules exactly. Output JSON only.'},{role:'user',content:prompt(data)}],max_completion_tokens:2400,response_format:{type:'json_object'}}),cache:'no-store'});
-      if(!r.ok)continue;
-      const body=await r.json(); const raw=body?.choices?.[0]?.message?.content; if(!raw)continue;
+      const result=await generateText({
+        model,
+        system:'You are the story engine for Tiny Bedtime Tales, a parent-led UK children’s bedtime story product. Follow safety and privacy rules exactly. Output JSON only.',
+        prompt:prompt(data)
+      });
+      const raw=result?.text;
+      if(!raw)continue;
       const story=validate(JSON.parse(String(raw).trim().replace(/^```(?:json)?\s*/i,'').replace(/\s*```$/,'')),data);
       if(story)return {...story,model};
     }catch{}
