@@ -166,6 +166,125 @@ function HeroWorlds(){
   </div>;
 }
 
+
+function ReadyArt({scene=0,tile=false}){
+  const palettes=[
+    ['#f6a45d','#7067d8','#173d6a'],['#724cc5','#3d6cb4','#0f2e55'],['#7ed4e8','#3e85ad','#173957'],
+    ['#f7b85d','#bf6c78','#3f426d'],['#f0a2c0','#8664ba','#2d3766'],['#8fd59a','#488b7b','#24455b'],
+    ['#8570d8','#586fa8','#243552'],['#f4b35c','#4a879b','#213c55'],['#eea866','#6d6fc2','#273a5a'],['#223c69','#162646','#091528']
+  ];
+  const p=palettes[scene%palettes.length];
+  const showCastle=[0,4,7].includes(scene);
+  const showWater=[0,2,5,7].includes(scene);
+  const night=scene===9;
+  const x=scene===3?455:scene===6?520:scene===9?380:330;
+  const y=scene===9?410:390;
+  return <svg className={'readyArt '+(tile?'tile':'')} viewBox="0 0 800 620" role="img" aria-label="Jasper and Buddy exploring a magical valley">
+    <defs>
+      <linearGradient id={'sky'+scene} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor={p[0]}/><stop offset=".48" stopColor={p[1]}/><stop offset="1" stopColor={p[2]}/></linearGradient>
+      <linearGradient id={'hill'+scene} x1="0" y1="0" x2="1" y2="1"><stop stopColor="#355b58"/><stop offset="1" stopColor="#173b44"/></linearGradient>
+      <radialGradient id={'glow'+scene}><stop stopColor="#fff1a8"/><stop offset="1" stopColor="#f7a83d" stopOpacity=".08"/></radialGradient>
+      <filter id={'soft'+scene}><feGaussianBlur stdDeviation="13"/></filter>
+    </defs>
+    <rect width="800" height="620" rx={tile?28:0} fill={'url(#sky'+scene+')'}/>
+    {!night&&<circle cx="675" cy="108" r="62" fill={'url(#glow'+scene+')'} opacity=".9"/>}
+    {night&&<g fill="#fff7c7">{[55,130,210,310,420,540,630,720].map((sx,i)=><circle key={sx} cx={sx} cy={45+(i%3)*38} r={i%2?2.8:4}/>)}</g>}
+    <path d="M0 330 Q120 220 245 330 T510 310 T800 285 L800 620 L0 620Z" fill="#304d61" opacity=".72"/>
+    <path d="M0 395 Q140 285 275 390 T545 350 T800 350 L800 620 L0 620Z" fill={'url(#hill'+scene+')'}/>
+    {showWater&&<path d="M520 305 C460 355 575 392 485 445 C410 490 465 545 360 620 L545 620 C590 545 530 500 600 449 C665 398 575 350 650 310Z" fill="#83dce6" opacity=".9"/>}
+    {showCastle&&<g transform="translate(565 245)" fill="#ffe8a6"><rect x="0" y="55" width="112" height="72" rx="6"/><rect x="18" y="24" width="28" height="103"/><rect x="72" y="10" width="27" height="117"/><path d="M18 24 L32 0 L46 24ZM72 10 L85 -15 L99 10Z" fill="#f6c77c"/><g fill="#ffaf51"><rect x="15" y="74" width="10" height="16" rx="4"/><rect x="48" y="76" width="10" height="16" rx="4"/><rect x="81" y="61" width="10" height="16" rx="4"/></g></g>}
+    {[0,1,2,4,5,6,7].includes(scene)&&<g opacity=".92">{[95,170,250,590,690].map((lx,i)=><g key={lx} transform={'translate('+lx+' '+(315+(i%2)*70)+')'}><circle r="22" fill="#ffbc52" opacity=".18" filter={'url(#soft'+scene+')'}/><circle r="7" fill="#ffd977"/></g>)}</g>}
+    {scene===2&&<g transform="translate(78 218)"><path d="M0 0 H160 V180 Q80 230 0 180Z" fill="#70cfe4" opacity=".65"/><path d="M30 0 V188M75 0 V205M125 0 V188" stroke="#d9fbff" strokeWidth="10" strokeLinecap="round" opacity=".8"/></g>}
+    {scene===3&&<g><path d="M80 360 Q400 240 720 360" fill="none" stroke="#9b6d4d" strokeWidth="18"/><path d="M80 344 Q400 225 720 344" fill="none" stroke="#e2bb76" strokeWidth="6" strokeDasharray="18 16"/></g>}
+    {scene===6&&<g opacity=".72"><path d="M0 180 Q190 70 370 180 T800 165 V0 H0Z" fill="#584d88"/><path d="M60 210 l20 45M190 175 l18 55M620 175 l20 55M730 205 l17 42" stroke="#cad9ff" strokeWidth="5" strokeLinecap="round"/></g>}
+    <g transform={'translate('+x+' '+y+') scale('+(tile?1.05:1)+')'}>
+      <g transform="translate(-10 0)">
+        <ellipse cx="0" cy="82" rx="40" ry="53" fill="#f1f0e7"/>
+        <circle cx="0" cy="20" r="43" fill="#f0b27d"/>
+        <path d="M-42 18 Q-28 -42 8 -35 Q46 -25 42 22 Q25 0 0 -4 Q-24 -1 -42 18Z" fill="#5a351f"/>
+        <path d="M-35 2 Q-20 -36 1 -24 M-8 -28 Q18 -40 34 -13 M17 -25 Q43 -18 40 8" fill="none" stroke="#3c261b" strokeWidth="12" strokeLinecap="round"/>
+        <circle cx="-14" cy="19" r="5" fill="#2f2725"/><circle cx="15" cy="19" r="5" fill="#2f2725"/>
+        <path d="M-8 36 Q2 43 13 35" fill="none" stroke="#aa5b4a" strokeWidth="3" strokeLinecap="round"/>
+        <rect x="-37" y="69" width="74" height="72" rx="18" fill="#e8e3d8"/>
+        <rect x="-47" y="74" width="17" height="66" rx="8" fill="#33546b"/><rect x="30" y="74" width="17" height="66" rx="8" fill="#33546b"/>
+        <rect x="-46" y="62" width="23" height="72" rx="12" fill="#31566a" opacity=".95"/>
+        <path d="M-28 139 L-37 197M27 139 L40 197" stroke="#344c61" strokeWidth="19" strokeLinecap="round"/>
+        <path d="M-49 194 h38M20 194 h38" stroke="#23364a" strokeWidth="14" strokeLinecap="round"/>
+      </g>
+      <g transform="translate(76 82)">
+        <ellipse cx="0" cy="56" rx="58" ry="40" fill="#d99b52"/>
+        <circle cx="38" cy="15" r="39" fill="#e1a65e"/>
+        <path d="M10 -5 Q-4 -35 15 -30 L35 0ZM64 -5 Q84 -35 89 -18 L70 10Z" fill="#b87942"/>
+        <ellipse cx="54" cy="25" rx="20" ry="14" fill="#f0c98e"/>
+        <circle cx="29" cy="10" r="5" fill="#2c241f"/><circle cx="54" cy="19" r="4" fill="#2c241f"/>
+        <path d="M-49 63 Q-82 43 -79 74" fill="none" stroke="#d99b52" strokeWidth="18" strokeLinecap="round"/>
+        <path d="M-35 89 V120M21 88 V120" stroke="#c88749" strokeWidth="16" strokeLinecap="round"/>
+      </g>
+    </g>
+    <g opacity=".55" fill="#fff3b0">{[40,110,225,480,610,745].map((sx,i)=><circle key={sx} cx={sx} cy={190+(i%3)*55} r={i%2?3:5}/>)}</g>
+  </svg>;
+}
+
+function ReadyLibraryScreen({openBook}){
+  const book=READY_BOOKS[0];
+  return <main className="screenPage readyLibrary">
+    <div className="screenIntro"><span className="kicker">Subscriber library</span><h1>Ready to read.</h1><p>Beautiful finished stories for nights when you just want to pick a book and begin. No profile, no setup.</p></div>
+    <div className="readyFilterRow"><button className="active">All</button><button>Ages 0–3</button><button>Ages 4–6</button><button>Ages 7–9</button><button>Ages 10–12</button><button>Older</button></div>
+    <div className="readyLibraryMeta"><span><b>1</b> showcase story live</span><span>Eventually: hundreds of subscriber books</span></div>
+    <div className="readyGrid"><button className="readyBookTile" onClick={()=>openBook(book)}><div className="readyTileArt"><ReadyArt scene={0} tile/><div className="readyTileBadges"><span>Ages {book.age}</span><span>{book.minutes} min</span></div></div><div className="readyTileCopy"><small>{book.category}</small><h2>{book.title}</h2><p>{book.strapline}</p><div className="readyTileFooter"><span>Illustrated</span><span>🔊 Narrated</span><b>Open →</b></div></div></button></div>
+    <div className="readyComing"><span>✦</span><div><strong>This becomes the big library.</strong><p>Genre shelves, age filters, new releases, favourites, series and eventually hundreds — or thousands — of books included with a subscription.</p></div></div>
+  </main>;
+}
+
+function ReadyDetailScreen({book,onBack,onRead}){
+  return <main className="screenPage readyDetail">
+    <button className="backLink" onClick={onBack}>← Ready to read</button>
+    <section className="readyDetailHero"><div className="readyDetailArt"><ReadyArt scene={0}/></div><div className="readyDetailCopy"><span className="kicker">Tiny Bedtime Tales Original</span><h1>{book.title}</h1><div className="readyMetaRow"><span>Ages {book.age}</span><span>◷ {book.minutes} min</span><span>10 pages</span></div><p>{book.description}</p><div className="chipRow">{book.tags.map(tag=><span key={tag}>{tag}</span>)}</div><button className="primaryBtn readyMainBtn" onClick={()=>onRead(true)}>▶ Read & listen</button><button className="readyReadOnlyBtn" onClick={()=>onRead(false)}>▣ Read only</button></div></section>
+    <section className="readyPromise"><article><span>🎨</span><strong>Consistent story art</strong><small>Jasper and Buddy stay recognisable from first page to last.</small></article><article><span>🔊</span><strong>Narration mode</strong><small>Pages move on automatically as the narrator finishes.</small></article><article><span>☾</span><strong>Built for bedtime</strong><small>A complete adventure with a calm, satisfying landing.</small></article></section>
+  </main>;
+}
+
+function ReadyReader({book,onClose,initialNarration=false}){
+  const [page,setPage]=useState(0);
+  const [playing,setPlaying]=useState(initialNarration);
+  const [touchX,setTouchX]=useState(null);
+  const [textLarge,setTextLarge]=useState(false);
+  const current=book.pages[page];
+
+  useEffect(()=>{
+    if(typeof window==='undefined'||!window.speechSynthesis||!playing)return;
+    let active=true;
+    window.speechSynthesis.cancel();
+    const utterance=new SpeechSynthesisUtterance(current.heading+'. '+current.text);
+    const voices=window.speechSynthesis.getVoices();
+    utterance.voice=voices.find(v=>v.lang==='en-GB')||voices.find(v=>v.lang&&v.lang.startsWith('en'))||null;
+    utterance.rate=.9;utterance.pitch=1.01;
+    utterance.onend=()=>{if(!active)return;if(page<book.pages.length-1)setPage(p=>p+1);else setPlaying(false);};
+    utterance.onerror=()=>{if(active)setPlaying(false);};
+    const timer=setTimeout(()=>window.speechSynthesis.speak(utterance),80);
+    return()=>{active=false;clearTimeout(timer);utterance.onend=null;window.speechSynthesis.cancel();};
+  },[page,playing,current.heading,current.text,book.pages.length]);
+
+  useEffect(()=>()=>{if(typeof window!=='undefined'&&window.speechSynthesis)window.speechSynthesis.cancel();},[]);
+
+  function move(delta){setPage(p=>Math.max(0,Math.min(book.pages.length-1,p+delta)));}
+  function swipeEnd(x){if(touchX===null)return;const d=x-touchX;if(Math.abs(d)>55)move(d<0?1:-1);setTouchX(null);}
+  async function fullScreen(){try{if(!document.fullscreenElement)await document.documentElement.requestFullscreen?.();else await document.exitFullscreen?.();}catch{}}
+
+  return <div className={'readyReader '+(textLarge?'largeText':'')} onTouchStart={e=>setTouchX(e.changedTouches[0].clientX)} onTouchEnd={e=>swipeEnd(e.changedTouches[0].clientX)}>
+    <header className="readyReaderTop"><button onClick={onClose}>×</button><div><strong>{book.shortTitle}</strong><small>{page+1} / {book.pages.length}</small></div><div className="readyReaderTopActions"><button onClick={()=>setTextLarge(v=>!v)}>Aa</button><button onClick={fullScreen}>⛶</button></div></header>
+    <div className="readyPage">
+      <div className="readyPageArt"><ReadyArt scene={current.scene}/><div className="readyArtFade"/></div>
+      <article className="readyPageCopy"><span className="readyPageNum">PAGE {page+1}</span><h2>{current.heading}</h2>{current.text.split('\n\n').map((para,i)=><p key={i}>{para}</p>)}</article>
+    </div>
+    <div className="readyReaderControls">
+      <div className="readyProgress"><i style={{width:(((page+1)/book.pages.length)*100)+'%'}}/></div>
+      <div className="readyControlRow"><button disabled={page===0} onClick={()=>move(-1)}>‹</button><button className="narrateBtn" onClick={()=>setPlaying(v=>!v)}>{playing?'Ⅱ':'▶'}<span>{playing?'Stop narration':'Narrate'}</span></button><button disabled={page===book.pages.length-1} onClick={()=>move(1)}>›</button></div>
+      <div className="swipeHint">Swipe to turn the page {playing?'· pages turn automatically while narrated':''}</div>
+    </div>
+  </div>;
+}
+
 function StoryView({story,onBack,onRegenerate,onContinue}){
   const [speaking,setSpeaking]=useState(false);
   const [copied,setCopied]=useState(false);
