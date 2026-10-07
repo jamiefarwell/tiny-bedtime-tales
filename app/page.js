@@ -3,8 +3,9 @@
 import { useEffect, useMemo, useState } from 'react';
 
 const THEMES = [
-  ['Moon','🌙'],['Dragon','🐉'],['Ocean','🐳'],['Forest','🦊'],
-  ['Dinosaur','🦕'],['Castle','🏰'],['Space','🚀'],['Pirates','🏴‍☠️']
+  ['Dinosaur','🦕'],['Dragon','🐉'],['Space','🚀'],['Pirates','🏴‍☠️'],
+  ['Princesses','👑'],['Animals','🦁'],['Superheroes','🦸'],['Underwater','🧜'],
+  ['Other','✨']
 ];
 const EMOJI = Object.fromEntries(THEMES);
 const AGE_BANDS = ['Newborn–1','2–3','4–5','6–7','8–9','10–12','Older kids'];
@@ -23,10 +24,10 @@ const PHOTOS = {
   family:'https://images.pexels.com/photos/7938040/pexels-photo-7938040.jpeg?auto=compress&dpr=2&w=1200'
 };
 const DEFAULT_PROFILE = {
-  childName:'', ageBand:'6–7', interests:'', pets:'', friends:'', favouriteThings:'',
+  childName:'', ageBand:'6–7', interests:'', pets:'', friends:'',
   preferredTone:'Magical and adventurous', storyLength:'Bedtime — about 7 minutes', avoid:''
 };
-const DEFAULT_BRIEF = {theme:'Dragon',format:'standalone',request:'',occasion:'',packageType:'audio'};
+const DEFAULT_BRIEF = {theme:'Dragon',customWorld:'',format:'standalone',request:'',occasion:'',packageType:'audio'};
 
 function readStore(key,fallback){
   if(typeof window==='undefined') return fallback;
@@ -36,6 +37,7 @@ function writeStore(key,value){try{window.localStorage.setItem(key,JSON.stringif
 function uid(){return String(Date.now())+'-'+Math.random().toString(36).slice(2,8);}
 function initial(name){return (String(name||'').trim()[0]||'★').toUpperCase();}
 function themeEmoji(theme){return EMOJI[theme]||'✨';}
+function themeLabel(brief){return brief.theme==='Other'?(brief.customWorld.trim()||'Your own world'):brief.theme;}
 
 function AppHeader({screen,go,start}){
   return <>
@@ -66,7 +68,6 @@ function ProfileFields({profile,setProfile,compact=false}){
     <div className="field full"><label>Interests & hobbies</label><textarea className="textarea" placeholder="Dinosaurs, gymnastics, football, drawing, space…" {...bind('interests')}/></div>
     <div className="field"><label>Pets — first names only</label><input className="input" placeholder="Max the dog, Luna the cat" {...bind('pets')}/></div>
     <div className="field"><label>Friends — first names only</label><input className="input" placeholder="Ava, Leo" {...bind('friends')}/></div>
-    <div className="field full"><label>Favourite things</label><textarea className="textarea" placeholder="Animals, toys, films, colours or anything they love right now…" {...bind('favouriteThings')}/></div>
     <div className="field"><label>Story feel</label><select className="select" {...bind('preferredTone')}><option>Magical and adventurous</option><option>Funny and silly</option><option>Cosy and gentle</option><option>Mystery and discovery</option><option>Brave and exciting</option></select></div>
     <div className="field"><label>Story length</label><select className="select" {...bind('storyLength')}><option>Quick — about 4 minutes</option><option>Bedtime — about 7 minutes</option><option>Longer — about 10 minutes</option></select></div>
     <div className="field full"><label>Anything to avoid</label><input className="input" placeholder="e.g. spiders, thunder, anything too scary" {...bind('avoid')}/></div>
@@ -84,14 +85,14 @@ function HeroWorlds(){
     <div className="heroMoon">☾</div>
     <div className="worldOrb orbDragon"><span>🐉</span><small>dragon skies</small></div>
     <div className="worldOrb orbCastle"><span>🏰</span><small>secret kingdoms</small></div>
-    <div className="worldOrb orbOcean"><span>🐳</span><small>ocean quests</small></div>
-    <div className="worldOrb orbForest"><span>🦊</span><small>enchanted woods</small></div>
+    <div className="worldOrb orbOcean"><span>🧜</span><small>underwater worlds</small></div>
+    <div className="worldOrb orbForest"><span>🦁</span><small>animal adventures</small></div>
     <div className="worldOrb orbSpace"><span>🚀</span><small>star adventures</small></div>
     <div className="worldOrb orbDino"><span>🦕</span><small>prehistoric worlds</small></div>
-    <div className="tinyCharacter charOne">🧚</div>
-    <div className="tinyCharacter charTwo">🦄</div>
+    <div className="tinyCharacter charOne">👑</div>
+    <div className="tinyCharacter charTwo">🦸</div>
     <div className="tinyCharacter charThree">🐙</div>
-    <div className="tinyCharacter charFour">🧙</div>
+    <div className="tinyCharacter charFour">🧚</div>
     <div className="heroSparkles">✦　·　✧　·　✦　·　✧　·　✦</div>
   </div>;
 }
@@ -136,8 +137,8 @@ function HomeScreen({start,go,library,setBrief}){
     {library.length>0&&<section className="appSection"><div className="sectionTitle"><div><span className="kicker">Their library</span><h2>Pick up a favourite.</h2></div><button className="textBtn" onClick={()=>go('library')}>See all</button></div><div className="recentScroller">{library.slice(0,4).map(story=><button className="recentCard" key={story.id} onClick={()=>go('library')}><ThemeCover theme={story.theme} compact/><div><strong>{story.title}</strong><small>{story.theme} · {story.readingMinutes||7} min</small></div></button>)}</div></section>}
 
     <section className="appSection exampleSection"><div className="sectionTitle"><div><span className="kicker">Try the feeling first</span><h2>Stories they could be asking for tonight.</h2></div></div><div className="exampleScroller">
-      <button className="exampleBook" onClick={()=>launch('standalone','Dragon')}><ThemeCover theme="Dragon"/><div><small>MAGICAL ADVENTURE</small><strong>The Dragon Who Lost the Moon</strong><span>About 7 min · cosy ending</span></div></button>
-      <button className="exampleBook" onClick={()=>launch('support','Moon')}><ThemeCover theme="Moon"/><div><small>GENTLE BEDTIME</small><strong>The Night Light That Learned to Glow</strong><span>About 5 min · reassuring</span></div></button>
+      <button className="exampleBook" onClick={()=>launch('standalone','Dragon')}><ThemeCover theme="Dragon"/><div><small>MAGICAL ADVENTURE</small><strong>The Dragon Who Lost His Roar</strong><span>About 7 min · cosy ending</span></div></button>
+      <button className="exampleBook" onClick={()=>launch('support','Animals')}><ThemeCover theme="Animals"/><div><small>GENTLE BEDTIME</small><strong>The Little Lion Who Found His Brave</strong><span>About 5 min · reassuring</span></div></button>
       <button className="exampleBook" onClick={()=>launch('special','Space')}><ThemeCover theme="Space"/><div><small>BIG LITTLE MOMENT</small><strong>The Rocket to Tomorrow Morning</strong><span>About 7 min · first-day magic</span></div></button>
     </div></section>
 
@@ -166,9 +167,9 @@ function CreateScreen({profile,setProfile,brief,setBrief,generate,loading,error,
 
       {step===2&&<section className="flowCard singleFlowCard"><div className="flowHeading"><span className="stepBadge">2</span><div><h2>What does tonight need?</h2><p>Tap the kind of story that fits the moment.</p></div></div><div className="modeGrid appModeGrid">{Object.entries(FORMATS).map(([id,item])=><button type="button" key={id} className={`modeChoice ${brief.format===id?'active':''}`} onClick={()=>setBrief({...brief,format:id})}><span>{item.icon}</span><strong>{item.label}</strong><small>{item.copy}</small></button>)}</div><div className="flowFooter"><button className="backBtn" onClick={back}>← Back</button><button className="primaryBtn" onClick={next}>Choose a world →</button></div></section>}
 
-      {step===3&&<section className="flowCard singleFlowCard"><div className="flowHeading"><span className="stepBadge">3</span><div><h2>Where are we going?</h2><p>Pick a world, then add a little twist only if you want one.</p></div></div><div className="themeScroller bigThemes">{THEMES.map(([name,emoji])=><button type="button" key={name} className={`themeChoice ${brief.theme===name?'active':''}`} onClick={()=>setBrief({...brief,theme:name})}><span>{emoji}</span><small>{name}</small></button>)}</div>{brief.format==='special'&&<div className="field spaced"><label>What’s the occasion?</label><input className="input" value={brief.occasion} onChange={e=>setBrief({...brief,occasion:e.target.value})} placeholder="Birthday, first day at school, Christmas…"/></div>}<div className="field spaced"><label>Anything you’d love included? <i>Optional</i></label><textarea className="textarea short" value={brief.request} onChange={e=>setBrief({...brief,request:e.target.value})} placeholder={brief.format==='support'?'e.g. A gentle story about feeling brave when the bedroom is dark':'e.g. A moon treasure hunt with a funny purple dragon'}/></div><div className="flowFooter"><button className="backBtn" onClick={back}>← Back</button><button className="primaryBtn" onClick={next}>Nearly there →</button></div></section>}
+      {step===3&&<section className="flowCard singleFlowCard"><div className="flowHeading"><span className="stepBadge">3</span><div><h2>Pick their world.</h2><p>Choose a world they already love, or make up one of your own.</p></div></div><div className="themeScroller bigThemes">{THEMES.map(([name,emoji])=><button type="button" key={name} className={`themeChoice ${brief.theme===name?'active':''}`} onClick={()=>setBrief({...brief,theme:name})}><span>{emoji}</span><small>{name}</small></button>)}</div>{brief.theme==='Other'&&<div className="field spaced customWorldField"><label>What world should we create?</label><input className="input" maxLength={80} value={brief.customWorld||''} onChange={e=>setBrief({...brief,customWorld:e.target.value})} placeholder="e.g. tractors, ballet, monster trucks, unicorn school…"/></div>}{brief.format==='special'&&<div className="field spaced"><label>What’s the occasion?</label><input className="input" value={brief.occasion} onChange={e=>setBrief({...brief,occasion:e.target.value})} placeholder="Birthday, first day at school, Christmas…"/></div>}<div className="field spaced"><label>Anything you’d love included? <i>Optional</i></label><textarea className="textarea short" value={brief.request} onChange={e=>setBrief({...brief,request:e.target.value})} placeholder={brief.format==='support'?'e.g. A gentle story about feeling brave when the bedroom is dark':'e.g. A treasure hunt, a silly sidekick, or a surprise at the end'}/></div><div className="flowFooter"><button className="backBtn" onClick={back}>← Back</button><button className="primaryBtn" disabled={brief.theme==='Other'&&!brief.customWorld.trim()} onClick={next}>Nearly there →</button></div></section>}
 
-      {step===4&&<section className="flowCard singleFlowCard experienceCard"><div className="flowHeading"><span className="stepBadge">4</span><div><h2>How will you enjoy it?</h2><p>Read, listen, or make it feel like a little picture book.</p></div></div><div className="experienceList">{Object.entries(PACKAGES).map(([id,pack])=><button type="button" key={id} className={`experienceChoice ${brief.packageType===id?'active':''}`} onClick={()=>setBrief({...brief,packageType:id})}><span className="radioDot"/><div><strong>{pack[0]}</strong><small>{pack[2]}</small></div><b>{pack[1]}</b></button>)}</div>{error&&<div className="errorCard">{error}</div>}<div className="storyReadyCard"><span>{themeEmoji(brief.theme)}</span><div><small>Ready to make</small><strong>{brief.theme} · {FORMATS[brief.format].label}</strong><p>First story free in this development preview.</p></div></div><div className="flowFooter finalFlowFooter"><button className="backBtn" onClick={back}>← Back</button><button className="primaryBtn magicBtn" onClick={()=>generate(false)}>✨ Make the magic</button></div></section>}
+      {step===4&&<section className="flowCard singleFlowCard experienceCard"><div className="flowHeading"><span className="stepBadge">4</span><div><h2>How will you enjoy it?</h2><p>Read, listen, or make it feel like a little picture book.</p></div></div><div className="experienceList">{Object.entries(PACKAGES).map(([id,pack])=><button type="button" key={id} className={`experienceChoice ${brief.packageType===id?'active':''}`} onClick={()=>setBrief({...brief,packageType:id})}><span className="radioDot"/><div><strong>{pack[0]}</strong><small>{pack[2]}</small></div><b>{pack[1]}</b></button>)}</div>{error&&<div className="errorCard">{error}</div>}<div className="storyReadyCard"><span>{themeEmoji(brief.theme)}</span><div><small>Ready to make</small><strong>{themeLabel(brief)} · {FORMATS[brief.format].label}</strong><p>First story free in this development preview.</p></div></div><div className="flowFooter finalFlowFooter"><button className="backBtn" onClick={back}>← Back</button><button className="primaryBtn magicBtn" onClick={()=>generate(false)}>✨ Make the magic</button></div></section>}
     </div>}
   </main>;
 }
