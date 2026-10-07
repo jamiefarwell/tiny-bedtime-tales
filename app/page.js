@@ -28,6 +28,75 @@ const DEFAULT_PROFILE = {
   preferredTone:'Magical and adventurous', storyLength:'Bedtime — about 7 minutes', avoid:''
 };
 const DEFAULT_BRIEF = {theme:'Dragon',customWorld:'',format:'standalone',request:'',occasion:'',packageType:'audio'};
+const READY_BOOKS = [
+  {
+    "id": "jasper-buddy-lost-light",
+    "title": "Jasper & Buddy and the Valley of Lost Light",
+    "shortTitle": "The Valley of Lost Light",
+    "age": "5–8",
+    "minutes": 10,
+    "category": "Adventure",
+    "tags": [
+      "Adventure",
+      "Friendship",
+      "Magic"
+    ],
+    "strapline": "A glowing adventure about small brave choices, helping others and finding the light you already carry.",
+    "description": "When Jasper and his golden dog Buddy find a map hidden beneath a loose floorboard, it leads them into a valley where every lantern has mysteriously gone dark. To help the valley glow again, they must listen to a silent waterfall, cross a bridge made from echoes and discover a kind of light that cannot be carried in a jar.",
+    "pages": [
+      {
+        "heading": "The Map Under the Floorboard",
+        "scene": 0,
+        "text": "Jasper was meant to be getting ready for bed when Buddy began scratching at the rug.\n\n“Buddy,” Jasper whispered, “that is not your bed.”\n\nBuddy wagged once and scratched again.\n\nUnder the rug was a loose floorboard Jasper had never noticed before. Beneath it lay a folded map, tied with a thread of gold. The paper was soft as an old leaf and covered in tiny painted mountains, rivers and a valley filled with hundreds of glowing lanterns.\n\nAcross the bottom, in crooked silver writing, were six words:\n\nWHEN THE VALLEY GOES DARK, FOLLOW BUDDY.\n\nJasper looked at Buddy.\n\nBuddy looked extremely pleased with himself.\n\nThen every lantern painted on the map went out.\n\nA warm golden dot appeared beside the bedroom door and began drifting down the hallway.\n\nJasper pulled on his little green backpack.\n\n“Just a quick adventure,” he said.\n\nBuddy sneezed.\n\nThey both knew there was no such thing."
+      },
+      {
+        "heading": "A Door Made of Fireflies",
+        "scene": 1,
+        "text": "The golden dot floated through the kitchen, out into the garden and stopped beside the old apple tree.\n\nAt first there was only bark.\n\nThen one firefly appeared.\n\nThen ten.\n\nThen hundreds.\n\nThey gathered in a tall glowing arch, and where the tree trunk should have been, a path stretched beneath a violet sky.\n\nJasper took Buddy’s paw for exactly one second.\n\n“Ready?”\n\nBuddy stepped through first.\n\nOn the other side, the air smelled of pine needles and warm cinnamon. Mountains rose in the distance. Silver rivers curled between them. Tiny cottages dotted the hills.\n\nBut the valley was dark.\n\nEvery lamp post, window lantern and hanging light was cold.\n\nA fox in a red scarf sat beside the path, holding an empty lantern.\n\n“We have plenty of candles,” she explained, “but none of them remember how to shine.”\n\nJasper unfolded the map.\n\nThree new marks had appeared: a waterfall, a bridge and a castle.\n\nBuddy barked at the waterfall.\n\n“Good choice,” Jasper said.\n\nAnd off they went."
+      },
+      {
+        "heading": "The Waterfall That Forgot to Sing",
+        "scene": 2,
+        "text": "The waterfall was enormous, but it made no sound at all.\n\nWater tumbled down the cliff in perfect silence.\n\nAt the bottom, a family of otters stared sadly into the pool.\n\n“It used to sing,” said the smallest otter. “When it sang, the blue lanterns lit first.”\n\nJasper listened.\n\nNothing.\n\nBuddy tilted his head.\n\nThen Jasper noticed three smooth stones beside the water. Each had a different mark carved into it: a spiral, a star and a tiny paw.\n\nHe tapped the spiral.\n\nPlink.\n\nHe tapped the star.\n\nPlonk.\n\nBuddy placed one paw on the paw-shaped stone.\n\nBOOOONG.\n\nThe waterfall shivered.\n\nJasper laughed. The otters laughed. Buddy barked and bounced on the stone again.\n\nBOOOONG!\n\nSuddenly the waterfall burst into music—rushing, splashing, chiming music that echoed across the valley.\n\nA blue spark jumped from the water into Jasper’s map.\n\nFar away, one row of lanterns flickered awake.\n\n“One light found,” Jasper said.\n\nBut the map was already pointing toward the bridge."
+      },
+      {
+        "heading": "The Bridge of Echoes",
+        "scene": 3,
+        "text": "The bridge hung between two cliffs, thin as a ribbon.\n\nBelow it, clouds hid the bottom of the gorge.\n\nJasper’s feet stopped.\n\nBuddy’s feet stopped too.\n\nA wooden sign read:\n\nTHE BRIDGE REPEATS WHAT YOU BRING TO IT.\n\nJasper swallowed.\n\n“What if I fall?”\n\nThe gorge whispered back:\n\nFall… fall… fall…\n\nBuddy pressed against Jasper’s leg.\n\nJasper tried again.\n\n“I can take one step.”\n\nThe gorge answered:\n\nOne step… one step… one step…\n\nSo Jasper did.\n\nThe bridge creaked, but held.\n\n“One more.”\n\nOne more… one more…\n\nHalfway across, Buddy froze. His tail tucked between his legs.\n\nJasper crouched beside him.\n\n“We don’t have to be fearless,” he said. “We just have to do the next small thing together.”\n\nTogether… together… together…\n\nBuddy stood.\n\nStep by step, boy and dog reached the other side.\n\nA warm orange spark lifted from the bridge and settled into the map beside the blue one.\n\nJasper grinned.\n\n“Two.”\n\nBuddy wagged.\n\nThe castle waited ahead."
+      },
+      {
+        "heading": "The Castle with No Lamps",
+        "scene": 4,
+        "text": "The castle was beautiful even in darkness.\n\nIts towers twisted into the clouds, and hundreds of empty lanterns hung from balconies, gates and trees.\n\nInside the great hall, everyone was trying to relight them.\n\nDragons puffed tiny flames.\n\nInventors wound enormous machines.\n\nA magician shouted words that made his own hat smoke.\n\nNothing worked.\n\nAt the centre of the hall sat a little girl holding a broken paper lantern.\n\nNobody seemed to notice her.\n\nJasper did.\n\n“What happened?”\n\n“It was my gran’s,” she said. “It tore when everyone rushed past.”\n\nJasper sat on the floor. He found tape in his backpack. Buddy gently held one side of the paper while Jasper repaired the other.\n\nIt was not a grand job.\n\nIt was not magical.\n\nBut when the girl smiled, a pink light appeared inside the lantern.\n\nEvery person in the hall stopped.\n\nThe pink light floated into Jasper’s map.\n\nThree sparks now glowed together.\n\nBlue for joy. Orange for courage. Pink for kindness.\n\nSurely that was enough.\n\nBut still, most of the valley remained dark."
+      },
+      {
+        "heading": "The Light They Couldn’t Carry",
+        "scene": 5,
+        "text": "The map changed again.\n\nThe waterfall, bridge and castle vanished.\n\nIn their place appeared one final instruction:\n\nTAKE THE THREE LIGHTS TO THE HIGHEST HILL.\n\nJasper, Buddy and the girl from the castle climbed together.\n\nThe wind grew stronger.\n\nAt the top stood a stone lantern taller than Jasper.\n\nHe held up the map.\n\nThe blue, orange and pink sparks rose into the air and swirled around the lantern.\n\nFor one wonderful second, it blazed gold.\n\nThen—\n\nPFFT.\n\nDark again.\n\nJasper’s shoulders sank.\n\n“We did everything.”\n\nBuddy nudged his hand.\n\nBehind them, the little girl had stopped to help an old tortoise up the final step.\n\nBelow, the otters were showing castle guards how to make the waterfall sing.\n\nAt the bridge, strangers were crossing slowly together, calling encouragement across the gorge.\n\nJasper stared.\n\nThe valley was full of tiny lights now.\n\nNot in lanterns.\n\nIn people.\n\n“Oh,” he whispered.\n\nThe map had never been teaching them how to carry light.\n\nIt had been teaching them how to make it."
+      },
+      {
+        "heading": "The Storm That Wasn’t Angry",
+        "scene": 6,
+        "text": "A rumble rolled over the mountains.\n\nEveryone looked up.\n\nA huge purple cloud was drifting into the valley.\n\nThe fox in the red scarf gasped. “The night storm!”\n\nWind rushed over the hill and rattled every dark lantern.\n\nJasper understood.\n\nIf the valley was going to shine, it had to happen now.\n\nHe ran to the stone lantern.\n\n“Don’t light this one!” he shouted. “Light each other’s!”\n\nThe fox shared her candle with the otters.\n\nThe dragons lit the inventors’ lamps.\n\nThe castle girl carried her pink paper lantern to the bridge.\n\nOne light became two.\n\nTwo became ten.\n\nTen became hundreds.\n\nThe storm reached the valley.\n\nRain began to fall.\n\nBut instead of putting the lights out, each raindrop caught their glow and scattered it into the air.\n\nThe whole valley sparkled.\n\nThe purple clouds turned silver.\n\nThe great stone lantern finally blazed—not because of three sparks inside it, but because thousands of little lights were shining all around it.\n\nBuddy barked so loudly the mountains barked back."
+      },
+      {
+        "heading": "The Valley Wakes",
+        "scene": 7,
+        "text": "From the highest hill, Jasper watched the valley come alive.\n\nBlue lanterns danced beside the waterfall.\n\nOrange lights traced the Bridge of Echoes from one cliff to the other.\n\nPink lanterns glowed in every castle window.\n\nAlong the roads, tiny gold lights appeared wherever somebody stopped to help somebody else.\n\nThe fox handed Jasper her red scarf.\n\n“For the Keeper of the Map.”\n\nJasper shook his head.\n\n“I’m not a keeper.”\n\nThe fox smiled. “Exactly. Keepers hide important things away. You shared yours.”\n\nBuddy received a biscuit shaped like a crown, which he considered a much more sensible reward.\n\nThe map in Jasper’s hands changed one last time.\n\nThe painted valley was bright again.\n\nAt the very edge of the paper, a new path appeared—a path that had not been there before.\n\nJasper quickly folded the map.\n\n“Not tonight,” he told it.\n\nThe path shimmered as if it were laughing.\n\nFor once, the adventure seemed happy to wait."
+      },
+      {
+        "heading": "The Way Home",
+        "scene": 8,
+        "text": "The firefly door waited beneath the apple tree.\n\nThe fox, the otters, the castle girl and half a dozen tiny dragons came to say goodbye.\n\nBuddy had somehow collected three more biscuits.\n\nJasper did not ask how.\n\nHe stepped through the glowing arch and felt the warm garden grass beneath his feet.\n\nThe kitchen clock had moved forward only seven minutes.\n\n“That,” Jasper said, “is extremely suspicious.”\n\nBack upstairs, he tucked the map beneath his pillow instead of under the floorboard.\n\nThe golden thread around it gave one tiny pulse of light.\n\nBuddy circled his bed three times, then jumped onto Jasper’s blanket and rested his head on Jasper’s knees.\n\nThe room was quiet.\n\nNo waterfalls.\n\nNo echoing bridges.\n\nNo castles.\n\nJust the familiar glow of the hallway light beneath the door.\n\nBut Jasper saw it differently now.\n\nA little light did not have to fill a whole valley.\n\nSometimes it only had to reach the person beside you."
+      },
+      {
+        "heading": "The Light That Stayed",
+        "scene": 9,
+        "text": "Jasper switched off his bedside lamp.\n\nFor a moment, the room was completely dark.\n\nThen Buddy’s tail thumped once against the blanket.\n\nJasper smiled.\n\nOutside, a firefly blinked beside the apple tree.\n\nOnce.\n\nTwice.\n\nGone.\n\nJasper closed his eyes and thought of the waterfall finding its song, the bridge repeating brave words, and a small paper lantern glowing because somebody had stopped to help.\n\nTomorrow there might be school, muddy shoes, missing socks and absolutely no magical valleys at all.\n\nThat was fine.\n\nHe knew where the smallest kind of magic lived now.\n\nIn trying again.\n\nIn taking one more step.\n\nIn noticing someone who needed you.\n\nIn sharing whatever light you had.\n\nBuddy gave a sleepy sigh.\n\nJasper placed one hand on the dog’s warm fur.\n\nSomewhere very far away—or perhaps not far away at all—a whole valley of lanterns glowed softly through the night.\n\nAnd this time, none of them forgot how to shine."
+      }
+    ]
+  }
+];
 
 function readStore(key,fallback){
   if(typeof window==='undefined') return fallback;
@@ -44,14 +113,14 @@ function AppHeader({screen,go,start}){
     <div className="devbar"><span className="devpill">IN DEVELOPMENT</span><span>Prototype currently being developed by <strong>Greg Godfrey</strong></span></div>
     <header className="appHeader">
       <button className="brand" onClick={()=>go('home')}><span className="brandMoon">☾</span><span>Tiny Bedtime Tales</span></button>
-      <div className="desktopActions"><button className="textBtn" onClick={()=>go('library')}>My stories</button><button className="primaryBtn compact" onClick={start}>Create a story</button></div>
+      <div className="desktopActions"><button className="textBtn" onClick={()=>go('ready')}>Ready to read</button><button className="textBtn" onClick={()=>go('library')}>My stories</button><button className="primaryBtn compact" onClick={start}>Create a story</button></div>
       {screen!=='home'&&<button className="headerClose" onClick={()=>go('home')} aria-label="Back home">×</button>}
     </header>
   </>;
 }
 
 function BottomNav({screen,go,start,libraryCount}){
-  const items=[['home','⌂','Home'],['create','✦','Create'],['library','▤','Stories'],['profile','☺','Profile']];
+  const items=[['home','⌂','Home'],['create','✦','Create'],['ready','▣','Ready'],['library','▤','Stories'],['profile','☺','Profile']];
   return <nav className="bottomNav" aria-label="Main navigation">{items.map(([id,icon,label])=><button key={id} className={screen===id?'active':''} onClick={()=>id==='create'?start():go(id)}><span>{icon}</span><small>{label}{id==='library'&&libraryCount?` ${libraryCount}`:''}</small></button>)}</nav>;
 }
 
