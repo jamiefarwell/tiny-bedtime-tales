@@ -7,6 +7,7 @@ const THEMES = [
   ['Dinosaur','🦕'],['Castle','🏰'],['Space','🚀'],['Pirates','🏴‍☠️']
 ];
 const EMOJI = Object.fromEntries(THEMES);
+const AGE_BANDS = ['Newborn–1','2–3','4–5','6–7','8–9','10–12','Older kids'];
 const FORMATS = {
   standalone:{label:'New adventure',icon:'✨',copy:'A completely fresh world for tonight.'},
   continue:{label:'Continue our world',icon:'📚',copy:'Pick up where their last adventure left off.'},
@@ -19,9 +20,7 @@ const PACKAGES = {
   illustrated:['Illustrated','£4.00','Story, narration and storybook scenes']
 };
 const PHOTOS = {
-  hero:'https://images.pexels.com/photos/10566114/pexels-photo-10566114.jpeg?auto=compress&dpr=2&w=1400',
-  family:'https://images.pexels.com/photos/7938040/pexels-photo-7938040.jpeg?auto=compress&dpr=2&w=1200',
-  father:'https://images.pexels.com/photos/7938255/pexels-photo-7938255.jpeg?auto=compress&dpr=2&w=1200'
+  family:'https://images.pexels.com/photos/7938040/pexels-photo-7938040.jpeg?auto=compress&dpr=2&w=1200'
 };
 const DEFAULT_PROFILE = {
   childName:'', ageBand:'6–7', interests:'', pets:'', friends:'', favouriteThings:'',
@@ -58,12 +57,12 @@ function ProfileFields({profile,setProfile,compact=false}){
   function bind(key){return {value:profile[key],onChange:e=>setProfile({...profile,[key]:e.target.value})};}
   if(compact) return <div className="quickProfileFields">
     <div className="field"><label>First name or nickname</label><input className="input" maxLength={24} placeholder="e.g. Isla" {...bind('childName')}/></div>
-    <div className="field"><label>Age</label><select className="select" {...bind('ageBand')}><option>4–5</option><option>6–7</option><option>8–9</option></select></div>
+    <div className="field"><label>Age</label><select className="select" {...bind('ageBand')}>{AGE_BANDS.map(age=><option key={age}>{age}</option>)}</select></div>
     <div className="field full"><label>What are they into right now?</label><textarea className="textarea short" placeholder="Dinosaurs, gymnastics, drawing, space…" {...bind('interests')}/></div>
   </div>;
   return <div className="profileFields">
     <div className="field"><label>First name or nickname</label><input className="input" maxLength={24} placeholder="e.g. Isla" {...bind('childName')}/></div>
-    <div className="field"><label>Age band</label><select className="select" {...bind('ageBand')}><option>4–5</option><option>6–7</option><option>8–9</option></select></div>
+    <div className="field"><label>Age band</label><select className="select" {...bind('ageBand')}>{AGE_BANDS.map(age=><option key={age}>{age}</option>)}</select></div>
     <div className="field full"><label>Interests & hobbies</label><textarea className="textarea" placeholder="Dinosaurs, gymnastics, football, drawing, space…" {...bind('interests')}/></div>
     <div className="field"><label>Pets — first names only</label><input className="input" placeholder="Max the dog, Luna the cat" {...bind('pets')}/></div>
     <div className="field"><label>Friends — first names only</label><input className="input" placeholder="Ava, Leo" {...bind('friends')}/></div>
@@ -77,6 +76,24 @@ function ProfileFields({profile,setProfile,compact=false}){
 
 function ThemeCover({theme='Moon',compact=false}){
   return <div className={`themeCover theme-${String(theme).toLowerCase()} ${compact?'compact':''}`}><span className="coverStars">✦ · ✧ · ✦</span><span className="coverEmoji">{themeEmoji(theme)}</span><span className="coverLabel">{theme} adventure</span></div>;
+}
+
+function HeroWorlds(){
+  return <div className="heroWorlds" aria-hidden="true">
+    <div className="heroAurora"/>
+    <div className="heroMoon">☾</div>
+    <div className="worldOrb orbDragon"><span>🐉</span><small>dragon skies</small></div>
+    <div className="worldOrb orbCastle"><span>🏰</span><small>secret kingdoms</small></div>
+    <div className="worldOrb orbOcean"><span>🐳</span><small>ocean quests</small></div>
+    <div className="worldOrb orbForest"><span>🦊</span><small>enchanted woods</small></div>
+    <div className="worldOrb orbSpace"><span>🚀</span><small>star adventures</small></div>
+    <div className="worldOrb orbDino"><span>🦕</span><small>prehistoric worlds</small></div>
+    <div className="tinyCharacter charOne">🧚</div>
+    <div className="tinyCharacter charTwo">🦄</div>
+    <div className="tinyCharacter charThree">🐙</div>
+    <div className="tinyCharacter charFour">🧙</div>
+    <div className="heroSparkles">✦　·　✧　·　✦　·　✧　·　✦</div>
+  </div>;
 }
 
 function StoryView({story,onBack,onRegenerate,onContinue}){
@@ -108,10 +125,10 @@ function StoryView({story,onBack,onRegenerate,onContinue}){
 function HomeScreen({start,go,library,setBrief}){
   function launch(format,theme){setBrief(current=>({...current,format,theme:theme||current.theme}));start();}
   return <main className="homeScreen">
-    <section className="heroCard">
-      <img src={PHOTOS.hero} alt="Parent and child sharing a bedtime story"/>
+    <section className="heroCard magicalHero">
+      <HeroWorlds/>
       <div className="heroShade"/>
-      <div className="heroCopy"><div className="eyebrow light">A NEW ADVENTURE FOR TONIGHT</div><h1>Tonight, <em>they’re</em> the hero.</h1><p>Personalised bedtime stories made around the little things they already love.</p><button className="primaryBtn heroButton" onClick={start}>Create their first story — free</button><div className="heroTrust">No card · No child photos · Parent-led</div></div>
+      <div className="heroCopy"><div className="eyebrow light">A NEW ADVENTURE FOR TONIGHT</div><h1>Tonight, <em>they’re</em> the hero.</h1><p>One bedtime. Endless worlds. Stories made around the things they already love.</p><button className="primaryBtn heroButton" onClick={start}>Create their first story — free</button><div className="heroTrust">First story free · No card · Ready in moments</div></div>
     </section>
 
     <section className="appSection first"><div className="sectionTitle"><div><span className="kicker">Tonight</span><h2>What kind of story do you need?</h2></div></div><div className="intentScroller">{Object.entries(FORMATS).map(([id,item])=><button className="intentCard" key={id} onClick={()=>launch(id)}><span className="intentIcon">{item.icon}</span><strong>{item.label}</strong><small>{item.copy}</small><span className="arrow">→</span></button>)}</div></section>
@@ -124,11 +141,10 @@ function HomeScreen({start,go,library,setBrief}){
       <button className="exampleBook" onClick={()=>launch('special','Space')}><ThemeCover theme="Space"/><div><small>BIG LITTLE MOMENT</small><strong>The Rocket to Tomorrow Morning</strong><span>About 7 min · first-day magic</span></div></button>
     </div></section>
 
-    <section className="sampleSection"><div className="samplePhoto"><img src={PHOTOS.family} alt="Family reading together at bedtime"/></div><div className="sampleCopy"><span className="kicker">Made to read together</span><h2>A finished bedtime moment, not a generator box.</h2><p>Choose a little about tonight. We do the writing. You get a complete story you can read, replay and continue another night.</p><div className="benefitRow"><span>✓ First story free</span><span>✓ Age-matched language</span><span>✓ Happy, cosy endings</span></div><button className="secondaryBtn" onClick={start}>Make tonight’s story</button></div></section>
+    <section className="sampleSection"><div className="samplePhoto"><img src={PHOTOS.family} alt="Family reading together at bedtime"/></div><div className="sampleCopy"><span className="kicker">Made to read together</span><h2>A story that feels like it was written just for them.</h2><p>Tell us a little about who they are and what they love. We turn that into a complete bedtime adventure you can read together, listen to, revisit and continue another night.</p><div className="benefitRow"><span>✓ First story free</span><span>✓ Language matched to them</span><span>✓ Happy, cosy endings</span></div><button className="secondaryBtn" onClick={start}>Make tonight’s story</button></div></section>
 
     <section className="appSection"><div className="sectionTitle"><div><span className="kicker">A world that remembers</span><h2>Not just another one-off story.</h2></div></div><div className="featureStack"><article><span>📚</span><div><h3>Continue the adventure</h3><p>Characters, places and little promises can return in the next chapter.</p></div></article><article><span>🎈</span><div><h3>Turn real moments into magic</h3><p>First day of school, a new sibling, birthdays, holidays or losing a tooth.</p></div></article><article><span>💛</span><div><h3>Gentle stories for wobbly moments</h3><p>Bedtime nerves, trying something new or simply needing a calmer ending to the day.</p></div></article></div></section>
 
-    <section className="photoQuote"><img src={PHOTOS.father} alt="Father and child reading a story in warm bedtime light"/><div><span className="kicker">Privacy-light by design</span><h2>Their imagination matters. Their identity doesn’t need to.</h2><p>We only need a first name or nickname, age band and broad interests. No child photo, surname, school, address, phone number or exact date of birth.</p></div></section>
 
     <section className="appSection pricingSection"><div className="sectionTitle centred"><div><span className="kicker">Working proposition</span><h2>Choose how bedtime feels.</h2><p>Checkout stays switched off while the product is in development.</p></div></div><div className="pricingCards">{Object.entries(PACKAGES).map(([id,pack])=><article className={`priceCard ${id==='audio'?'featured':''}`} key={id}>{id==='audio'&&<span className="popular">MOST NATURAL START</span>}<h3>{pack[0]}</h3><div className="price">{pack[1]} <small>per story</small></div><p>{pack[2]}</p><button className="secondaryBtn" onClick={()=>{setBrief(current=>({...current,packageType:id}));start();}}>Choose {pack[0].toLowerCase()}</button></article>)}</div></section>
   </main>;
