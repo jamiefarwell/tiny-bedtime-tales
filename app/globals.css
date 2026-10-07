@@ -41,3 +41,46 @@ img{display:block;max-width:100%}
   .appShell{padding-bottom:0}.bottomNav{display:none}.devbar{font-size:12px;min-height:38px}.appHeader{height:76px;padding:0 24px}.brand{font-size:25px}.desktopActions{display:flex;align-items:center;gap:10px}.headerClose{display:none}.homeScreen,.screenPage{padding-bottom:72px}.heroCard{min-height:590px}.heroCard>img{object-position:center 41%}.heroShade{background:linear-gradient(90deg,rgba(5,13,28,.92) 0%,rgba(5,13,28,.73) 42%,rgba(5,13,28,.08) 75%),linear-gradient(180deg,transparent 58%,rgba(5,13,28,.5))}.heroCopy{top:50%;bottom:auto;transform:translateY(-50%);right:auto;width:51%;left:50px}.heroCopy h1{font-size:68px}.heroCopy p{font-size:18px}.heroTrust{margin-left:2px}.appSection{padding-top:58px}.appSection.first{padding-top:48px}.sectionTitle h2,.sampleCopy h2,.photoQuote h2{font-size:42px}.intentScroller,.recentScroller{display:grid;overflow:visible}.intentScroller{grid-template-columns:repeat(4,1fr)}.intentCard{min-height:205px}.recentScroller{grid-template-columns:repeat(4,1fr)}.sampleSection,.photoQuote{display:grid;grid-template-columns:1fr 1fr;margin-top:64px}.samplePhoto{height:auto;min-height:420px}.sampleCopy,.photoQuote>div{padding:46px;display:flex;flex-direction:column;justify-content:center}.sampleCopy .secondaryBtn{width:max-content}.featureStack{grid-template-columns:repeat(3,1fr)}.featureStack article{padding:23px;min-height:165px}.photoQuote>img{height:100%;min-height:380px}.pricingCards{grid-template-columns:repeat(3,1fr)}.screenPage{padding-top:38px}.screenIntro{margin-bottom:30px}.screenIntro h1{font-size:52px}.createFlow{grid-template-columns:1fr 1fr;align-items:start}.profileFlow,.experienceCard,.createSticky,.errorCard{grid-column:1/-1}.modeGrid{grid-template-columns:repeat(4,1fr)}.modeChoice{min-height:150px}.themeScroller{display:grid;grid-template-columns:repeat(8,1fr);overflow:visible}.themeChoice{width:100%;height:86px}.experienceList{grid-template-columns:repeat(3,1fr)}.experienceChoice{grid-template-columns:18px 1fr}.experienceChoice>b{grid-column:2;margin-top:-2px}.createSticky{position:static}.libraryList{grid-template-columns:1fr 1fr}.profilePageGrid{grid-template-columns:minmax(0,1.25fr) minmax(300px,.75fr)}.profileSave{flex-direction:row;justify-content:space-between;align-items:center}.readerCoverCopy h1{font-size:48px}.footer{padding-bottom:45px;flex-direction:row;justify-content:space-between;align-items:center}}
 @media(min-width:1080px){.homeScreen,.screenPage{padding-left:0;padding-right:0}.heroCopy{left:64px}.heroCopy h1{font-size:76px}.intentCard strong{font-size:23px}.libraryList{grid-template-columns:repeat(3,1fr)}.libraryCard{grid-template-columns:1fr;min-height:350px}.libraryCard>.themeCover{height:160px}.libraryCopy{padding:18px}}
 @media print{.devbar,.appHeader,.bottomNav,.readerActions,.backLink,.footer,.quietMeta{display:none!important}.appShell,body{background:#fff;color:#111;padding:0}.screenPage{max-width:none;padding:0}.readerCover,.storyPage,.goodnightCard{background:#fff;color:#111;border-color:#ddd;box-shadow:none}.readerCover>.themeCover{display:none}.readerCover{display:block}.readerCoverCopy p,.storyPage p{color:#333}.storyPage{break-inside:avoid}.goodnightCard p{color:#554012}}
+
+/* Guided mobile-first story creator */
+.compactIntro{margin-bottom:18px}
+.compactIntro h1{margin-bottom:7px}
+.guidedFlow{display:grid;gap:13px;max-width:720px;margin:0 auto}
+.flowProgress{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:4px;border-radius:18px;background:#0b1d35;border:1px solid #294765;position:sticky;top:6px;z-index:25;backdrop-filter:blur(12px)}
+.progressStep{border:0;background:transparent;color:#647b98;border-radius:14px;padding:8px 3px 7px;display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0}
+.progressStep>span{display:grid;place-items:center;width:25px;height:25px;border-radius:50%;border:1px solid #385574;font-size:10px;font-weight:900}
+.progressStep small{font-size:9px;font-weight:800;white-space:nowrap}
+.progressStep.active{background:#152b49;color:#fff}
+.progressStep.active>span{background:var(--gold);border-color:var(--gold);color:#13213a}
+.progressStep.done{color:#a9c8b7}.progressStep.done>span{background:#173b34;border-color:#2d6a59;color:#a6e5c6}
+.singleFlowCard{min-height:430px;display:flex;flex-direction:column}
+.miniSummary{margin:-3px 0 16px}
+.flowFooter{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:auto;padding-top:22px}
+.flowFooter>span{font-size:10px;color:#7188a3;max-width:260px;line-height:1.4}
+.flowFooter .primaryBtn{min-width:145px}
+.backBtn{border:0;background:transparent;color:#92a6bd;font-weight:800;padding:12px 4px}
+.primaryBtn:disabled{opacity:.4;cursor:not-allowed;box-shadow:none}
+.bigThemes{padding-bottom:10px}
+.bigThemes .themeChoice{flex-basis:82px;height:86px}
+.appModeGrid{margin-bottom:8px}
+.storyReadyCard{display:flex;align-items:center;gap:13px;margin-top:18px;padding:14px;border:1px solid #334f6d;border-radius:18px;background:linear-gradient(145deg,#142942,#0c1e36)}
+.storyReadyCard>span{width:48px;height:48px;display:grid;place-items:center;border-radius:15px;background:#203b5f;font-size:25px}
+.storyReadyCard div{display:flex;flex-direction:column;min-width:0}
+.storyReadyCard small{font-size:9px;color:#8096af;text-transform:uppercase;letter-spacing:.08em;font-weight:900}
+.storyReadyCard strong{font:700 17px Georgia,serif;margin-top:2px}
+.storyReadyCard p{font-size:10px!important;margin:3px 0 0!important;color:#8196ae!important}
+.magicBtn{min-width:180px}
+@media(max-width:599px){
+  .screenIntro.compactIntro h1{font-size:36px}
+  .screenIntro.compactIntro p{font-size:13px}
+  .singleFlowCard{min-height:calc(100vh - 280px);padding:17px}
+  .flowHeading{margin-bottom:15px}
+  .flowHeading h2{font-size:22px}
+  .flowProgress{top:4px}
+  .appModeGrid{grid-template-columns:1fr 1fr}
+  .modeChoice{min-height:128px;padding:13px}
+  .modeChoice>span{margin-bottom:10px}
+  .flowFooter{position:sticky;bottom:82px;background:linear-gradient(180deg,rgba(13,31,57,0),#0d1f39 24%);margin-left:-4px;margin-right:-4px;padding:25px 4px 4px}
+  .flowFooter .primaryBtn{flex:1}
+  .finalFlowFooter .magicBtn{min-width:0}
+}
