@@ -84,3 +84,18 @@ img{display:block;max-width:100%}
   .flowFooter .primaryBtn{flex:1}
   .finalFlowFooter .magicBtn{min-width:0}
 }
+
+/* Example story shelf */
+.exampleSection{padding-top:28px}
+.exampleScroller{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:1px 1px 8px;scrollbar-width:none}
+.exampleScroller::-webkit-scrollbar{display:none}
+.exampleBook{flex:0 0 78%;max-width:310px;scroll-snap-align:start;border:1px solid var(--line);border-radius:22px;overflow:hidden;background:#10223d;color:#fff;padding:0;text-align:left;box-shadow:0 14px 30px rgba(0,0,0,.13)}
+.exampleBook>.themeCover{min-height:170px}
+.exampleBook>div:last-child{padding:15px}
+.exampleBook small{display:block;color:var(--gold-2);font-size:8px;font-weight:900;letter-spacing:.1em;margin-bottom:6px}
+.exampleBook strong{display:block;font:700 19px/1.08 Georgia,serif;margin-bottom:7px}
+.exampleBook span{display:block;color:#8195ad;font-size:10px}
+@media(min-width:820px){
+  .exampleScroller{display:grid;grid-template-columns:repeat(3,1fr);overflow:visible}
+  .exampleBook{max-width:none;min-width:0}
+}
