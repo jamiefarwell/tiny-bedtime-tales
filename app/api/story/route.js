@@ -118,7 +118,11 @@ function fallback(data){
   return {title:titles[t]||`${n} and the Tiny Bedtime Adventure`,strapline:`A ${t.toLowerCase()} adventure about noticing the little things and taking one brave step at a time.`,readingMinutes:minutes(p.storyLength),pages,seriesMemory:clean(`${n} entered a hidden ${t.toLowerCase()} world with ${companion}. They chose the quiet path, solved a problem by noticing a clue linked to ${likes}, and learned that bravery can mean taking one small next step. ${n} returned home with the memory of ${object}. ${companion} hinted another chapter is waiting. ${data.seriesMemory?'Earlier world memory remains relevant: '+data.seriesMemory:''}`,1400),bedtimeLine:`Sleep tight, ${n}. The next tiny adventure can wait until tomorrow.`,theme:t,engine:'smart-fallback'};
 }
 async function ai(data){
-  const models=['openai/gpt-5.6-sol','anthropic/claude-sonnet-5'];
+  const models=[
+    'openai/gpt-6-luna',
+    'anthropic/claude-sonnet-5.5',
+    'google/gemini-3.8-flash'
+  ];
   for(const model of models){
     try{
       const result=await generateText({
