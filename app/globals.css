@@ -176,3 +176,31 @@ img{display:block;max-width:100%}
   .tinyCharacter{width:48px;height:48px;font-size:27px}
   .heroSparkles{left:36%;top:5%;font-size:18px}
 }
+
+
+/* Stronger story-world cards */
+.theme-princesses{background:radial-gradient(circle at 72% 22%,rgba(255,220,246,.32),transparent 25%),linear-gradient(160deg,#8b4f8f,#482f69 60%,#222144)}
+.theme-animals{background:radial-gradient(circle at 25% 18%,rgba(255,213,118,.28),transparent 28%),linear-gradient(160deg,#587a43,#294f42 58%,#173634)}
+.theme-superheroes{background:radial-gradient(circle at 72% 20%,rgba(255,214,74,.28),transparent 24%),linear-gradient(155deg,#3757b8,#672f75 57%,#25274f)}
+.theme-underwater{background:radial-gradient(circle at 25% 15%,rgba(128,222,241,.32),transparent 28%),linear-gradient(160deg,#137a91,#155a85 58%,#0b3152)}
+.theme-other{background:radial-gradient(circle at 70% 20%,rgba(255,196,238,.24),transparent 24%),linear-gradient(160deg,#5e4a89,#324979 55%,#172542)}
+.customWorldField{padding:13px;border-radius:17px;background:#102944;border:1px solid #315573}
+
+/* Let sample story artwork lead the card */
+.exampleBook{flex-basis:88%;max-width:360px}
+.exampleBook>.themeCover{min-height:235px}
+.exampleBook>.themeCover .coverEmoji{font-size:80px}
+.exampleBook>.themeCover .coverLabel{font-size:10px;margin-top:12px}
+.exampleBook>.themeCover .coverStars{font-size:12px;top:16px;right:16px}
+.exampleBook>div:last-child{padding:17px}
+.exampleBook strong{font-size:21px}
+
+@media(min-width:820px){
+  .themeScroller{grid-template-columns:repeat(3,1fr)}
+  .bigThemes .themeChoice{height:106px}
+  .exampleBook>.themeCover{min-height:255px}
+  .exampleBook>.themeCover .coverEmoji{font-size:88px}
+}
+@media(min-width:1080px){
+  .themeScroller{grid-template-columns:repeat(5,1fr)}
+}
