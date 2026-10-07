@@ -106,7 +106,7 @@ function StoryView({story,onBack,onRegenerate,onContinue}){
 }
 
 function HomeScreen({start,go,library,setBrief}){
-  function launch(format){setBrief(current=>({...current,format}));start();}
+  function launch(format,theme){setBrief(current=>({...current,format,theme:theme||current.theme}));start();}
   return <main className="homeScreen">
     <section className="heroCard">
       <img src={PHOTOS.hero} alt="Parent and child sharing a bedtime story"/>
@@ -117,6 +117,12 @@ function HomeScreen({start,go,library,setBrief}){
     <section className="appSection first"><div className="sectionTitle"><div><span className="kicker">Tonight</span><h2>What kind of story do you need?</h2></div></div><div className="intentScroller">{Object.entries(FORMATS).map(([id,item])=><button className="intentCard" key={id} onClick={()=>launch(id)}><span className="intentIcon">{item.icon}</span><strong>{item.label}</strong><small>{item.copy}</small><span className="arrow">→</span></button>)}</div></section>
 
     {library.length>0&&<section className="appSection"><div className="sectionTitle"><div><span className="kicker">Their library</span><h2>Pick up a favourite.</h2></div><button className="textBtn" onClick={()=>go('library')}>See all</button></div><div className="recentScroller">{library.slice(0,4).map(story=><button className="recentCard" key={story.id} onClick={()=>go('library')}><ThemeCover theme={story.theme} compact/><div><strong>{story.title}</strong><small>{story.theme} · {story.readingMinutes||7} min</small></div></button>)}</div></section>}
+
+    <section className="appSection exampleSection"><div className="sectionTitle"><div><span className="kicker">Try the feeling first</span><h2>Stories they could be asking for tonight.</h2></div></div><div className="exampleScroller">
+      <button className="exampleBook" onClick={()=>launch('standalone','Dragon')}><ThemeCover theme="Dragon"/><div><small>MAGICAL ADVENTURE</small><strong>The Dragon Who Lost the Moon</strong><span>About 7 min · cosy ending</span></div></button>
+      <button className="exampleBook" onClick={()=>launch('support','Moon')}><ThemeCover theme="Moon"/><div><small>GENTLE BEDTIME</small><strong>The Night Light That Learned to Glow</strong><span>About 5 min · reassuring</span></div></button>
+      <button className="exampleBook" onClick={()=>launch('special','Space')}><ThemeCover theme="Space"/><div><small>BIG LITTLE MOMENT</small><strong>The Rocket to Tomorrow Morning</strong><span>About 7 min · first-day magic</span></div></button>
+    </div></section>
 
     <section className="sampleSection"><div className="samplePhoto"><img src={PHOTOS.family} alt="Family reading together at bedtime"/></div><div className="sampleCopy"><span className="kicker">Made to read together</span><h2>A finished bedtime moment, not a generator box.</h2><p>Choose a little about tonight. We do the writing. You get a complete story you can read, replay and continue another night.</p><div className="benefitRow"><span>✓ First story free</span><span>✓ Age-matched language</span><span>✓ Happy, cosy endings</span></div><button className="secondaryBtn" onClick={start}>Make tonight’s story</button></div></section>
 
