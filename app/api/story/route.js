@@ -2,7 +2,7 @@ import { generateText } from 'ai';
 
 export const runtime = 'nodejs';
 
-const THEMES = new Set(['Moon','Dragon','Ocean','Forest','Dinosaur','Castle','Space','Pirates']);
+const THEMES = new Set(['Dinosaur','Dragon','Space','Pirates','Princesses','Animals','Superheroes','Underwater','Other']);
 const FORMATS = new Set(['standalone','continue','special','support']);
 const BAD = /\b(?:sex(?:ual)?|porn(?:ography)?|nude|suicide|self[- ]?harm|murder|torture|rape|cocaine|heroin|gun|knife attack)\b/i;
 
@@ -37,15 +37,15 @@ function normalise(input={}){
   const data={
     profile:{
       childName:cleanName(p.childName),
-      ageBand:['4–5','6–7','8–9'].includes(p.ageBand)?p.ageBand:'6–7',
+      ageBand:['Newborn–1','2–3','4–5','6–7','8–9','10–12','Older kids'].includes(p.ageBand)?p.ageBand:'6–7',
       interests:list(p.interests), pets:list(p.pets), friends:list(p.friends),
-      favouriteThings:clean(p.favouriteThings,420),
       preferredTone:clean(p.preferredTone,80)||'Magical and adventurous',
       storyLength:clean(p.storyLength,80)||'Bedtime — about 7 minutes',
       avoid:clean(p.avoid,240)
     },
     brief:{
-      theme:THEMES.has(b.theme)?b.theme:'Moon',
+      theme:THEMES.has(b.theme)?b.theme:'Dragon',
+      customWorld:clean(b.customWorld,80),
       format:FORMATS.has(b.format)?b.format:'standalone',
       request:clean(b.request,500), occasion:clean(b.occasion,140),
       packageType:['read','audio','illustrated'].includes(b.packageType)?b.packageType:'illustrated'
@@ -70,10 +70,9 @@ function prompt(data){
 Interests/hobbies: ${p.interests||'curiosity and imaginative play'}
 Pets: ${p.pets||'none specified'}
 Friends first names: ${p.friends||'none specified'}
-Favourite things: ${p.favouriteThings||'stars, surprises and friendly adventures'}
 Preferred tone: ${p.preferredTone}
 Things to avoid: ${p.avoid||'anything frightening, unsafe or age-inappropriate'}
-Theme: ${b.theme}
+Story world: ${b.theme==='Other'?(b.customWorld||'a world invented by the parent'):b.theme}
 Parent request: ${b.request||'surprise us'}
 ${mode}
 ${regen}
@@ -99,14 +98,14 @@ function validate(obj,data){
   return {title:clean(obj.title,130)||'A Tiny Bedtime Adventure',strapline:clean(obj.strapline,230)||'A brand-new adventure made especially for tonight.',readingMinutes:Number(obj.readingMinutes)||minutes(data.profile.storyLength),pages,seriesMemory:clean(obj.seriesMemory,1400),bedtimeLine:clean(obj.bedtimeLine,240)||'Goodnight, little hero. Tomorrow, imagination will still be waiting.',theme:data.brief.theme,engine:'ai-gateway'};
 }
 function fallback(data){
-  const p=data.profile,b=data.brief,n=p.childName,t=b.theme;
-  const likes=p.interests||p.favouriteThings||'mysteries and magical things';
-  const companion=(p.pets&&p.pets.split(',')[0].trim())||(p.friends&&p.friends.split(',')[0].trim())||(t==='Dragon'?'Pip, a pocket-sized dragon':'Flicker, a tiny golden fox');
-  const req=b.request||(t==='Ocean'?'a secret beneath the moonlit sea':t==='Dinosaur'?'a hidden valley where dinosaurs still whisper':t==='Castle'?'a castle with a door that only appears at bedtime':t==='Space'||t==='Moon'?'a silver path among the stars':t==='Pirates'?'a treasure map with a very unusual X':t==='Forest'?'a lantern trail through the whispering woods':'a dragon who has lost something important');
+  const p=data.profile,b=data.brief,n=p.childName,t=b.theme==='Other'?(b.customWorld||'Imagination'):b.theme;
+  const likes=p.interests||'mysteries and magical things';
+  const companion=(p.pets&&p.pets.split(',')[0].trim())||(p.friends&&p.friends.split(',')[0].trim())||(t==='Dragon'?'Pip, a pocket-sized dragon':t==='Animals'?'Flicker, a tiny golden fox':'Pip, a curious little sidekick');
+  const req=b.request||(t==='Underwater'?'a secret beneath the shimmering sea':t==='Dinosaur'?'a hidden valley where dinosaurs still whisper':t==='Princesses'?'a royal castle with a door that only appears at bedtime':t==='Space'?'a silver path among the stars':t==='Pirates'?'a treasure map with a very unusual X':t==='Animals'?'a woodland animal who needs a clever friend':t==='Superheroes'?'a city where a small act of kindness needs a hero':'a surprising mystery in a world made just for tonight');
   const seed=(Date.now()+(data.previousStory?.title?.length||0))%4;
   const objects=['a warm golden key','a bottle of blue starlight','a tiny compass that hummed','a feather that glowed when someone was kind'];
   const object=objects[seed];
-  const titles={Dragon:`${n} and the Dragon Who Lost the Moon`,Ocean:`${n} and the Secret Under the Silver Sea`,Forest:`${n} and the Lanterns of Whispering Wood`,Dinosaur:`${n} and the Valley Beyond Bedtime`,Castle:`${n} and the Castle of a Hundred Doors`,Space:`${n} and the Star That Fell Upstairs`,Moon:`${n} and the Moonlight Map`,Pirates:`${n} and the Treasure That Wouldn’t Stay Buried`};
+  const titles={Dragon:`${n} and the Dragon Who Lost His Roar`,Underwater:`${n} and the Secret Under the Silver Sea`,Animals:`${n} and the Woodland That Needed a Hero`,Dinosaur:`${n} and the Valley Beyond Bedtime`,Princesses:`${n} and the Castle of a Hundred Doors`,Space:`${n} and the Star That Fell Upstairs`,Superheroes:`${n} and the Smallest Superpower`,Pirates:`${n} and the Treasure That Wouldn’t Stay Buried`};
   const pages=[
     ['Something impossible at the window',`Just as ${n} was getting ready for bed, a soft tap-tap-tap came from the window. Outside was ${companion}, carrying ${object}. “I need exactly one person who loves ${likes},” came the urgent whisper. ${n} sat up. That sounded suspiciously specific. Before there was time for another question, a ribbon of ${t.toLowerCase()}-coloured light curled across the room and became a doorway. On the other side waited ${req}.`],
     ['The rule nobody had mentioned',`The moment ${n} stepped through, the doorway vanished behind them with a polite little pop. A wooden sign swung overhead: THE BRAVEST WAY IS NOT ALWAYS THE LOUDEST WAY. “That seems important,” said ${companion}. Ahead, the path split into three. One road glittered. One roared. The third looked ordinary, except for a trail of tiny marks that reminded ${n} of ${likes}. “I know which one I’d choose,” ${n} said, pointing to the quiet path.`],
