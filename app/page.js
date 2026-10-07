@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import StoryArt from '@/components/StoryArt';
 
 const THEMES = [
   ['Moon','🌙'],['Dragon','🐉'],['Ocean','🐳'],['Forest','🦊'],
@@ -9,73 +8,150 @@ const THEMES = [
 ];
 const EMOJI = Object.fromEntries(THEMES);
 const FORMATS = {
-  standalone:'A brand-new adventure',
-  continue:'Continue an adventure',
-  special:'Special occasion story',
-  support:'A gentle helping story'
+  standalone:{label:'New adventure',icon:'✨',copy:'A completely fresh world for tonight.'},
+  continue:{label:'Continue our world',icon:'📚',copy:'Pick up where their last adventure left off.'},
+  special:{label:'A big little moment',icon:'🎈',copy:'Birthdays, school, siblings, holidays and more.'},
+  support:{label:'A little reassurance',icon:'💛',copy:'A gentle story around something on their mind.'}
 };
 const PACKAGES = {
-  read:['Read only','£2.50 / story'],
-  audio:['Read + audio','£3.00 / story'],
-  illustrated:['Illustrated','£4.00 / story']
+  read:['Read','£2.50','A beautiful story to read together'],
+  audio:['Read + listen','£3.00','Story plus calm narration'],
+  illustrated:['Illustrated','£4.00','Story, narration and storybook scenes']
+};
+const PHOTOS = {
+  hero:'https://images.pexels.com/photos/10566114/pexels-photo-10566114.jpeg?auto=compress&dpr=2&w=1400',
+  family:'https://images.pexels.com/photos/7938040/pexels-photo-7938040.jpeg?auto=compress&dpr=2&w=1200',
+  father:'https://images.pexels.com/photos/7938255/pexels-photo-7938255.jpeg?auto=compress&dpr=2&w=1200'
 };
 const DEFAULT_PROFILE = {
   childName:'', ageBand:'6–7', interests:'', pets:'', friends:'', favouriteThings:'',
   preferredTone:'Magical and adventurous', storyLength:'Bedtime — about 7 minutes', avoid:''
 };
-const DEFAULT_BRIEF = {theme:'Dragon',format:'standalone',request:'',occasion:'',packageType:'illustrated'};
+const DEFAULT_BRIEF = {theme:'Dragon',format:'standalone',request:'',occasion:'',packageType:'audio'};
 
 function readStore(key,fallback){
   if(typeof window==='undefined') return fallback;
-  try{const v=window.localStorage.getItem(key);return v?JSON.parse(v):fallback;}catch{return fallback;}
+  try{const value=window.localStorage.getItem(key);return value?JSON.parse(value):fallback;}catch{return fallback;}
 }
 function writeStore(key,value){try{window.localStorage.setItem(key,JSON.stringify(value));}catch{}}
 function uid(){return String(Date.now())+'-'+Math.random().toString(36).slice(2,8);}
 function initial(name){return (String(name||'').trim()[0]||'★').toUpperCase();}
+function themeEmoji(theme){return EMOJI[theme]||'✨';}
 
-function Art({theme='Moon',page=0,large=false}){
-  return <StoryArt theme={theme} page={page} className="storybookScene" />;
+function AppHeader({screen,go,start}){
+  return <>
+    <div className="devbar"><span className="devpill">IN DEVELOPMENT</span><span>Prototype currently being developed by <strong>Greg Godfrey</strong></span></div>
+    <header className="appHeader">
+      <button className="brand" onClick={()=>go('home')}><span className="brandMoon">☾</span><span>Tiny Bedtime Tales</span></button>
+      <div className="desktopActions"><button className="textBtn" onClick={()=>go('library')}>My stories</button><button className="primaryBtn compact" onClick={start}>Create a story</button></div>
+      {screen!=='home'&&<button className="headerClose" onClick={()=>go('home')} aria-label="Back home">×</button>}
+    </header>
+  </>;
 }
 
-function ProfileFields({profile,setProfile}){
-  function bind(key){return {value:profile[key],onChange:function(e){setProfile(Object.assign({},profile,{[key]:e.target.value}));}};}
-  return <div className="formGrid">
-    <div className="field"><label>First name or nickname</label><input className="input" maxLength={24} placeholder="e.g. Isla" {...bind('childName')} /></div>
+function BottomNav({screen,go,start,libraryCount}){
+  const items=[['home','⌂','Home'],['create','✦','Create'],['library','▤','Stories'],['profile','☺','Profile']];
+  return <nav className="bottomNav" aria-label="Main navigation">{items.map(([id,icon,label])=><button key={id} className={screen===id?'active':''} onClick={()=>id==='create'?start():go(id)}><span>{icon}</span><small>{label}{id==='library'&&libraryCount?` ${libraryCount}`:''}</small></button>)}</nav>;
+}
+
+function ProfileFields({profile,setProfile,compact=false}){
+  function bind(key){return {value:profile[key],onChange:e=>setProfile({...profile,[key]:e.target.value})};}
+  if(compact) return <div className="quickProfileFields">
+    <div className="field"><label>First name or nickname</label><input className="input" maxLength={24} placeholder="e.g. Isla" {...bind('childName')}/></div>
+    <div className="field"><label>Age</label><select className="select" {...bind('ageBand')}><option>4–5</option><option>6–7</option><option>8–9</option></select></div>
+    <div className="field full"><label>What are they into right now?</label><textarea className="textarea short" placeholder="Dinosaurs, gymnastics, drawing, space…" {...bind('interests')}/></div>
+  </div>;
+  return <div className="profileFields">
+    <div className="field"><label>First name or nickname</label><input className="input" maxLength={24} placeholder="e.g. Isla" {...bind('childName')}/></div>
     <div className="field"><label>Age band</label><select className="select" {...bind('ageBand')}><option>4–5</option><option>6–7</option><option>8–9</option></select></div>
-    <div className="field full"><label>Interests & hobbies</label><textarea className="textarea" placeholder="Dinosaurs, gymnastics, football, drawing, space…" {...bind('interests')} /></div>
-    <div className="field"><label>Pets — first names only</label><input className="input" placeholder="Max the dog, Luna the cat" {...bind('pets')} /></div>
-    <div className="field"><label>Friends — first names only</label><input className="input" placeholder="Ava, Leo" {...bind('friends')} /></div>
-    <div className="field full"><label>Favourite things</label><textarea className="textarea" placeholder="Animals, toys, films, colours, places or anything they love right now…" {...bind('favouriteThings')} /></div>
+    <div className="field full"><label>Interests & hobbies</label><textarea className="textarea" placeholder="Dinosaurs, gymnastics, football, drawing, space…" {...bind('interests')}/></div>
+    <div className="field"><label>Pets — first names only</label><input className="input" placeholder="Max the dog, Luna the cat" {...bind('pets')}/></div>
+    <div className="field"><label>Friends — first names only</label><input className="input" placeholder="Ava, Leo" {...bind('friends')}/></div>
+    <div className="field full"><label>Favourite things</label><textarea className="textarea" placeholder="Animals, toys, films, colours or anything they love right now…" {...bind('favouriteThings')}/></div>
     <div className="field"><label>Story feel</label><select className="select" {...bind('preferredTone')}><option>Magical and adventurous</option><option>Funny and silly</option><option>Cosy and gentle</option><option>Mystery and discovery</option><option>Brave and exciting</option></select></div>
     <div className="field"><label>Story length</label><select className="select" {...bind('storyLength')}><option>Quick — about 4 minutes</option><option>Bedtime — about 7 minutes</option><option>Longer — about 10 minutes</option></select></div>
-    <div className="field full"><label>Anything to avoid</label><input className="input" placeholder="e.g. spiders, thunder, anything too scary" {...bind('avoid')} /></div>
-    <div className="field full"><div className="privacyNote"><span>🔒</span><div><b>Keep it general.</b> First names and broad interests are plenty. Please don’t enter surnames, schools, addresses, phone numbers, exact dates of birth or other identifying details.</div></div></div>
+    <div className="field full"><label>Anything to avoid</label><input className="input" placeholder="e.g. spiders, thunder, anything too scary" {...bind('avoid')}/></div>
+    <div className="field full"><div className="privacyNote"><span>🔒</span><div><b>Stories need imagination, not identity.</b> First names and broad interests are enough. Please don’t enter surnames, schools, addresses, phone numbers or exact dates of birth.</div></div></div>
   </div>;
+}
+
+function ThemeCover({theme='Moon',compact=false}){
+  return <div className={`themeCover theme-${String(theme).toLowerCase()} ${compact?'compact':''}`}><span className="coverStars">✦ · ✧ · ✦</span><span className="coverEmoji">{themeEmoji(theme)}</span><span className="coverLabel">{theme} adventure</span></div>;
 }
 
 function StoryView({story,onBack,onRegenerate,onContinue}){
   const [speaking,setSpeaking]=useState(false);
   const [copied,setCopied]=useState(false);
   async function copyStory(){
-    const text=story.title+'\n\n'+story.pages.map(function(p){return p.heading+'\n'+p.text;}).join('\n\n')+'\n\n'+(story.bedtimeLine||'');
-    try{await navigator.clipboard.writeText(text);setCopied(true);setTimeout(function(){setCopied(false);},1800);}catch{}
+    const text=story.title+'\n\n'+story.pages.map(p=>p.heading+'\n'+p.text).join('\n\n')+'\n\n'+(story.bedtimeLine||'');
+    try{await navigator.clipboard.writeText(text);setCopied(true);setTimeout(()=>setCopied(false),1800);}catch{}
   }
   function listen(){
-    if(typeof window==='undefined'||!window.speechSynthesis) return;
+    if(typeof window==='undefined'||!window.speechSynthesis)return;
     if(speaking){window.speechSynthesis.cancel();setSpeaking(false);return;}
-    const text=story.title+'. '+story.pages.map(function(p){return p.heading+'. '+p.text;}).join(' ')+'. '+(story.bedtimeLine||'');
-    const u=new SpeechSynthesisUtterance(text);u.rate=.88;u.pitch=1.02;u.onend=function(){setSpeaking(false);};u.onerror=function(){setSpeaking(false);};setSpeaking(true);window.speechSynthesis.speak(u);
+    const text=story.title+'. '+story.pages.map(p=>p.heading+'. '+p.text).join(' ')+'. '+(story.bedtimeLine||'');
+    const utterance=new SpeechSynthesisUtterance(text);utterance.rate=.88;utterance.pitch=1.02;utterance.onend=()=>setSpeaking(false);utterance.onerror=()=>setSpeaking(false);setSpeaking(true);window.speechSynthesis.speak(utterance);
   }
-  const illustrated=story.packageType==='illustrated';
-  return <div>
-    <div className="storyHeader">
-      <div className="storyCover"><div className="storyCoverCopy"><div className="eyebrow">A TINY BEDTIME TALE</div><h1>{story.title}</h1><p>{story.strapline}</p><div className="storyMeta"><span className="metaChip">{story.theme}</span><span className="metaChip">About {story.readingMinutes||7} min</span><span className="metaChip">{PACKAGES[story.packageType]?PACKAGES[story.packageType][0]:'Story'}</span></div></div><div className="storyCoverArt"><Art theme={story.theme} page={0}/></div></div>
-      <div className="storyTools"><button className="miniBtn" onClick={onBack}>← Library</button>{story.packageType!=='read'&&<button className="miniBtn" onClick={listen}>{speaking?'■ Stop':'▶ Listen'}</button>}<button className="miniBtn" onClick={onRegenerate}>↻ Regenerate</button><button className="miniBtn" onClick={copyStory}>{copied?'✓ Copied':'⧉ Copy story'}</button><button className="miniBtn" onClick={function(){window.print();}}>⎙ Print</button><button className="miniBtn" onClick={onContinue}>＋ Continue this adventure</button></div>
+  return <section className="storyReader">
+    <button className="backLink" onClick={onBack}>← All stories</button>
+    <div className="readerCover">
+      <ThemeCover theme={story.theme}/>
+      <div className="readerCoverCopy"><div className="eyebrow">A TINY BEDTIME TALE</div><h1>{story.title}</h1><p>{story.strapline}</p><div className="chipRow"><span>{story.theme}</span><span>About {story.readingMinutes||7} min</span><span>{PACKAGES[story.packageType]?.[0]||'Story'}</span></div></div>
     </div>
-    <div className="pageList">{story.pages.map(function(p,i){return <article className="storyPage" key={i}>{illustrated&&<div className="pageArt"><Art theme={story.theme} page={i+1}/></div>}<div className="pageText" style={!illustrated?{gridColumn:'1 / -1',padding:'22px'}:undefined}><h3>{p.heading}</h3><p>{p.text}</p></div></article>;})}</div>
-    <div className="bedtimeLine">{story.bedtimeLine||'Goodnight, little hero.'}</div>
-    <div className="engineNote">Story engine: {story.engine==='ai-gateway'?'AI generated':'preview fallback'} · saved to this device</div>
-  </div>;
+    <div className="readerActions">{story.packageType!=='read'&&<button className="actionBtn primaryAction" onClick={listen}>{speaking?'■ Stop':'▶ Listen'}</button>}<button className="actionBtn" onClick={onRegenerate}>↻ New version</button><button className="actionBtn" onClick={onContinue}>＋ Next chapter</button><button className="actionBtn iconOnly" onClick={copyStory}>{copied?'✓':'⧉'}</button></div>
+    <div className="storyPages">{story.pages.map((page,i)=><article className="storyPage" key={i}><div className="pageNumber">{String(i+1).padStart(2,'0')}</div><h2>{page.heading}</h2><p>{page.text}</p></article>)}</div>
+    <div className="goodnightCard"><span>☾</span><p>{story.bedtimeLine||'Goodnight, little hero.'}</p></div>
+    <div className="quietMeta">{story.engine==='ai-gateway'?'Generated by the Tiny Bedtime story engine':'Preview story engine'} · saved on this device</div>
+  </section>;
+}
+
+function HomeScreen({start,go,library,setBrief}){
+  function launch(format){setBrief(current=>({...current,format}));start();}
+  return <main className="homeScreen">
+    <section className="heroCard">
+      <img src={PHOTOS.hero} alt="Parent and child sharing a bedtime story"/>
+      <div className="heroShade"/>
+      <div className="heroCopy"><div className="eyebrow light">A NEW ADVENTURE FOR TONIGHT</div><h1>Tonight, <em>they’re</em> the hero.</h1><p>Personalised bedtime stories made around the little things they already love.</p><button className="primaryBtn heroButton" onClick={start}>Create their first story — free</button><div className="heroTrust">No card · No child photos · Parent-led</div></div>
+    </section>
+
+    <section className="appSection first"><div className="sectionTitle"><div><span className="kicker">Tonight</span><h2>What kind of story do you need?</h2></div></div><div className="intentScroller">{Object.entries(FORMATS).map(([id,item])=><button className="intentCard" key={id} onClick={()=>launch(id)}><span className="intentIcon">{item.icon}</span><strong>{item.label}</strong><small>{item.copy}</small><span className="arrow">→</span></button>)}</div></section>
+
+    {library.length>0&&<section className="appSection"><div className="sectionTitle"><div><span className="kicker">Their library</span><h2>Pick up a favourite.</h2></div><button className="textBtn" onClick={()=>go('library')}>See all</button></div><div className="recentScroller">{library.slice(0,4).map(story=><button className="recentCard" key={story.id} onClick={()=>go('library')}><ThemeCover theme={story.theme} compact/><div><strong>{story.title}</strong><small>{story.theme} · {story.readingMinutes||7} min</small></div></button>)}</div></section>}
+
+    <section className="sampleSection"><div className="samplePhoto"><img src={PHOTOS.family} alt="Family reading together at bedtime"/></div><div className="sampleCopy"><span className="kicker">Made to read together</span><h2>A finished bedtime moment, not a generator box.</h2><p>Choose a little about tonight. We do the writing. You get a complete story you can read, replay and continue another night.</p><div className="benefitRow"><span>✓ First story free</span><span>✓ Age-matched language</span><span>✓ Happy, cosy endings</span></div><button className="secondaryBtn" onClick={start}>Make tonight’s story</button></div></section>
+
+    <section className="appSection"><div className="sectionTitle"><div><span className="kicker">A world that remembers</span><h2>Not just another one-off story.</h2></div></div><div className="featureStack"><article><span>📚</span><div><h3>Continue the adventure</h3><p>Characters, places and little promises can return in the next chapter.</p></div></article><article><span>🎈</span><div><h3>Turn real moments into magic</h3><p>First day of school, a new sibling, birthdays, holidays or losing a tooth.</p></div></article><article><span>💛</span><div><h3>Gentle stories for wobbly moments</h3><p>Bedtime nerves, trying something new or simply needing a calmer ending to the day.</p></div></article></div></section>
+
+    <section className="photoQuote"><img src={PHOTOS.father} alt="Father and child reading a story in warm bedtime light"/><div><span className="kicker">Privacy-light by design</span><h2>Their imagination matters. Their identity doesn’t need to.</h2><p>We only need a first name or nickname, age band and broad interests. No child photo, surname, school, address, phone number or exact date of birth.</p></div></section>
+
+    <section className="appSection pricingSection"><div className="sectionTitle centred"><div><span className="kicker">Working proposition</span><h2>Choose how bedtime feels.</h2><p>Checkout stays switched off while the product is in development.</p></div></div><div className="pricingCards">{Object.entries(PACKAGES).map(([id,pack])=><article className={`priceCard ${id==='audio'?'featured':''}`} key={id}>{id==='audio'&&<span className="popular">MOST NATURAL START</span>}<h3>{pack[0]}</h3><div className="price">{pack[1]} <small>per story</small></div><p>{pack[2]}</p><button className="secondaryBtn" onClick={()=>{setBrief(current=>({...current,packageType:id}));start();}}>Choose {pack[0].toLowerCase()}</button></article>)}</div></section>
+  </main>;
+}
+
+function CreateScreen({profile,setProfile,brief,setBrief,generate,loading,error,go}){
+  const hasProfile=Boolean(profile.childName.trim());
+  return <main className="screenPage createPage">
+    <div className="screenIntro"><span className="kicker">Tonight’s story</span><h1>Make a little magic.</h1><p>A few taps is enough. You can add more detail only when you want to.</p></div>
+    {loading?<div className="magicLoading"><div className="moonLoader">☾</div><h2>Writing their adventure…</h2><p>Building a beginning, a brave little middle and a cosy way home.</p><div className="loadingSteps"><span>Writing</span><span>Checking</span><span>Finishing</span></div></div>:<div className="createFlow">
+      <section className="flowCard profileFlow">{hasProfile?<><div className="profileSummary"><div className="avatar">{initial(profile.childName)}</div><div><small>Tonight’s hero</small><strong>{profile.childName}</strong><span>Ages {profile.ageBand}{profile.interests?` · ${profile.interests.split(',')[0]}`:''}</span></div><button className="editLink" onClick={()=>go('profile')}>Edit</button></div></>:<><div className="flowHeading"><span className="stepBadge">1</span><div><h2>Who’s the hero?</h2><p>Just enough to make the first story feel like theirs.</p></div></div><ProfileFields profile={profile} setProfile={setProfile} compact/><button className="quietLink" onClick={()=>go('profile')}>Add pets, friends and more details later →</button></>}</section>
+
+      <section className="flowCard"><div className="flowHeading"><span className="stepBadge">{hasProfile?'1':'2'}</span><div><h2>What does tonight need?</h2><p>Choose a starting point.</p></div></div><div className="modeGrid">{Object.entries(FORMATS).map(([id,item])=><button type="button" key={id} className={`modeChoice ${brief.format===id?'active':''}`} onClick={()=>setBrief({...brief,format:id})}><span>{item.icon}</span><strong>{item.label}</strong><small>{item.copy}</small></button>)}</div></section>
+
+      <section className="flowCard"><div className="flowHeading"><span className="stepBadge">{hasProfile?'2':'3'}</span><div><h2>Pick their world.</h2><p>Swipe through the themes or surprise them.</p></div></div><div className="themeScroller">{THEMES.map(([name,emoji])=><button type="button" key={name} className={`themeChoice ${brief.theme===name?'active':''}`} onClick={()=>setBrief({...brief,theme:name})}><span>{emoji}</span><small>{name}</small></button>)}</div>{brief.format==='special'&&<div className="field spaced"><label>What’s the occasion?</label><input className="input" value={brief.occasion} onChange={e=>setBrief({...brief,occasion:e.target.value})} placeholder="Birthday, first day at school, Christmas…"/></div>}<div className="field spaced"><label>Anything you’d love included? <i>Optional</i></label><textarea className="textarea short" value={brief.request} onChange={e=>setBrief({...brief,request:e.target.value})} placeholder={brief.format==='support'?'e.g. A gentle story about feeling brave when the bedroom is dark':'e.g. A moon treasure hunt with a funny purple dragon'}/></div></section>
+
+      <section className="flowCard experienceCard"><div className="flowHeading"><span className="stepBadge">{hasProfile?'3':'4'}</span><div><h2>How will you enjoy it?</h2><p>You can change this each time.</p></div></div><div className="experienceList">{Object.entries(PACKAGES).map(([id,pack])=><button type="button" key={id} className={`experienceChoice ${brief.packageType===id?'active':''}`} onClick={()=>setBrief({...brief,packageType:id})}><span className="radioDot"/><div><strong>{pack[0]}</strong><small>{pack[2]}</small></div><b>{pack[1]}</b></button>)}</div></section>
+      {error&&<div className="errorCard">{error}</div>}
+      <div className="createSticky"><div><small>Development preview</small><span>First story free · no payment</span></div><button className="primaryBtn" onClick={()=>generate(false)}>✨ Make the magic</button></div>
+    </div>}
+  </main>;
+}
+
+function LibraryScreen({library,setLibrary,setStory,go,start}){
+  return <main className="screenPage"><div className="screenIntro"><span className="kicker">Story library</span><h1>Their worlds live here.</h1><p>Open an old favourite or continue a world another night.</p></div>{library.length?<div className="libraryList">{library.map((story,i)=><article className="libraryCard" key={story.id}><ThemeCover theme={story.theme} compact/><div className="libraryCopy"><small>{new Date(story.createdAt).toLocaleDateString('en-GB',{day:'numeric',month:'short'})} · {story.theme}</small><h2>{story.title}</h2><p>{story.strapline}</p><div className="libraryActions"><button className="secondaryBtn small" onClick={()=>{setStory(story);go('story')}}>Open story</button><button className="removeBtn" onClick={()=>setLibrary(library.filter(x=>x.id!==story.id))}>Remove</button></div></div></article>)}</div>:<div className="emptyState"><span>📖</span><h2>Your first story will live here.</h2><p>Once you make an adventure, it is saved on this device so you can come back to it.</p><button className="primaryBtn" onClick={start}>Create first story</button></div>}</main>;
+}
+
+function ProfileScreen({profile,setProfile,start}){
+  return <main className="screenPage"><div className="screenIntro"><span className="kicker">Child story profile</span><h1>The little things they love.</h1><p>Keep this broad. It is a storytelling profile, not an identity profile.</p></div><div className="profilePageGrid"><section className="flowCard"><ProfileFields profile={profile} setProfile={setProfile}/><div className="profileSave"><span>Changes save automatically on this device.</span><button className="primaryBtn compact" onClick={start}>Use in a story</button></div></section><aside className="privacySide"><span>🔒</span><h2>Minimum useful detail.</h2><p>We deliberately do not ask for child photos, surnames, exact dates of birth, addresses, schools or phone numbers.</p><p>Broad interests and first names are enough to make a story feel personal.</p></aside></div></main>;
 }
 
 export default function Home(){
@@ -88,46 +164,34 @@ export default function Home(){
   const [error,setError]=useState('');
   const [hydrated,setHydrated]=useState(false);
 
-  useEffect(function(){setProfile(readStore('tbt-profile',DEFAULT_PROFILE));setLibrary(readStore('tbt-library',[]));setHydrated(true);},[]);
-  useEffect(function(){if(hydrated)writeStore('tbt-profile',profile);},[profile,hydrated]);
-  useEffect(function(){if(hydrated)writeStore('tbt-library',library);},[library,hydrated]);
-  const latestSeriesMemory=useMemo(function(){const s=library.find(function(x){return x.seriesMemory;});return s?s.seriesMemory:'';},[library]);
+  useEffect(()=>{setProfile(readStore('tbt-profile',DEFAULT_PROFILE));setLibrary(readStore('tbt-library',[]));setHydrated(true);},[]);
+  useEffect(()=>{if(hydrated)writeStore('tbt-profile',profile);},[profile,hydrated]);
+  useEffect(()=>{if(hydrated)writeStore('tbt-library',library);},[library,hydrated]);
+  const latestSeriesMemory=useMemo(()=>library.find(item=>item.seriesMemory)?.seriesMemory||'',[library]);
   function go(target){setError('');setScreen(target);if(typeof window!=='undefined')window.scrollTo({top:0,behavior:'smooth'});}
   function start(){go('create');}
   async function generate(regenerate){
     if(!profile.childName.trim()){setError('Add a first name or nickname so the story knows who its hero is.');return;}
     setError('');setLoading(true);
     try{
-      const previous=regenerate&&story?{title:story.title,pages:story.pages.map(function(p){return p.text;}).join(' ').slice(0,1600)}:null;
-      const r=await fetch('/api/story',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({profile:profile,brief:brief,seriesMemory:brief.format==='continue'?(brief.seriesMemory||latestSeriesMemory):'',previousStory:previous})});
-      const data=await r.json();if(!r.ok)throw new Error(data.error||'We could not make that story just now.');
-      const saved=Object.assign({},data,{id:uid(),createdAt:new Date().toISOString(),packageType:brief.packageType,format:brief.format,profileSnapshot:{childName:profile.childName,ageBand:profile.ageBand}});
-      setStory(saved);setLibrary(function(items){const kept=regenerate&&story?items.filter(function(x){return x.id!==story.id;}):items;return [saved].concat(kept).slice(0,60);});setScreen('story');if(typeof window!=='undefined')window.scrollTo({top:0,behavior:'smooth'});
+      const previous=regenerate&&story?{title:story.title,pages:story.pages.map(p=>p.text).join(' ').slice(0,1600)}:null;
+      const response=await fetch('/api/story',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({profile,brief,seriesMemory:brief.format==='continue'?(brief.seriesMemory||latestSeriesMemory):'',previousStory:previous})});
+      const data=await response.json();if(!response.ok)throw new Error(data.error||'We could not make that story just now.');
+      const saved={...data,id:uid(),createdAt:new Date().toISOString(),packageType:brief.packageType,format:brief.format,profileSnapshot:{childName:profile.childName,ageBand:profile.ageBand}};
+      setStory(saved);setLibrary(items=>{const kept=regenerate&&story?items.filter(x=>x.id!==story.id):items;return [saved,...kept].slice(0,60);});setScreen('story');if(typeof window!=='undefined')window.scrollTo({top:0,behavior:'smooth'});
     }catch(e){setError(e.message||'Something went wrong while making the story.');}finally{setLoading(false);}
   }
-  function continueStory(){setBrief(Object.assign({},brief,{format:'continue',theme:story?story.theme:brief.theme,seriesMemory:story?.seriesMemory||'',request:'Continue the adventure from “'+(story?story.title:'the last story')+'”.'}));go('create');}
-  const tabs=[['home','Home'],['create','Create'],['library','Library'+(library.length?' ('+library.length+')':'')],['profile','Child profile']];
+  function continueStory(){setBrief(current=>({...current,format:'continue',theme:story?.theme||current.theme,seriesMemory:story?.seriesMemory||'',request:`Continue the adventure from “${story?.title||'the last story'}”.`}));go('create');}
 
-  return <>
-    <div className="devbar"><span><span className="devpill">IN DEVELOPMENT</span> Tiny Bedtime Tales is currently being developed by <strong>Greg Godfrey</strong></span></div>
-    <div className="shell"><nav className="nav"><button className="brand" onClick={function(){go('home');}} style={{background:'none',border:0,color:'inherit',padding:0}}><span className="brandMoon">☾</span> Tiny Bedtime Tales</button><div className="navActions"><button className="ghost" onClick={function(){go('library');}}>My stories</button><button className="btn small" onClick={start}>Create a story</button></div></nav></div>
-
-    {screen==='home'&&<><main className="shell"><section className="hero"><div><div className="eyebrow">PERSONALISED BEDTIME STORIES</div><h1>Bedtime stories where <em>your child</em> is the hero.</h1><p className="heroLead">Fresh adventures built around their first name, favourite things and imagination — ready to read, listen to or enjoy as an illustrated tale.</p><div className="heroCtas"><button className="btn" onClick={start}>Create their first story — free</button><button className="ghost" onClick={function(){document.getElementById('how')?.scrollIntoView({behavior:'smooth'});}}>See how it works</button></div><div className="trust"><span className="trustDot"/>No photos. No surnames. No addresses. Just the details that make a story feel like theirs.</div></div><div className="heroVisual"><Art theme="Dragon" page={0} large={true}/><div className="heroCaption"><div><strong>A different world every bedtime.</strong><small>Built around the things they already love.</small></div><div className="heroBadge">Made for ages 4–9</div></div></div></section></main>
-    <div className="noticeStrip"><span>✨</span><span><b>First story free.</b> Choose standalone adventures, continuing chapters, special occasions or gentle stories for big little moments.</span></div>
-    <main className="shell"><section className="section" id="how"><div className="sectionHead center"><div className="kicker">How it works</div><h2>A world that grows with them.</h2><p className="sectionText">Tell us the broad things they love. We turn those ingredients into brand-new bedtime adventures, while keeping the personal information deliberately light.</p></div><div className="steps"><div className="card"><div className="cardIcon">✨</div><h3>Tell us about them</h3><p>First name, age band, hobbies, favourite things, pets and friends’ first names. Update the profile whenever their obsessions change.</p></div><div className="card"><div className="cardIcon">🪄</div><h3>We build the adventure</h3><p>Choose a theme or ask for something specific. Start a new world or continue the same adventure week after week.</p></div><div className="card"><div className="cardIcon">🌙</div><h3>Read it their way</h3><p>Read together, use read-aloud, or choose the illustrated experience. Every finished story lands in their growing library.</p></div></div></section>
-    <section className="section"><div className="sectionHead"><div className="kicker">Ways to use it</div><h2>Not just another random AI story.</h2><p className="sectionText">The product remembers the story world, so recurring characters and previous adventures can become part of what happens next.</p></div><div className="steps"><div className="card"><div className="cardIcon">📚</div><h3>Continuing adventures</h3><p>Each bedtime can become the next chapter. The child stays the hero while the world and returning characters evolve.</p></div><div className="card"><div className="cardIcon">🎂</div><h3>Special occasions</h3><p>Birthdays, Christmas, starting school, a new sibling, losing a tooth or a family holiday can become part of tonight’s tale.</p></div><div className="card"><div className="cardIcon">💛</div><h3>Big little feelings</h3><p>Gentle, reassuring stories for things like being nervous about the dark, starting school or trying something new — always as stories, never therapy.</p></div></div></section>
-    <section className="section"><div className="sectionHead center"><div className="kicker">Working pricing</div><h2>Pick how bedtime feels tonight.</h2><p className="sectionText">The purchase journey is being built now; checkout is intentionally switched off during development.</p></div><div className="pricing">{Object.entries(PACKAGES).map(function(entry){const id=entry[0],pack=entry[1];return <div className={'priceCard '+(id==='audio'?'featured':'')} key={id}>{id==='audio'&&<span className="priceTag">POPULAR</span>}<h3>{pack[0]}</h3><div className="price">{pack[1].split(' / ')[0]} <small>per story</small></div><ul><li>Personalised story</li><li>Saved to story library</li><li>{id==='read'?'Standalone or continuing':id==='audio'?'Read-aloud experience':'Storybook-style scenes'}</li></ul><button className={'btn '+(id==='audio'?'':'dark')} onClick={function(){setBrief(Object.assign({},brief,{packageType:id}));start();}}>Choose {pack[0].toLowerCase()}</button></div>;})}</div></section>
-    <section className="section"><div className="sectionHead center"><div className="kicker">Questions parents might ask</div><h2>Simple on purpose.</h2></div><div className="steps"><div className="card"><div className="cardIcon">🔒</div><h3>What information do you need?</h3><p>Only broad storytelling ingredients: a first name or nickname, age band and the sorts of things they love. No child photos, surnames, addresses or schools are needed.</p></div><div className="card"><div className="cardIcon">🔁</div><h3>Can we change a story?</h3><p>Yes. Regenerate it for a different version, start a completely new adventure, or continue the current story world as another chapter.</p></div><div className="card"><div className="cardIcon">📖</div><h3>Do we keep old stories?</h3><p>That is the plan. The library should belong to the family. Cancelling future delivery should not make completed stories disappear.</p></div></div></section>
-    <section className="section"><div className="softPanel" style={{textAlign:'center',padding:'48px 26px'}}><div className="kicker">A world of their own</div><h2 style={{marginTop:10}}>Don’t buy your child another story.<br/>Give them a world of their own.</h2><p className="sectionText" style={{maxWidth:650,margin:'0 auto 22px'}}>Create tonight’s first adventure, then let the characters, places and little memories grow into something they look forward to at bedtime.</p><button className="btn" onClick={start}>Create a free story</button></div></section>
-    </main></>}
-
-    {screen!=='home'&&<main className="shell studioWrap"><div className="studio"><div className="studioTop"><div className="studioTitle"><strong>Tiny Bedtime Studio</strong><span className="modePill">Preview mode</span></div><div className="tabs">{tabs.map(function(t){return <button key={t[0]} onClick={function(){go(t[0]);}} className={'tab '+(screen===t[0]?'active':'')}>{t[1]}</button>;})}</div></div><div className="studioBody">
-      {screen==='create'&&(loading?<div className="loadingBox"><div className="spinner"/><h3>Writing a tiny adventure…</h3><p>Mixing in favourite things, brave moments and a cosy ending.</p></div>:<div className="dashboardGrid"><div className="softPanel"><h3>Create tonight’s story</h3><p>Start with the child profile, then choose where their imagination goes tonight.</p><ProfileFields profile={profile} setProfile={setProfile}/></div><div className="softPanel"><div className="profilePreview"><div className="avatar">{initial(profile.childName)}</div><div><b>{profile.childName||'Your little storyteller'}</b><small>{profile.ageBand} years · {profile.preferredTone}</small></div></div><div className="field" style={{marginTop:18}}><label>What kind of story?</label><select className="select" value={brief.format} onChange={function(e){setBrief(Object.assign({},brief,{format:e.target.value}));}}>{Object.entries(FORMATS).map(function(x){return <option key={x[0]} value={x[0]}>{x[1]}</option>;})}</select></div><div className="field" style={{marginTop:15}}><label>Choose an adventure</label><div className="choiceGrid">{THEMES.map(function(t){return <button type="button" key={t[0]} className={'choice '+(brief.theme===t[0]?'active':'')} onClick={function(){setBrief(Object.assign({},brief,{theme:t[0]}));}}><span className="emoji">{t[1]}</span>{t[0]}</button>;})}</div></div>{brief.format==='special'&&<div className="field" style={{marginTop:15}}><label>What’s the occasion?</label><input className="input" value={brief.occasion} onChange={function(e){setBrief(Object.assign({},brief,{occasion:e.target.value}));}} placeholder="Birthday, first day at school, Christmas…"/></div>}<div className="field" style={{marginTop:15}}><label>Anything you want in tonight’s story?</label><textarea className="textarea" value={brief.request} onChange={function(e){setBrief(Object.assign({},brief,{request:e.target.value}));}} placeholder={brief.format==='support'?'e.g. A gentle story about feeling brave when the bedroom is dark':'e.g. A treasure hunt on the moon with a funny purple dragon'}/></div><div className="field" style={{marginTop:15}}><label>Experience</label><div className="packageChoices">{Object.entries(PACKAGES).map(function(entry){return <button type="button" key={entry[0]} className={'packageChoice '+(brief.packageType===entry[0]?'active':'')} onClick={function(){setBrief(Object.assign({},brief,{packageType:entry[0]}));}}><b>{entry[1][0]}</b><small>{entry[1][1]}</small></button>;})}</div></div>{error&&<div className="error">{error}</div>}<div className="formFooter"><small>Your first story is free in this preview. No checkout or payment is connected yet.</small><button className="btn" onClick={function(){generate(false);}}>✨ Make the magic</button></div></div></div>)}
-      {screen==='library'&&<div><div className="sectionHead" style={{marginBottom:22}}><div className="kicker">Story library</div><h2 style={{fontSize:42}}>Their adventures live here.</h2><p className="sectionText">This preview saves stories on this device. Account sync is prepared for the next backend step.</p></div>{library.length?<div className="libraryGrid">{library.map(function(s,i){return <div className="storyTile" key={s.id}><div className="tileArt"><Art theme={s.theme} page={i+1}/></div><div className="tileBody"><h3>{s.title}</h3><p>{new Date(s.createdAt).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})} · {s.theme} · {(PACKAGES[s.packageType]||['Story'])[0]}</p><div className="tileActions"><button className="miniBtn" onClick={function(){setStory(s);go('story');}}>Open</button><button className="miniBtn" onClick={function(){setLibrary(library.filter(function(x){return x.id!==s.id;}));}}>Remove</button></div></div></div>;})}</div>:<div className="empty"><div className="emptyIcon">📖</div><h3>No stories yet</h3><p>Create the first adventure and it will appear here.</p><button className="btn small" onClick={start}>Create first story</button></div>}</div>}
-      {screen==='profile'&&<div className="dashboardGrid"><div className="softPanel"><h3>Child story profile</h3><p>These are storytelling ingredients, not an identity profile. Keep details broad and update them whenever interests change.</p><ProfileFields profile={profile} setProfile={setProfile}/><div className="formFooter"><small>Changes are saved automatically on this device.</small><button className="btn small" onClick={start}>Use profile in a story</button></div></div><div className="softPanel"><h3>Privacy by design</h3><p>We’re intentionally not asking for photos, surnames, exact dates of birth, addresses, schools or phone numbers.</p><div className="card" style={{marginTop:18}}><div className="cardIcon">🔒</div><h3>Minimum useful detail</h3><p>Stories need imagination, not identity. Broad interests and first names are enough to make the experience feel personal.</p></div><div className="card" style={{marginTop:12}}><div className="cardIcon">✏️</div><h3>Easy to change</h3><p>Favourite things change fast. The profile is designed to be edited without losing the child’s story library or series history.</p></div></div></div>}
-      {screen==='story'&&story&&<StoryView story={story} onBack={function(){go('library');}} onRegenerate={function(){generate(true);}} onContinue={continueStory}/>}
-      {screen==='story'&&!story&&<div className="empty"><div className="emptyIcon">🌙</div><h3>Pick a story from the library</h3><button className="btn small" onClick={function(){go('library');}}>Open library</button></div>}
-    </div></div></main>}
-    <footer className="footer"><div className="shell footerInner"><div><div className="footerBrand">☾ Tiny Bedtime Tales</div><small>Development preview. Parent-led personalised storytelling with deliberately minimal child data.</small></div><div className="footerLinks"><a className="ghost" href="/privacy">Privacy approach</a><button className="ghost" onClick={start}>Create story</button></div></div></footer>
-  </>;
+  return <div className="appShell">
+    <AppHeader screen={screen} go={go} start={start}/>
+    {screen==='home'&&<HomeScreen start={start} go={go} library={library} setBrief={setBrief}/>} 
+    {screen==='create'&&<CreateScreen profile={profile} setProfile={setProfile} brief={brief} setBrief={setBrief} generate={generate} loading={loading} error={error} go={go}/>} 
+    {screen==='library'&&<LibraryScreen library={library} setLibrary={setLibrary} setStory={setStory} go={go} start={start}/>} 
+    {screen==='profile'&&<ProfileScreen profile={profile} setProfile={setProfile} start={start}/>} 
+    {screen==='story'&&story&&<main className="screenPage readerPage"><StoryView story={story} onBack={()=>go('library')} onRegenerate={()=>generate(true)} onContinue={continueStory}/></main>}
+    {screen==='story'&&!story&&<main className="screenPage"><div className="emptyState"><span>🌙</span><h2>Pick a story from your library.</h2><button className="primaryBtn" onClick={()=>go('library')}>Open library</button></div></main>}
+    <footer className="footer"><div><strong>☾ Tiny Bedtime Tales</strong><small>Parent-led personalised storytelling with deliberately minimal child data.</small></div><a href="/privacy">Privacy approach</a></footer>
+    <BottomNav screen={screen} go={go} start={start} libraryCount={library.length}/>
+  </div>;
 }
