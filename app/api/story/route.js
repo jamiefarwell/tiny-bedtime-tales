@@ -130,7 +130,9 @@ async function ai(data){
       if(!raw)continue;
       const story=validate(JSON.parse(String(raw).trim().replace(/^```(?:json)?\s*/i,'').replace(/\s*```$/,'')),data);
       if(story)return {...story,model};
-    }catch{}
+    }catch(error){
+      console.warn('Tiny Bedtime AI model failed', model, error?.message || String(error));
+    }
   }
   return null;
 }
