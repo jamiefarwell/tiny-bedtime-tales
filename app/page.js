@@ -57,12 +57,12 @@ function ProfileFields({profile,setProfile,compact=false}){
   function bind(key){return {value:profile[key],onChange:e=>setProfile({...profile,[key]:e.target.value})};}
   if(compact) return <div className="quickProfileFields">
     <div className="field"><label>First name or nickname</label><input className="input" maxLength={24} placeholder="e.g. Isla" {...bind('childName')}/></div>
-    <div className="field"><label>Age</label><select className="select" {...bind('ageBand')}>{AGE_BANDS.map(age=><option key={age}>{age}</option>)}</select></div>
+    <div className="field"><label>Age / story level</label><select className="select" {...bind('ageBand')}>{AGE_BANDS.map(age=><option key={age}>{age}</option>)}</select><small className="fieldHint">Choose what feels right for them.</small></div>
     <div className="field full"><label>What are they into right now?</label><textarea className="textarea short" placeholder="Dinosaurs, gymnastics, drawing, space…" {...bind('interests')}/></div>
   </div>;
   return <div className="profileFields">
     <div className="field"><label>First name or nickname</label><input className="input" maxLength={24} placeholder="e.g. Isla" {...bind('childName')}/></div>
-    <div className="field"><label>Age band</label><select className="select" {...bind('ageBand')}>{AGE_BANDS.map(age=><option key={age}>{age}</option>)}</select></div>
+    <div className="field"><label>Age / story level</label><select className="select" {...bind('ageBand')}>{AGE_BANDS.map(age=><option key={age}>{age}</option>)}</select><small className="fieldHint">Choose the level that suits them — it does not have to match their age exactly.</small></div>
     <div className="field full"><label>Interests & hobbies</label><textarea className="textarea" placeholder="Dinosaurs, gymnastics, football, drawing, space…" {...bind('interests')}/></div>
     <div className="field"><label>Pets — first names only</label><input className="input" placeholder="Max the dog, Luna the cat" {...bind('pets')}/></div>
     <div className="field"><label>Friends — first names only</label><input className="input" placeholder="Ava, Leo" {...bind('friends')}/></div>
