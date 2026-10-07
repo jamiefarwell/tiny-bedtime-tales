@@ -4,6 +4,7 @@ export async function GET() {
     service: 'tiny-bedtime-tales',
     storyEngine: 'ready',
     aiGatewayMode: 'vercel-ai-sdk',
+    aiGatewayAuth: Boolean(process.env.AI_GATEWAY_API_KEY || process.env.VERCEL_OIDC_TOKEN),
     cloudDatabase: Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY),
     commit: process.env.VERCEL_GIT_COMMIT_SHA || ''
   }, { headers: { 'Cache-Control': 'no-store' } });
