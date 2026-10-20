@@ -1,0 +1,40 @@
+name: Build Claude Handoff Pack
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - CLAUDE_HANDOFF.md
+      - .github/workflows/claude-handoff.yml
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Check out current project
+        uses: actions/checkout@v4
+
+      - name: Prepare clean handoff folder
+        run: |
+          mkdir -p handoff/tiny-bedtime-tales
+          rsync -a ./ handoff/tiny-bedtime-tales/             --exclude '.git'             --exclude '.next'             --exclude 'node_modules'             --exclude 'handoff'
+          cat > handoff/UPLOAD_THIS_TO_CLAUDE.txt <<'EOF'
+Tiny Bedtime Tales — Claude Handoff
+
+Upload the "tiny-bedtime-tales" folder to Claude, or upload this artifact ZIP directly if Claude accepts archives.
+
+Tell Claude:
+"Read CLAUDE_HANDOFF.md first. Then inspect the repository and continue the existing project rather than restarting it. Mobile first. No child photos. No payments yet. Keep working without stopping for small implementation questions."
+
+Live site:
+https://tiny-bedtime-tales.vercel.app
+EOF
+
+      - name: Upload handoff pack
+        uses: actions/upload-artifact@v4
+        with:
+          name: tiny-bedtime-tales-claude-handoff
+          path: handoff/
+          retention-days: 7
