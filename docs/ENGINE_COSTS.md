@@ -4,10 +4,17 @@ All prices are pay-as-you-go list prices; GBP at about $1 = £0.76.
 
 ## Story text: Claude Opus 5.5 (`claude-opus-5-5`)
 - **Price:** $4 / 1M input, $20 / 1M output, cache reads $0.20 / 1M.
-- **Input:** the system prompt is about 1.5k tokens and is cached; the request is about 400 tokens.
-- **Output:** about 1,800 tokens of story, plus thinking at `medium` effort (about 2–3k tokens).
-- **Cost:** about **$0.10–0.13 (8–10p) per 10-minute story**.
-- **Cheaper option:** set `STORY_MODEL=claude-sonnet-5-5` for about 4p per story. Measure quality before switching; the stories are the product.
+- **Default effort:** `low`. In a side-by-side test on 20 Oct 2026, quality was no worse than `medium` and the first page arrived twice as fast.
+- **Measured results (20 Oct 2026):**
+
+| Effort | First page | Total | Output tokens | Cost |
+|---|---|---|---|---|
+| `medium`, 10 min | 56 s | 76 s | 7,177 | ≈ $0.15 (11p) |
+| `low`, 10 min | 26 s | 51 s | 4,430 | ≈ $0.09 (7p) |
+| `low`, 5 min, chapter 2 | 20 s | 35 s | — | ≈ 5p |
+
+- **Caching:** the system prompt is cached (about 1.3k tokens read from cache per request), so input cost is negligible.
+- **Cheaper option:** set `STORY_MODEL=claude-sonnet-5-5` for about 4p per story. Measure quality first; the stories are the product.
 
 ## Illustrations: Gemini Nano Banana 2.1
 - **Price:** $0.0336 per 1K image, $0.0504 per 2K.
@@ -22,7 +29,7 @@ All prices are pay-as-you-go list prices; GBP at about $1 = £0.76.
 ## Per-product variable cost
 | Product | Cost |
 |---|---|
-| Read-aloud personalised story, device voice | ≈ 9p |
+| Read-aloud personalised story, device voice | ≈ 7p |
 | Personalised story + recorded narration (Flash) | ≈ 30p |
 | Illustrated personalised story + recorded narration | ≈ 45p |
 | Finished library book | ≈ £1 once; every replay is free |

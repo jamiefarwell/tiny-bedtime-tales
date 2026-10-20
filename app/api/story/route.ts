@@ -7,7 +7,7 @@ export const runtime = 'nodejs';
 export const maxDuration = 300;
 
 const MODEL = process.env.STORY_MODEL || 'claude-opus-5-5';
-const EFFORT = (process.env.STORY_EFFORT || 'medium') as 'low' | 'medium' | 'high';
+const EFFORT = (process.env.STORY_EFFORT || 'low') as 'low' | 'medium' | 'high';
 
 // Per-instance soft limit for the preview. Real limits move to entitlements
 // once accounts exist.
@@ -49,7 +49,16 @@ export async function POST(request: Request) {
     return Response.json({ error: 'bad_request', message }, { status: 400 });
   }
 
-  const client = new Anthropic();
+  // Pin the endpoint: an ambient ANTHROPIC_BASE_URL (e.g. from developer
+  // tooling) must never redirect the story key elsewhere.
+  const client = new Anthropic({
+    apiKey: process.env.ANTHROPIC_API_KEY,
+    baseURL: process.env.STORY_API_BASE_URL || 'https://api.anthropic.com',
+    // Org-level keys must name the workspace to bill; workspace keys don't need it.
+    defaultHeaders: process.env.ANTHROPIC_WORKSPACE_ID
+      ? { 'anthropic-workspace-id': process.env.ANTHROPIC_WORKSPACE_ID }
+      : undefined,
+  });
   const encoder = new TextEncoder();
   const started = Date.now();
 

@@ -401,6 +401,25 @@ export function CreateFlow({ initialWorld, continueId, againId }: { initialWorld
   );
 }
 
+// The storyteller plans silently for ~20–30s before the first words arrive;
+// rotate gentle status lines so the wait feels alive rather than frozen.
+function DreamingStatus({ name }: { name: string }) {
+  const lines = [
+    `Dreaming up ${name}’s world…`,
+    'Choosing a sidekick…',
+    'Hiding a surprise for later…',
+    'Thinking of something funny…',
+    'Planning a cosy ending…',
+    'Picking the perfect title…',
+  ];
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    const t = setInterval(() => setI((n) => Math.min(n + 1, lines.length - 1)), 4500);
+    return () => clearInterval(t);
+  }, [lines.length]);
+  return <>{lines[i]}</>;
+}
+
 function WritingScreen({
   writing,
   childName,
@@ -444,9 +463,7 @@ function WritingScreen({
       </main>
     );
   }
-  const status = !writing.title
-    ? `Dreaming up ${childName}’s world…`
-    : `Writing page ${writing.pages.length + 1}…`;
+  const status = !writing.title ? <DreamingStatus name={childName} /> : `Writing page ${writing.pages.length + 1}…`;
   return (
     <main className={styles.writing} aria-live="polite">
       <div className={styles.quill} aria-hidden />

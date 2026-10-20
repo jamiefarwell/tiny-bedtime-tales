@@ -65,7 +65,7 @@ The UK anchors are Moshi £49.99–59.99/yr, Headspace Family £74.99 and Epic �
 
 | Item | Cost |
 |---|---|
-| Personalised story text (Opus 5.5) | ≈ 8–10p |
+| Personalised story text (Opus 5.5, low effort) | ≈ 7p, first page in about 25 s |
 | 5 illustrations (Nano Banana 2.1, 1K) | ≈ 13p |
 | Recorded narration via ElevenLabs | ≈ 40p per 10-minute story |
 | A finished 10-page library book | ≈ £1 one-off; replays cost nothing |
