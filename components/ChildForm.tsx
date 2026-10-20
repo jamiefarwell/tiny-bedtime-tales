@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import type { ChildProfile, Pronouns } from '@/lib/types';
 import { uid } from '@/lib/store';
-import { AGE_OPTIONS, AVOIDS, LOVES } from '@/app/(app)/create/options';
+import { AGE_OPTIONS, AVOIDS, LAUGHS, LOVES, PERSONALITY } from '@/app/(app)/create/options';
 import styles from './ChildForm.module.css';
 
 const KINDS = ['pet', 'friend', 'sibling', 'toy', 'grown-up'];
@@ -25,10 +25,12 @@ export function ChildForm({
 }) {
   const [c, setC] = useState(initial);
   const [extraLove, setExtraLove] = useState('');
-  const [companion, setCompanion] = useState({ name: '', kind: 'pet' });
+  const [companion, setCompanion] = useState({ name: '', kind: 'pet', note: '' });
   const set = (patch: Partial<ChildProfile>) => setC((x) => ({ ...x, ...patch }));
-  const toggle = (key: 'loves' | 'avoid', v: string) =>
-    set({ [key]: c[key].includes(v) ? c[key].filter((x) => x !== v) : [...c[key], v].slice(0, 8) } as Partial<ChildProfile>);
+  const toggle = (key: 'loves' | 'avoid' | 'personality' | 'laughs', v: string, max = 8) => {
+    const cur = c[key] ?? [];
+    set({ [key]: cur.includes(v) ? cur.filter((x) => x !== v) : [...cur, v].slice(-max) } as Partial<ChildProfile>);
+  };
 
   const loves = Array.from(new Set([...LOVES, ...c.loves]));
 
@@ -115,6 +117,8 @@ export function ChildForm({
 
       {!compact && (
         <>
+          <ProfileExtras child={c} toggle={toggle} set={set} />
+
           <fieldset className={styles.field}>
             <legend>Who can join the adventure?</legend>
             <small>Pets, friends, siblings or a favourite toy. First names only.</small>
@@ -128,7 +132,8 @@ export function ChildForm({
                     aria-label={`Remove ${x.name}`}
                     onClick={() => set({ companions: c.companions.filter((_, j) => j !== i) })}
                   >
-                    {x.name} · {x.kind} ×
+                    {x.name} · {x.kind}
+                    {x.note ? ` · ${x.note}` : ''} ×
                   </button>
                 ))}
               </div>
@@ -146,13 +151,22 @@ export function ChildForm({
                   <option key={k}>{k}</option>
                 ))}
               </select>
+            </div>
+            <div className={styles.addRow}>
+              <input
+                className={styles.input}
+                value={companion.note}
+                maxLength={60}
+                placeholder="Something fun about them (optional), e.g. hides socks"
+                onChange={(e) => setCompanion({ ...companion, note: e.target.value })}
+              />
               <button
                 type="button"
                 className={styles.add}
                 onClick={() => {
                   const name = companion.name.trim().split(/\s+/)[0];
-                  if (name) set({ companions: [...c.companions, { name, kind: companion.kind }].slice(0, 4) });
-                  setCompanion({ name: '', kind: companion.kind });
+                  if (name) set({ companions: [...c.companions, { name, kind: companion.kind, note: companion.note.trim() }].slice(0, 4) });
+                  setCompanion({ name: '', kind: companion.kind, note: '' });
                 }}
               >
                 Add
@@ -181,5 +195,74 @@ export function ChildForm({
         {saveLabel}
       </button>
     </form>
+  );
+}
+
+/** Personality, humour, comfort toy and current challenge. Shared with the create flow's quick questions. */
+export function ProfileExtras({
+  child,
+  toggle,
+  set,
+  only,
+}: {
+  child: ChildProfile;
+  toggle: (key: 'personality' | 'laughs', v: string, max?: number) => void;
+  set: (patch: Partial<ChildProfile>) => void;
+  only?: 'personality' | 'laughs' | 'comfort' | 'learning';
+}) {
+  const show = (k: typeof only) => !only || only === k;
+  return (
+    <>
+      {show('personality') && (
+        <fieldset className={styles.field}>
+          <legend>Which words sound like {child.name || 'them'}?</legend>
+          <small>Pick up to three. The hero will sound and act like them.</small>
+          <div className={styles.pills}>
+            {PERSONALITY.map((p) => (
+              <button type="button" key={p} aria-pressed={(child.personality ?? []).includes(p)} onClick={() => toggle('personality', p, 3)}>
+                {p}
+              </button>
+            ))}
+          </div>
+        </fieldset>
+      )}
+      {show('laughs') && (
+        <fieldset className={styles.field}>
+          <legend>What makes {child.name || 'them'} laugh?</legend>
+          <div className={styles.pills}>
+            {LAUGHS.map((p) => (
+              <button type="button" key={p} aria-pressed={(child.laughs ?? []).includes(p)} onClick={() => toggle('laughs', p, 3)}>
+                {p}
+              </button>
+            ))}
+          </div>
+        </fieldset>
+      )}
+      {show('comfort') && (
+        <label className={styles.field}>
+          <span>Favourite bedtime toy (optional)</span>
+          <input
+            className={styles.input}
+            value={child.comfort ?? ''}
+            maxLength={50}
+            placeholder="e.g. Bun, a floppy grey rabbit"
+            onChange={(e) => set({ comfort: e.target.value })}
+          />
+        </label>
+      )}
+      {show('learning') && (
+        <label className={styles.field}>
+          <span>Anything they’re working on at the moment? (optional)</span>
+          <input
+            className={styles.input}
+            value={child.learning ?? ''}
+            maxLength={70}
+            placeholder="e.g. riding without stabilisers, sharing, swimming"
+            onChange={(e) => set({ learning: e.target.value })}
+          />
+          <small>Sometimes woven in gently. Never as a lesson.</small>
+        </label>
+      )}
+    </>
   );
 }

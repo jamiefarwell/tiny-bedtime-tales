@@ -1,5 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk';
-import { PROMPT_VERSION, SYSTEM_PROMPT, buildUserMessage } from '@/lib/engine/prompt';
+import { PROMPT_VERSION, SYSTEM_PROMPT, buildUserMessage, pageShape } from '@/lib/engine/prompt';
+import { readability, type Readability } from '@/lib/engine/readability';
 import { StoryParser, bannedPhraseCount, type ParseEvent } from '@/lib/engine/parse';
 import { RequestError, parseStoryRequest } from '@/lib/engine/sanitise';
 
@@ -27,7 +28,7 @@ function rateLimited(request: Request): boolean {
 
 type Out =
   | ParseEvent
-  | { type: 'done'; model: string; promptVersion: string }
+  | { type: 'done'; model: string; promptVersion: string; shape: string; readability: Readability }
   | { type: 'error'; message: string; code: string };
 
 // Short codes shown under the error so a parent's screenshot tells us the cause.
@@ -88,6 +89,11 @@ export async function POST(request: Request) {
       const send = (event: Out) => controller.enqueue(encoder.encode(JSON.stringify(event) + '\n'));
       const parser = new StoryParser();
       let full = '';
+      const pageTexts: string[] = [];
+      const emit = (event: ParseEvent) => {
+        if (event.type === 'page') pageTexts[event.index] = event.text;
+        send(event);
+      };
       try {
         const stream = client.beta.messages.stream(
           {
@@ -103,15 +109,17 @@ export async function POST(request: Request) {
         );
         stream.on('text', (delta) => {
           full += delta;
-          for (const event of parser.push(delta)) send(event);
+          for (const event of parser.push(delta)) emit(event);
         });
         const final = await stream.finalMessage();
-        for (const event of parser.end()) send(event);
+        for (const event of parser.end()) emit(event);
+        const level = pageShape(story.child.ageBand, story.minutes);
+        const read = readability(pageTexts.filter(Boolean).join('\n\n'), level.maxSentence);
 
         if (final.stop_reason === 'refusal') {
           send({ type: 'error', code: 'refusal', message: 'The storyteller couldn’t write that one. Try a different idea?' });
         } else {
-          send({ type: 'done', model: final.model, promptVersion: PROMPT_VERSION });
+          send({ type: 'done', model: final.model, promptVersion: PROMPT_VERSION, shape: story.shape, readability: read });
         }
         console.info('story generated', {
           model: final.model,
@@ -120,6 +128,12 @@ export async function POST(request: Request) {
           cacheRead: final.usage.cache_read_input_tokens,
           output: final.usage.output_tokens,
           banned: bannedPhraseCount(full),
+          level: story.child.ageBand,
+          shape: story.shape,
+          avgSentence: `${read.avgSentence} (limit ${level.avgSentence})`,
+          longest: `${read.longestSentence} (limit ${level.maxSentence})`,
+          overLimit: read.overLimit,
+          hardWords: read.hardWords,
         });
       } catch (error) {
         const { code, message } = request.signal.aborted ? { code: 'cancelled', message: 'The story was interrupted.' } : classify(error);

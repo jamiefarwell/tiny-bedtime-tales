@@ -6,7 +6,7 @@ import type { Page } from '@/lib/types';
 import { family, useFamily, useHydrated, useSettings } from '@/lib/store';
 import { tokenise, type Token } from '@/lib/tokenise';
 import { Scene } from '@/components/Scene';
-import { estimateSeconds, narrate, type Narration } from './narration';
+import { bestVoice, estimateSeconds, loadVoices, narrate, type Narration } from './narration';
 import { startAmbient, type Ambient } from './ambient';
 import { Icon } from './icons';
 import styles from './Reader.module.css';
@@ -23,12 +23,16 @@ export interface ReaderProps {
   endActions?: ReactNode;
   /** Start narrating as soon as the book opens. */
   autoPlay?: boolean;
+  /** More pages are still being written; wait for them instead of ending. */
+  pending?: boolean;
+  /** Total pages expected while `pending`, for the progress bar. */
+  expectedPages?: number;
 }
 
 const TURN_DELAY = 1400;
 const AMBIENT_AFTER_END_MS = 10 * 60 * 1000;
 
-export function Reader({ title, pages, progressKey, backHref, glow, artNote, endActions, autoPlay }: ReaderProps) {
+export function Reader({ title, pages, progressKey, backHref, glow, artNote, endActions, autoPlay, pending, expectedPages }: ReaderProps) {
   const hydrated = useHydrated();
   const [settings, update] = useSettings();
   const saved = useFamily((s) => s.progress[progressKey]);
@@ -42,6 +46,8 @@ export function Reader({ title, pages, progressKey, backHref, glow, artNote, end
   const [dragX, setDragX] = useState(0);
   const [resumeWord, setResumeWord] = useState(0);
   const [restored, setRestored] = useState(false);
+  // Narration reached the newest page while the rest is still being written.
+  const [waiting, setWaiting] = useState(false);
 
   const narrationRef = useRef<Narration | null>(null);
   const turnTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -53,6 +59,10 @@ export function Reader({ title, pages, progressKey, backHref, glow, artNote, end
   // Read inside narration callbacks, which outlive the render that made them.
   const autoTurnRef = useRef(settings.autoTurn);
   autoTurnRef.current = settings.autoTurn;
+  const pendingRef = useRef(pending);
+  pendingRef.current = pending;
+  const lastRef = useRef(pages.length - 1);
+  lastRef.current = pages.length - 1;
 
   const page = pages[index];
   const tokens = useMemo(() => pages.map((p) => tokenise(p.text)), [pages]);
@@ -108,8 +118,9 @@ export function Reader({ title, pages, progressKey, backHref, glow, artNote, end
           return;
         }
         turnTimer.current = setTimeout(() => {
-          if (index >= last) setEnded(true);
-          else setIndex(index + 1);
+          if (index < lastRef.current) setIndex(index + 1);
+          else if (pendingRef.current) setWaiting(true);
+          else setEnded(true);
         }, TURN_DELAY);
       },
     });
@@ -117,14 +128,29 @@ export function Reader({ title, pages, progressKey, backHref, glow, artNote, end
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playing, index, ended]);
 
-  // Reset per-page state on every page change.
+  // Reset per-page state on every page change (not when new pages stream in).
   useEffect(() => {
     setWord(-1);
     setPageProgress(0);
     textRef.current?.scrollTo({ top: 0 });
+  }, [index]);
+
+  useEffect(() => {
     const next = pages[index + 1]?.image;
     if (next) new Image().src = next;
   }, [index, pages]);
+
+  // The page we were waiting for has arrived (or the story is complete).
+  useEffect(() => {
+    if (!waiting) return;
+    if (index < last) {
+      setWaiting(false);
+      setIndex(index + 1);
+    } else if (!pending) {
+      setWaiting(false);
+      setEnded(true);
+    }
+  }, [waiting, index, last, pending]);
 
   // Keep the screen awake while a story is being told.
   useEffect(() => {
@@ -186,9 +212,11 @@ export function Reader({ title, pages, progressKey, backHref, glow, artNote, end
       stopNarration();
       setResumeWord(0);
       if (next > last) {
-        setEnded(true);
+        if (pending) setWaiting(true);
+        else setEnded(true);
         return;
       }
+      setWaiting(false);
       setEnded(false);
       setIndex(next);
     },
@@ -323,7 +351,7 @@ export function Reader({ title, pages, progressKey, backHref, glow, artNote, end
           <span>{title}</span>
           {!ended && (
             <small>
-              Page {index + 1} of {pages.length}
+              Page {index + 1} of {pending ? Math.max(pages.length, expectedPages ?? 0) : pages.length}
             </small>
           )}
         </div>
@@ -335,7 +363,7 @@ export function Reader({ title, pages, progressKey, backHref, glow, artNote, end
       {!ended && (
         <footer className={styles.controls}>
           <div className={styles.progress} aria-hidden>
-            {pages.map((_, i) => (
+            {Array.from({ length: pending ? Math.max(pages.length, expectedPages ?? 0) : pages.length }, (_, i) => (
               <button
                 key={i}
                 className={styles.segment}
@@ -346,7 +374,9 @@ export function Reader({ title, pages, progressKey, backHref, glow, artNote, end
             ))}
           </div>
           <div className={styles.meta}>
-            <span>{playing ? (settings.autoTurn ? 'Reading to you' : 'Reading this page') : 'Paused'}</span>
+            <span>
+              {waiting ? 'Writing the next page…' : playing ? (settings.autoTurn ? 'Reading to you' : 'Reading this page') : 'Paused'}
+            </span>
             <span>About {minutesLeft} min left</span>
           </div>
           <div className={styles.buttons}>
@@ -444,6 +474,7 @@ function SettingsPanel({
           </span>
           <input type="checkbox" checked={settings.readAlong} onChange={(e) => update({ readAlong: e.target.checked })} />
         </label>
+        <VoicePicker voiceURI={settings.voiceURI} onChange={(voiceURI) => update({ voiceURI })} />
         <label className={styles.row}>
           <span>
             Sleepy mode
@@ -543,6 +574,53 @@ function EndScreen({
           Back to the library
         </Link>
       </div>
+    </div>
+  );
+}
+
+/** Choose among the device's English voices. Quality varies a lot by phone. */
+function VoicePicker({ voiceURI, onChange }: { voiceURI: string; onChange: (uri: string) => void }) {
+  const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
+  useEffect(() => {
+    loadVoices().then((all) => {
+      const en = all.filter((v) => v.lang.toLowerCase().startsWith('en'));
+      // British voices first, then the rest of English.
+      en.sort((a, b) => Number(/GB/i.test(b.lang)) - Number(/GB/i.test(a.lang)) || a.name.localeCompare(b.name));
+      setVoices(en);
+    });
+  }, []);
+  if (!voices.length) return null;
+  const current = bestVoice(voices, voiceURI);
+  const isIOS = typeof navigator !== 'undefined' && /iPhone|iPad/i.test(navigator.userAgent);
+  return (
+    <div className={styles.voice}>
+      <span className={styles.voiceLabel}>Reading voice</span>
+      <div className={styles.voiceRow}>
+        <select value={current?.voiceURI ?? ''} onChange={(e) => onChange(e.target.value)}>
+          {voices.map((v) => (
+            <option key={v.voiceURI} value={v.voiceURI}>
+              {v.name.replace(/^(Microsoft|Google)\s+/, '').replace(/\s*-\s*English.*$/, '')} ({v.lang.replace('en-', '')})
+            </option>
+          ))}
+        </select>
+        <button
+          type="button"
+          onClick={() => {
+            const u = new SpeechSynthesisUtterance('Once there was a sleepy dragon who could not find his pillow.');
+            if (current) u.voice = current;
+            u.rate = 0.92;
+            speechSynthesis.cancel();
+            speechSynthesis.speak(u);
+          }}
+        >
+          Hear it
+        </button>
+      </div>
+      <small>
+        {isIOS
+          ? 'Tip: for much nicer voices, go to Settings → Accessibility → Read & Speak (Spoken Content) → Voices → English, and download an “Enhanced” or “Premium” voice.'
+          : 'Voices come from this device. Recorded narration is coming soon.'}
+      </small>
     </div>
   );
 }

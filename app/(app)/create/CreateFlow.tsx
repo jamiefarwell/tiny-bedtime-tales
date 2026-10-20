@@ -1,12 +1,13 @@
 'use client';
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import type { ChildProfile, Page, PersonalStory } from '@/lib/types';
 import { activeChild, family, uid, useFamily, useHydrated } from '@/lib/store';
-import { ChildForm, blankChild } from '@/components/ChildForm';
+import { ChildForm, ProfileExtras, blankChild } from '@/components/ChildForm';
 import { Icon } from '@/components/reader/icons';
+import { Reader } from '@/components/reader/Reader';
+import { pageShape } from '@/lib/engine/prompt';
 import { LENGTHS, MOODS, WORLDS } from './options';
 import styles from './create.module.css';
 
@@ -23,17 +24,19 @@ interface Draft {
 }
 
 interface Writing {
+  id: string;
   title: string;
   hook: string;
-  pages: { heading: string; text: string }[];
+  pages: Page[];
   expected: number;
+  done: boolean;
+  reading: boolean;
   error: string | null;
   code: string;
   notConnected: boolean;
 }
 
 export function CreateFlow({ initialWorld, continueId, againId }: { initialWorld?: string; continueId?: string; againId?: string }) {
-  const router = useRouter();
   const hydrated = useHydrated();
   const child = useFamily(activeChild);
   const children = useFamily((s) => s.children);
@@ -91,7 +94,9 @@ export function CreateFlow({ initialWorld, continueId, againId }: { initialWorld
   async function make() {
     if (!child || !mood || !worldText) return;
     const continuing = Boolean(continueId && base);
-    setWriting({ title: '', hook: '', pages: [], expected: 10, error: null, code: '', notConnected: false });
+    const id = uid();
+    const expected = pageShape(child.ageBand, draft.minutes).pages;
+    setWriting({ id, title: '', hook: '', pages: [], expected, done: false, reading: false, error: null, code: '', notConnected: false });
     go('writing');
     abort.current = new AbortController();
     // Writing takes up to a minute; if the phone auto-locks, the connection drops.
@@ -105,7 +110,16 @@ export function CreateFlow({ initialWorld, continueId, againId }: { initialWorld
         loves: child.loves,
         companions: child.companions.filter((c) => draft.companions.includes(c.name)),
         avoid: child.avoid,
+        personality: child.personality ?? [],
+        laughs: child.laughs ?? [],
+        comfort: child.comfort ?? '',
+        learning: child.learning ?? '',
       },
+      // Recent stories for this child, so tonight's doesn't repeat them.
+      history: stories
+        .filter((s) => s.childId === child.id)
+        .slice(0, 10)
+        .map((s) => ({ title: s.title, premise: s.premise || s.hook, shape: s.shape || '' })),
       mood: mood.prompt,
       world: worldText,
       minutes: draft.minutes,
@@ -133,7 +147,9 @@ export function CreateFlow({ initialWorld, continueId, againId }: { initialWorld
       let buffer = '';
       let title = '';
       let hook = '';
-      const pages: { heading: string; text: string }[] = [];
+      let premise = '';
+      let shape = '';
+      const pages: Page[] = [];
       let memory = '';
       let model = '';
       for (;;) {
@@ -148,9 +164,13 @@ export function CreateFlow({ initialWorld, continueId, againId }: { initialWorld
           if (ev.type === 'meta') {
             title = ev.title;
             hook = ev.hook;
-          } else if (ev.type === 'page') pages[ev.index] = { heading: ev.heading, text: ev.text };
+            premise = ev.premise || '';
+          } else if (ev.type === 'page') pages[ev.index] = toPage(ev.heading, ev.text, ev.index, expected);
           else if (ev.type === 'memory') memory = ev.text;
-          else if (ev.type === 'done') model = ev.model;
+          else if (ev.type === 'done') {
+            model = ev.model;
+            shape = ev.shape || '';
+          }
           else if (ev.type === 'error') throw Object.assign(new Error(ev.message), { code: ev.code });
           setWriting((w) => w && { ...w, title, hook, pages: pages.filter(Boolean) });
         }
@@ -161,24 +181,16 @@ export function CreateFlow({ initialWorld, continueId, againId }: { initialWorld
         throw Object.assign(new Error('The story came out too short. Let’s try again.'), { code: `short-${finished.length}${model ? '' : '-nodone'}` });
       }
       const story: PersonalStory = {
-        id: uid(),
+        id,
         childId: child.id,
         title,
         hook,
+        premise,
+        shape,
         world: draft.world === 'other' ? draft.customWorld.trim() : world!.prompt,
         mood: mood.label,
         minutes: draft.minutes,
-        pages: finished.map(
-          (p, i): Page => ({
-            heading: p.heading,
-            text: p.text,
-            image: null,
-            imageAlt: '',
-            audio: null,
-            timings: null,
-            mood: i === finished.length - 1 ? 'sleepy' : i === 0 ? 'warm' : i > finished.length * 0.55 ? 'wonder' : 'curious',
-          }),
-        ),
+        pages: finished.map((p, i) => toPage(p.heading, p.text, i, finished.length)),
         memory,
         seriesId: continuing ? base!.seriesId : uid(),
         chapter: continuing ? base!.chapter + 1 : 1,
@@ -186,7 +198,12 @@ export function CreateFlow({ initialWorld, continueId, againId }: { initialWorld
         createdAt: Date.now(),
       };
       family.saveStory(story);
-      router.push(`/read/mine/${story.id}?listen=1`);
+      setWriting((w) => {
+        // Already reading: give the page its permanent address without
+        // interrupting the narrator.
+        if (w?.reading) window.history.replaceState(null, '', `/read/mine/${id}`);
+        return w && { ...w, pages: story.pages, done: true };
+      });
     } catch (e: any) {
       if (e?.name === 'AbortError') return;
       // A dropped connection (phone locked, signal lost) surfaces as a TypeError.
@@ -199,8 +216,40 @@ export function CreateFlow({ initialWorld, continueId, againId }: { initialWorld
 
   if (!hydrated) return <main className={styles.flow} />;
 
+  if (step === 'writing' && writing?.reading) {
+    return (
+      <Reader
+        title={writing.title}
+        pages={writing.pages}
+        pending={!writing.done}
+        expectedPages={writing.expected}
+        progressKey={`story:${writing.id}`}
+        backHref="/stories"
+        autoPlay
+        endActions={
+          writing.done ? (
+            <Link className="btn btn-rose btn-block" href={`/create?continue=${writing.id}`}>
+              Next chapter, tomorrow night
+            </Link>
+          ) : undefined
+        }
+      />
+    );
+  }
+
   if (step === 'writing' && writing) {
-    return <WritingScreen writing={writing} childName={child?.name ?? ''} onRetry={make} onBack={() => go('touches')} />;
+    return (
+      <WritingScreen
+        writing={writing}
+        childName={child?.name ?? ''}
+        onRetry={make}
+        onBack={() => go('touches')}
+        onRead={() => {
+          if (writing.done) window.history.replaceState(null, '', `/read/mine/${writing.id}`);
+          setWriting((w) => w && { ...w, reading: true });
+        }}
+      />
+    );
   }
 
   return (
@@ -349,6 +398,8 @@ export function CreateFlow({ initialWorld, continueId, againId }: { initialWorld
             </>
           )}
 
+          <QuickQuestion child={child} />
+
           <div className={styles.block}>
             <span className={styles.label}>How long?</span>
             <div className={styles.lengths}>
@@ -434,11 +485,13 @@ function WritingScreen({
   childName,
   onRetry,
   onBack,
+  onRead,
 }: {
   writing: Writing;
   childName: string;
   onRetry: () => void;
   onBack: () => void;
+  onRead: () => void;
 }) {
   if (writing.notConnected) {
     return (
@@ -473,13 +526,26 @@ function WritingScreen({
       </main>
     );
   }
-  const status = !writing.title ? <DreamingStatus name={childName} /> : `Writing page ${writing.pages.length + 1}…`;
+  const status = writing.done
+    ? 'Ready when you are'
+    : !writing.title
+      ? <DreamingStatus name={childName} />
+      : `Writing page ${writing.pages.length + 1}…`;
   return (
     <main className={styles.writing} aria-live="polite">
       <div className={styles.quill} aria-hidden />
       <p className="eyebrow">{status}</p>
       <h1 className={writing.title ? styles.titleIn : styles.titleWait}>{writing.title || 'Once there was…'}</h1>
       {writing.hook && <p className={styles.sub}>{writing.hook}</p>}
+      {writing.pages.length > 0 && (
+        <button className={`btn btn-rose btn-block ${styles.readNow}`} onClick={onRead}>
+          <Icon name="play" size={20} />
+          {writing.done ? 'Read the story' : 'Start reading now'}
+        </button>
+      )}
+      {writing.pages.length > 0 && !writing.done && (
+        <p className={styles.code}>The rest of the story keeps arriving while you read.</p>
+      )}
       <ol className={styles.pagesList}>
         {writing.pages.map((p, i) => (
           <li key={i}>
@@ -492,5 +558,42 @@ function WritingScreen({
         ))}
       </ol>
     </main>
+  );
+}
+
+function toPage(heading: string, text: string, i: number, total: number): Page {
+  return {
+    heading,
+    text,
+    image: null,
+    imageAlt: '',
+    audio: null,
+    timings: null,
+    mood: i >= total - 1 ? 'sleepy' : i === 0 ? 'warm' : i > total * 0.55 ? 'wonder' : 'curious',
+  };
+}
+
+/** One gap in the profile per night, so stories get richer without a long form. */
+function QuickQuestion({ child }: { child: ChildProfile }) {
+  const missing: 'personality' | 'laughs' | 'comfort' | null = !child.personality?.length
+    ? 'personality'
+    : !child.laughs?.length
+      ? 'laughs'
+      : !child.comfort
+        ? 'comfort'
+        : null;
+  // Keep asking the same question while it's being answered tonight.
+  const [asking] = useState(missing);
+  if (!asking) return null;
+  const set = (patch: Partial<ChildProfile>) => family.saveChild({ ...child, ...patch });
+  const toggle = (key: 'personality' | 'laughs', v: string, max = 3) => {
+    const cur = child[key] ?? [];
+    set({ [key]: cur.includes(v) ? cur.filter((x) => x !== v) : [...cur, v].slice(-max) });
+  };
+  return (
+    <div className={styles.quick}>
+      <p className="eyebrow">Quick question · makes tonight’s story better</p>
+      <ProfileExtras child={child} toggle={toggle} set={set} only={asking} />
+    </div>
   );
 }

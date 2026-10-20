@@ -64,8 +64,16 @@ export interface ChildProfile {
   pronouns: Pronouns;
   loves: string[];
   /** First names only: pets, friends, siblings, toys. */
-  companions: { name: string; kind: string }[];
+  companions: { name: string; kind: string; note?: string }[];
   avoid: string[];
+  /** Up to three words for who they are; shapes the hero's voice and flaw. */
+  personality?: string[];
+  /** What makes them laugh; shapes the jokes. */
+  laughs?: string[];
+  /** Bedtime comfort toy, e.g. "Bun, a floppy grey rabbit". */
+  comfort?: string;
+  /** Something they're working on, e.g. "riding without stabilisers". */
+  learning?: string;
   createdAt: number;
 }
 
@@ -74,6 +82,10 @@ export interface PersonalStory {
   childId: string;
   title: string;
   hook: string;
+  /** One-line summary the engine uses to avoid repeating itself. */
+  premise?: string;
+  /** Story structure the engine used (see STORY_SHAPES). */
+  shape?: string;
   world: string;
   mood: string;
   minutes: number;

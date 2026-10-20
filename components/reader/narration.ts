@@ -142,8 +142,16 @@ function narrateSpeech(o: NarrateOptions): Narration {
 
   let stopped = false;
   let word = o.fromWord ?? 0;
-  let progressTimer = 0 as unknown as ReturnType<typeof setInterval>;
+  let ticker = 0 as unknown as ReturnType<typeof setInterval>;
   const totalChars = o.text.length || 1;
+  // Many phone voices (notably on iOS) never fire word-boundary events. Then
+  // we estimate the word from elapsed time and recalibrate the speaking pace
+  // after every paragraph, so highlighting and scrolling still follow along.
+  let boundaries = false;
+  let wordsPerSecond = 2.4 * o.rate;
+  let chunkStartedAt = 0;
+  let chunkFirst = word;
+  let chunkLast = word;
 
   synth.cancel();
   loadVoices().then((voices) => {
@@ -153,7 +161,7 @@ function narrateSpeech(o: NarrateOptions): Narration {
     const speakNext = () => {
       if (stopped) return;
       if (i >= chunks.length) {
-        clearInterval(progressTimer);
+        clearInterval(ticker);
         o.onProgress(1);
         o.onEnd();
         return;
@@ -165,30 +173,49 @@ function narrateSpeech(o: NarrateOptions): Narration {
       u.rate = 0.92 * o.rate;
       u.pitch = 1.02;
       u.volume = o.volume;
+      chunkFirst = tokenAt(o.tokens, chunk.offset);
+      chunkLast = tokenAt(o.tokens, chunk.offset + chunk.text.length - 1);
+      chunkStartedAt = 0;
+      u.onstart = () => {
+        chunkStartedAt = Date.now();
+        word = chunkFirst;
+        o.onWord(word);
+      };
       u.onboundary = (e) => {
         if (stopped || (e.name && e.name !== 'word')) return;
+        boundaries = true;
         word = tokenAt(o.tokens, chunk.offset + e.charIndex);
         o.onWord(word);
         o.onProgress(Math.min(0.99, (chunk.offset + e.charIndex) / totalChars));
       };
-      u.onend = () => setTimeout(speakNext, 260);
+      u.onend = () => {
+        if (!boundaries && chunkStartedAt) {
+          const secs = (Date.now() - chunkStartedAt) / 1000;
+          const measured = (chunkLast - chunkFirst + 1) / Math.max(0.5, secs);
+          wordsPerSecond = wordsPerSecond * 0.4 + measured * 0.6;
+        }
+        setTimeout(speakNext, 260);
+      };
       u.onerror = () => setTimeout(speakNext, 60);
       synth.speak(u);
     };
-    // Some voices never fire boundary events; keep progress moving anyway.
-    const startedAt = Date.now();
-    const estimate = estimateSeconds(o.tokens.length - word, o.rate) * 1000;
-    progressTimer = setInterval(() => {
-      if (stopped) return;
-      o.onProgress(Math.min(0.97, (o.tokens[word]?.start ?? 0) / totalChars + (Date.now() - startedAt) / estimate / 4));
-    }, 500);
+    ticker = setInterval(() => {
+      if (stopped || boundaries || !chunkStartedAt) return;
+      const elapsed = (Date.now() - chunkStartedAt) / 1000;
+      const estimate = Math.min(chunkLast, chunkFirst + Math.floor(elapsed * wordsPerSecond));
+      if (estimate !== word) {
+        word = estimate;
+        o.onWord(word);
+        o.onProgress(Math.min(0.99, (o.tokens[word]?.start ?? 0) / totalChars));
+      }
+    }, 120);
     speakNext();
   });
 
   return {
     stop() {
       stopped = true;
-      clearInterval(progressTimer);
+      clearInterval(ticker);
       synth.cancel();
     },
     position: () => word,
@@ -198,6 +225,6 @@ function narrateSpeech(o: NarrateOptions): Narration {
 /** Make sound-effect words read naturally rather than spelled out. */
 function speakable(text: string): string {
   return text
-    .replace(/…/g, '... ')
+    .replace(/…/g, ',')
     .replace(/\b([A-Z]{4,})\b/g, (w) => w.charAt(0) + w.slice(1).toLowerCase());
 }

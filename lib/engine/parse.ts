@@ -2,7 +2,7 @@
 // SYSTEM_PROMPT). Fed streamed text; emits events as each section completes.
 
 export type ParseEvent =
-  | { type: 'meta'; title: string; hook: string }
+  | { type: 'meta'; title: string; hook: string; premise: string }
   | { type: 'page'; index: number; heading: string; text: string }
   | { type: 'memory'; text: string };
 
@@ -14,6 +14,7 @@ export class StoryParser {
   private section: 'head' | 'page' | 'memory' | 'end' = 'head';
   private title = '';
   private hook = '';
+  private premise = '';
   private metaSent = false;
   private page: { index: number; heading: string; body: string[] } | null = null;
   private memory: string[] = [];
@@ -70,6 +71,7 @@ export class StoryParser {
     if (this.section === 'head') {
       if (trimmed.startsWith('TITLE:')) this.title = trimmed.slice(6).trim();
       else if (trimmed.startsWith('HOOK:')) this.hook = trimmed.slice(5).trim();
+      else if (trimmed.startsWith('PREMISE:')) this.premise = trimmed.slice(8).trim();
     } else if (this.section === 'page' && this.page) {
       this.page.body.push(line);
     } else if (this.section === 'memory') {
@@ -80,7 +82,7 @@ export class StoryParser {
   private sendMeta(out: ParseEvent[]) {
     if (this.metaSent) return;
     this.metaSent = true;
-    out.push({ type: 'meta', title: this.title || 'Tonight’s Story', hook: this.hook });
+    out.push({ type: 'meta', title: this.title || 'Tonight’s Story', hook: this.hook, premise: this.premise });
   }
 
   private closePage(out: ParseEvent[]) {

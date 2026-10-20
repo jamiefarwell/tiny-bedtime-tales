@@ -13,6 +13,7 @@
   background: var(--paper-bg);
   color: var(--ink);
   touch-action: pan-y;
+  z-index: 30;
   user-select: none;
   -webkit-user-select: none;
   transition: background 1.2s ease, color 1.2s ease;
@@ -588,4 +589,43 @@
   .reader {
     --controls-h: 100px;
   }
+}
+.voice {
+  display: grid;
+  gap: 8px;
+}
+.voiceLabel {
+  font-weight: 800;
+}
+.voice small {
+  color: var(--mist);
+  font-size: 13px;
+}
+.voiceRow {
+  display: flex;
+  gap: 8px;
+}
+.voiceRow select {
+  flex: 1;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--cream);
+}
+.voiceRow select option {
+  color: #111;
+}
+.voiceRow button {
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  font-weight: 800;
+}
+.panel {
+  max-height: 88dvh;
+  overflow-y: auto;
 }

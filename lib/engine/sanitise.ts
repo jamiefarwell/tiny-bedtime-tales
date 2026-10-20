@@ -1,5 +1,5 @@
 import type { AgeBand, Pronouns } from '@/lib/types';
-import type { StoryRequest } from './prompt';
+import { pickShape, STORY_SHAPES, type StoryRequest } from './prompt';
 
 export const AGE_BANDS: AgeBand[] = ['Newborn–1', '2–3', '4–5', '6–7', '8–9', '10–12', 'Older kids'];
 const PRONOUNS: Pronouns[] = ['she', 'he', 'they'];
@@ -41,10 +41,14 @@ export function parseStoryRequest(body: unknown): StoryRequest {
       pronouns: PRONOUNS.includes(c.pronouns) ? c.pronouns : 'they',
       loves: list(c.loves, 6),
       companions: (Array.isArray(c.companions) ? c.companions : [])
-        .map((x: any) => ({ name: firstName(x?.name), kind: scrub(x?.kind, 30) || 'friend' }))
+        .map((x: any) => ({ name: firstName(x?.name), kind: scrub(x?.kind, 30) || 'friend', note: scrub(x?.note, 80) }))
         .filter((x: { name: string }) => x.name)
         .slice(0, 4),
       avoid: list(c.avoid, 10),
+      personality: list(c.personality, 4, 24),
+      laughs: list(c.laughs, 4, 40),
+      comfort: scrub(c.comfort, 60),
+      learning: scrub(c.learning, 80),
     },
     mood: scrub(b.mood, 80) || 'a cosy adventure',
     world: scrub(b.world, 80) || 'somewhere surprising',
@@ -53,7 +57,17 @@ export function parseStoryRequest(body: unknown): StoryRequest {
     memory: scrub(b.memory, 1400),
     chapter: Math.max(1, Math.min(99, Number(b.chapter) || 1)),
     avoidTitle: scrub(b.avoidTitle, 120),
+    history: (Array.isArray(b.history) ? b.history : [])
+      .slice(0, 10)
+      .map((h: any) => ({
+        title: scrub(h?.title, 80),
+        premise: scrub(h?.premise, 200),
+        shape: STORY_SHAPES.some((s) => s.id === h?.shape) ? String(h.shape) : '',
+      }))
+      .filter((h: { title: string }) => h.title),
+    shape: '',
   };
+  req.shape = pickShape(req.history.map((h) => h.shape).filter(Boolean));
 
   if (BAD.test(JSON.stringify(req))) {
     throw new RequestError('Let’s keep tonight’s story right for bedtime. Try different words?');

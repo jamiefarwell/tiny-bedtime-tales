@@ -42,3 +42,7 @@ export const LENGTHS = [
   { value: 10, label: 'Bedtime', note: '10 min' },
   { value: 15, label: 'Long', note: '15 min' },
 ] as const;
+
+export const PERSONALITY = ['Brave', 'Shy', 'Curious', 'Cheeky', 'Kind', 'Bossy', 'A worrier', 'Silly', 'Determined', 'Dreamy', 'Chatty', 'Thoughtful', 'Energetic', 'Gentle'];
+
+export const LAUGHS = ['Silly noises', 'Things going wrong', 'Animals acting like people', 'Burps and bottoms', 'Grown-ups being silly', 'Funny voices', 'Surprises', 'Silly words'];
