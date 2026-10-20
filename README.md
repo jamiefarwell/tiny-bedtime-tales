@@ -21,8 +21,13 @@ Without a key, everything except personalised story writing works.
 - `docs/ARCHITECTURE.md`: code layout, engine and reader internals.
 - `docs/COMPETITOR_REVIEW.md`: the October 2026 research.
 - `docs/ENGINE_COSTS.md`: per-story unit costs.
+- `docs/COST_OPTIMISATION.md`: cheaper engines and character reuse, without losing quality.
+- `docs/GOING_LIVE.md`: switching on accounts, tokens and Stripe.
 - `docs/PIPELINE.md`: generating art and narration for books.
 - `docs/HISTORY_CHATGPT_HANDOFF.md`: decisions from the original prototype.
 
+## Accounts and payments
+Preview mode by default. Supabase switches on magic-link accounts, sync and token wallets; Stripe switches on the Family plan and token packs. See `docs/GOING_LIVE.md`.
+
 ## Product rules
-Mobile first. No child photos. First names only. Payments deliberately not connected yet. Art never contains text; the app sets all typography.
+Mobile first. No child photos. First names only. Art never contains text; the app sets all typography.

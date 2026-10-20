@@ -9,7 +9,8 @@ Read `docs/STRATEGY.md` and `docs/ARCHITECTURE.md` before changing anything subs
 
 ## Hard rules
 - No child photo uploads. First name or nickname only; never surnames, schools, addresses or dates of birth.
-- No payments or checkout until explicitly asked.
+- Payments are tokens: 1 token = 1 personalised book, never priced per feature. Balances change only via the SQL functions in migration 0004 (server-side). Keep `npm run test:db` passing.
+- Hero look is a palette, never a photo, and never goes into story-text prompts.
 - Illustrations never contain text or UI. The app sets all typography.
 - Characters must look identical on every page: use the pipeline's reference sheets, never ad-hoc per-page prompts.
 - Story quality bar is a published modern picture book. No "collect three magic things", no stated morals, nothing on the banned-phrase list in `lib/engine/prompt.ts`.

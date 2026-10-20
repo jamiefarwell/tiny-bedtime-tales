@@ -4,6 +4,7 @@ import { useState } from 'react';
 import type { ChildProfile, Pronouns } from '@/lib/types';
 import { uid } from '@/lib/store';
 import { AGE_OPTIONS, AVOIDS, LAUGHS, LOVES, PERSONALITY } from '@/app/(app)/create/options';
+import { HAIR_COLOURS, HAIR_STYLES, SKIN_TONES, type HeroLook } from '@/lib/heroLook';
 import styles from './ChildForm.module.css';
 
 const KINDS = ['pet', 'friend', 'sibling', 'toy', 'grown-up'];
@@ -174,6 +175,8 @@ export function ChildForm({
             </div>
           </fieldset>
 
+          <LookPicker child={c} set={set} />
+
           <fieldset className={styles.field}>
             <legend>Keep out of their stories</legend>
             <div className={styles.pills}>
@@ -264,5 +267,72 @@ export function ProfileExtras({
         </label>
       )}
     </>
+  );
+}
+
+const DEFAULT_LOOK: HeroLook = { skin: 's3', hair: 'brown', style: 'short', glasses: false, freckles: false };
+
+/** Optional: how they look in illustrated stories. Swatches, never photos. */
+function LookPicker({ child, set }: { child: ChildProfile; set: (patch: Partial<ChildProfile>) => void }) {
+  const look = child.look;
+  const patch = (p: Partial<HeroLook>) => set({ look: { ...(look ?? DEFAULT_LOOK), ...p } });
+  return (
+    <fieldset className={styles.field}>
+      <legend>How they look in pictures (optional)</legend>
+      <small>Keeps their character looking the same in every illustrated story. No photos, ever.</small>
+      {!look ? (
+        <button type="button" className={styles.add} onClick={() => set({ look: DEFAULT_LOOK })}>
+          Choose their look
+        </button>
+      ) : (
+        <div className={styles.look}>
+          <span className={styles.lookLabel}>Skin</span>
+          <div className={styles.swatches}>
+            {SKIN_TONES.map((s) => (
+              <button
+                type="button"
+                key={s.id}
+                aria-label={s.label}
+                aria-pressed={look.skin === s.id}
+                style={{ background: s.swatch }}
+                onClick={() => patch({ skin: s.id })}
+              />
+            ))}
+          </div>
+          <span className={styles.lookLabel}>Hair colour</span>
+          <div className={styles.swatches}>
+            {HAIR_COLOURS.map((h) => (
+              <button
+                type="button"
+                key={h.id}
+                aria-label={h.label}
+                aria-pressed={look.hair === h.id}
+                style={{ background: h.swatch }}
+                onClick={() => patch({ hair: h.id })}
+              />
+            ))}
+          </div>
+          <span className={styles.lookLabel}>Hair style</span>
+          <div className={styles.pills}>
+            {HAIR_STYLES.map((h) => (
+              <button type="button" key={h.id} aria-pressed={look.style === h.id} onClick={() => patch({ style: h.id })}>
+                {h.label}
+              </button>
+            ))}
+          </div>
+          <div className={styles.pills}>
+            <button type="button" aria-pressed={look.glasses} onClick={() => patch({ glasses: !look.glasses })}>
+              Glasses
+            </button>
+            <button type="button" aria-pressed={look.freckles} onClick={() => patch({ freckles: !look.freckles })}>
+              Freckles
+            </button>
+          </div>
+          <button type="button" className={styles.clear} onClick={() => set({ look: undefined })}>
+            Clear look
+          </button>
+        </div>
+      )}
+    </fieldset>
   );
 }

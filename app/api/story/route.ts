@@ -3,6 +3,9 @@ import { PROMPT_VERSION, SYSTEM_PROMPT, buildUserMessage, pageShape } from '@/li
 import { readability, type Readability } from '@/lib/engine/readability';
 import { StoryParser, bannedPhraseCount, type ParseEvent } from '@/lib/engine/parse';
 import { RequestError, parseStoryRequest } from '@/lib/engine/sanitise';
+import { cloudEnabled } from '@/lib/server/config';
+import { currentUser } from '@/lib/server/supabase';
+import { NoTokensError, refundStoryToken, spendStoryToken } from '@/lib/server/wallet';
 
 export const runtime = 'nodejs';
 export const maxDuration = 300;
@@ -64,12 +67,39 @@ export async function POST(request: Request) {
   }
 
   let story;
+  let raw: Record<string, unknown> = {};
   try {
-    story = parseStoryRequest(await request.json());
+    raw = await request.json();
+    story = parseStoryRequest(raw);
   } catch (e) {
     const message = e instanceof RequestError ? e.message : 'We couldn’t read that request.';
     return Response.json({ error: 'bad_request', message }, { status: 400 });
   }
+
+  // With accounts switched on, every personalised story costs one token,
+  // taken before writing starts and given back automatically if it fails.
+  // In preview mode (no Supabase) stories are free.
+  const clean = (v: unknown) => (typeof v === 'string' && /^[a-z0-9]{6,40}$/i.test(v) ? v : '');
+  let charge: { userId: string; ref: string } | null = null;
+  if (cloudEnabled()) {
+    const user = await currentUser();
+    if (!user) return Response.json({ error: 'sign_in', message: 'Sign in to make a story.' }, { status: 401 });
+    const storyId = clean(raw.storyId);
+    if (!storyId) return Response.json({ error: 'bad_request', message: 'Missing story id.' }, { status: 400 });
+    const redoOf = clean(raw.redoOf);
+    try {
+      const spent = await spendStoryToken(user.id, `${user.id}:${storyId}`, redoOf ? `${user.id}:${redoOf}` : undefined);
+      charge = { userId: user.id, ref: `${user.id}:${storyId}` };
+      if (spent.free) charge = null;
+    } catch (e) {
+      if (e instanceof NoTokensError) {
+        return Response.json({ error: 'no_tokens', message: 'You’ve used all your story tokens.' }, { status: 402 });
+      }
+      console.error('token spend failed', String(e));
+      return Response.json({ error: 'wallet_failed', message: 'We couldn’t check your tokens. Please try again.' }, { status: 503 });
+    }
+  }
+  const refund = () => charge && refundStoryToken(charge.userId, charge.ref);
 
   // Pin the endpoint: an ambient ANTHROPIC_BASE_URL (e.g. from developer
   // tooling) must never redirect the story key elsewhere.
@@ -117,7 +147,11 @@ export async function POST(request: Request) {
         const read = readability(pageTexts.filter(Boolean).join('\n\n'), level.maxSentence);
 
         if (final.stop_reason === 'refusal') {
+          await refund();
           send({ type: 'error', code: 'refusal', message: 'The storyteller couldn’t write that one. Try a different idea?' });
+        } else if (pageTexts.filter(Boolean).length < 3) {
+          await refund();
+          send({ type: 'error', code: 'short', message: 'The story came out too short. Your token has been returned.' });
         } else {
           send({ type: 'done', model: final.model, promptVersion: PROMPT_VERSION, shape: story.shape, readability: read });
         }
@@ -136,6 +170,7 @@ export async function POST(request: Request) {
           hardWords: read.hardWords,
         });
       } catch (error) {
+        await refund();
         const { code, message } = request.signal.aborted ? { code: 'cancelled', message: 'The story was interrupted.' } : classify(error);
         console.error('story generation failed', code, error instanceof Anthropic.APIError ? error.status : '', String(error));
         try {

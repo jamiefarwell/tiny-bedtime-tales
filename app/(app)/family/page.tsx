@@ -6,6 +6,7 @@ import type { ChildProfile } from '@/lib/types';
 import { family, useFamily, useHydrated } from '@/lib/store';
 import { ChildForm, blankChild } from '@/components/ChildForm';
 import { Icon } from '@/components/reader/icons';
+import { WalletChip } from '@/components/WalletChip';
 import ui from '../pages.module.css';
 import styles from './family.module.css';
 
@@ -57,6 +58,14 @@ export default function FamilyPage() {
         <p>One account for the whole family. Each child gets their own stories and their own world.</p>
       </header>
 
+      <Link href="/account" className={styles.account}>
+        <span>
+          <strong>Account &amp; plan</strong>
+          <small>Sign in, tokens and sync across devices</small>
+        </span>
+        <WalletChip plain />
+      </Link>
+
       <div className={styles.kids}>
         {hydrated &&
           children.map((c) => (
@@ -84,7 +93,7 @@ export default function FamilyPage() {
         <div className={`${ui.card} ${styles.promise}`}>
           <h2>Our bedtime promise</h2>
           <ul>
-            <li>When paid plans arrive: no coins or tokens, a reminder before any trial ends, and one-tap cancelling.</li>
+            <li>Simple pricing: 1 token makes 1 book, a reminder before any trial ends, and one-tap cancelling.</li>
             <li>Stories you’ve made stay on your shelf, even if you stop subscribing.</li>
             <li>We only ask for a first name. No photos, no surnames, no schools.</li>
             <li>Every story is written to strict bedtime rules: calm endings, nothing frightening, nothing from your keep-out list.</li>

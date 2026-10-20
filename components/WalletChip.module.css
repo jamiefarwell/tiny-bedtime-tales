@@ -1,0 +1,30 @@
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: rgba(14, 17, 41, 0.55);
+  border: 1px solid rgba(255, 196, 107, 0.35);
+  color: var(--cream);
+  font-size: 13px;
+  font-weight: 800;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  white-space: nowrap;
+}
+.coin {
+  color: var(--glow);
+}
+.empty {
+  border-color: rgba(255, 122, 154, 0.6);
+}
+.preview {
+  border-color: rgba(127, 211, 208, 0.4);
+  color: var(--cream-dim);
+}
+.loading {
+  width: 92px;
+  opacity: 0.4;
+}

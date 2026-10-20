@@ -7,6 +7,7 @@ import { BookTile } from '@/components/BookTile';
 import { BookCover } from '@/components/BookCover';
 import { Icon } from '@/components/reader/icons';
 import { WORLDS } from './create/options';
+import { WalletChip } from '@/components/WalletChip';
 import ui from './pages.module.css';
 import styles from './tonight.module.css';
 
@@ -50,7 +51,10 @@ export function Tonight({ books }: { books: Book[] }) {
         <img src="/books/lily-and-the-lantern-feather/page-05.webp" alt="" className={styles.heroArt} />
         <div className={styles.heroShade} />
         <div className={styles.heroBody}>
-          <p className={styles.hello}>{hydrated ? greeting() : ' '}</p>
+          <div className={styles.heroTop}>
+            <p className={styles.hello}>{hydrated ? greeting() : ' '}</p>
+            <WalletChip />
+          </div>
           <h1>
             Tonight, <em>{name ?? 'they’re'}</em>
             {name ? ' is' : ''} the hero.

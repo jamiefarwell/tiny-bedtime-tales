@@ -50,18 +50,25 @@ The top complaints across the category:
    - Clear labelling of what AI does.
 7. **UK-native.** British English, UK voices, GBP pricing, and ICO Children's Code alignment.
 
-## 4. Pricing recommendation (not built — payments stay off)
+## 4. Pricing (built; switches on with Stripe — see `GOING_LIVE.md`)
 
-| Plan | Price | Includes |
+| Option | Price | Includes |
 |---|---|---|
-| Free | £0 | 3 personalised stories, 2 library books, device narration |
-| Family | **£6.99/mo or £49.99/yr** | Unlimited personalised read-aloud stories, the full library, series memory, all children |
-| Family Plus | **£9.99/mo or £79.99/yr** | Plus illustrated personalised stories and recorded narration |
-| Keepsake | **£24.99** | A printed hardback of a child's series (later) |
+| Welcome | Free | 1 token on sign-up (first personalised book free) |
+| Family plan | **£6.99/mo or £59.99/yr** | 4 tokens a month (one book a week), roll-over up to 8, unlimited library, all children |
+| 3 tokens | **£2.99** | Never expire |
+| 10 tokens | **£7.99** | Never expire (80p a book) |
 
-The UK anchors are Moshi £49.99–59.99/yr, Headspace Family £74.99 and Epic £79.99. The AI-only apps at £3.99 have neither a library nor sleep craft.
+**Token rules:**
+- 1 token = 1 personalised book.
+- The first redo within 24 hours is free.
+- A failed story refunds its token.
 
-## 5. Unit costs (details: `ENGINE_COSTS.md`)
+**Why tokens without the usual complaints:** the research shows coins and tokens confuse people. We avoid that by never varying the price per feature, showing tokens as "books you can make", letting bought tokens never expire, and offering one-tap cancel.
+
+These prices are defaults in `lib/plans.ts`, for you to confirm.
+
+## 5. Unit costs (details: `ENGINE_COSTS.md`; savings plan: `COST_OPTIMISATION.md`)
 
 | Item | Cost |
 |---|---|

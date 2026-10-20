@@ -74,6 +74,8 @@ export interface ChildProfile {
   comfort?: string;
   /** Something they're working on, e.g. "riding without stabilisers". */
   learning?: string;
+  /** How they appear in illustrated stories (see lib/heroLook.ts). Optional. */
+  look?: import('./heroLook').HeroLook;
   createdAt: number;
 }
 

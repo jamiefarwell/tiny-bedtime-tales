@@ -629,3 +629,32 @@
   max-height: 88dvh;
   overflow-y: auto;
 }
+
+/* Tablet portrait: bigger type, more picture, centred reading column. */
+@media (min-width: 700px) and (max-aspect-ratio: 1/1) {
+  .reader {
+    --art-h: 52dvh;
+    --controls-h: 176px;
+  }
+  .paperInner {
+    padding-left: max(48px, calc((100% - 680px) / 2));
+    padding-right: max(48px, calc((100% - 680px) / 2));
+    padding-top: 18px;
+  }
+  .heading {
+    font-size: calc(30px * var(--text-scale));
+    margin-bottom: 14px;
+  }
+  .text {
+    font-size: calc(24px * var(--text-scale));
+    line-height: 1.55;
+  }
+  .controls {
+    padding-left: max(48px, calc((100% - 680px) / 2));
+    padding-right: max(48px, calc((100% - 680px) / 2));
+  }
+  .round {
+    width: 52px;
+    height: 52px;
+  }
+}

@@ -8,6 +8,9 @@ import { ChildForm, ProfileExtras, blankChild } from '@/components/ChildForm';
 import { Icon } from '@/components/reader/icons';
 import { Reader } from '@/components/reader/Reader';
 import { pageShape } from '@/lib/engine/prompt';
+import { WalletChip } from '@/components/WalletChip';
+import { cloudOnClient, refreshWallet, syncFamily, useWallet } from '@/lib/account';
+import { totalTokens } from '@/lib/plans';
 import { LENGTHS, MOODS, WORLDS } from './options';
 import styles from './create.module.css';
 
@@ -42,6 +45,8 @@ export function CreateFlow({ initialWorld, continueId, againId }: { initialWorld
   const children = useFamily((s) => s.children);
   const stories = useFamily((s) => s.stories);
   const base = stories.find((s) => s.id === (continueId || againId)) ?? null;
+  const wallet = useWallet();
+  const outOfTokens = Boolean(wallet?.cloud && wallet.signedIn && totalTokens(wallet) === 0 && !againId);
 
   const [step, setStep] = useState<Step>('who');
   const [editingChild, setEditingChild] = useState(false);
@@ -127,6 +132,10 @@ export function CreateFlow({ initialWorld, continueId, againId }: { initialWorld
       memory: continuing ? base!.memory : '',
       chapter: continuing ? base!.chapter + 1 : 1,
       avoidTitle: againId && base ? base.title : '',
+      // Token bookkeeping (ignored in preview mode): this story's id, and the
+      // story being redone, whose first redo within 24h is free.
+      storyId: id,
+      redoOf: againId && base ? base.id : undefined,
     };
 
     try {
@@ -198,6 +207,10 @@ export function CreateFlow({ initialWorld, continueId, againId }: { initialWorld
         createdAt: Date.now(),
       };
       family.saveStory(story);
+      if (cloudOnClient()) {
+        refreshWallet();
+        syncFamily();
+      }
       setWriting((w) => {
         // Already reading: give the page its permanent address without
         // interrupting the narrator.
@@ -451,10 +464,22 @@ export function CreateFlow({ initialWorld, continueId, againId }: { initialWorld
             <small>We’ll weave it in gently. The best stories have a little bit of real life in them.</small>
           </div>
 
-          <button className={`btn btn-primary btn-block ${styles.make}`} onClick={make} disabled={!mood || !worldText}>
-            <Icon name="sparkle" size={20} />
-            {againId ? 'Write a different story' : 'Write the story'}
-          </button>
+          <div className={styles.makeWrap}>
+            {outOfTokens ? (
+              <Link href="/plans" className="btn btn-primary btn-block">
+                Get tokens to write this story
+              </Link>
+            ) : (
+              <button className="btn btn-primary btn-block" onClick={make} disabled={!mood || !worldText}>
+                <Icon name="sparkle" size={20} />
+                {againId ? 'Write a different story' : 'Write the story'}
+              </button>
+            )}
+            <div className={styles.costLine}>
+              <WalletChip />
+              {wallet?.cloud && <span>{againId ? 'First redo within 24 hours is free' : 'Uses 1 token'}</span>}
+            </div>
+          </div>
         </section>
       )}
     </main>
@@ -508,6 +533,26 @@ function WritingScreen({
         <button className="btn btn-ghost btn-block" onClick={onBack}>
           Back
         </button>
+      </main>
+    );
+  }
+  if (writing.code === 'no_tokens' || writing.code === 'sign_in') {
+    const signIn = writing.code === 'sign_in';
+    return (
+      <main className={styles.writing}>
+        <div className={styles.quill} aria-hidden />
+        <h1>{signIn ? 'Sign in to make this story' : 'You’ve used all your tokens'}</h1>
+        <p className={styles.sub}>
+          {signIn
+            ? 'It takes one email, and your first personalised story is free.'
+            : 'Top up with a few extra tokens, or choose the Family plan for a new book every week. The library is still all yours tonight.'}
+        </p>
+        <Link href={signIn ? '/account?next=/create' : '/plans'} className="btn btn-primary btn-block">
+          {signIn ? 'Sign in' : 'Get more tokens'}
+        </Link>
+        <Link href="/library" className="btn btn-ghost btn-block">
+          Read from the library instead
+        </Link>
       </main>
     );
   }

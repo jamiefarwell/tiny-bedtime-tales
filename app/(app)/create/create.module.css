@@ -252,10 +252,23 @@
   border-color: var(--glow);
   color: #2a1a05;
 }
-.make {
+.makeWrap {
+  display: grid;
+  gap: 10px;
   margin-top: 6px;
   position: sticky;
   bottom: calc(var(--nav-h) + var(--safe-b) + 18px);
+  padding: 12px 0 4px;
+  background: linear-gradient(180deg, transparent, var(--night-900) 30%);
+}
+.costLine {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--mist);
 }
 
 /* Writing screen */

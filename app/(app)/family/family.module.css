@@ -105,3 +105,23 @@
   font-weight: 800;
   font-size: 14px;
 }
+
+.account {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 18px;
+  margin-bottom: 18px;
+  border-radius: var(--radius-l);
+  background: rgba(255, 196, 107, 0.08);
+  border: 1px solid rgba(255, 196, 107, 0.25);
+}
+.account strong {
+  display: block;
+  font-size: 17px;
+}
+.account small {
+  color: var(--mist);
+  font-size: 13px;
+}

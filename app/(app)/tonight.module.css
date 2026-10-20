@@ -181,3 +181,24 @@
     min-height: 520px;
   }
 }
+
+.heroTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+@media (min-width: 760px) {
+  .heroBody {
+    max-width: 640px;
+    padding: 36px 36px 32px;
+  }
+  .heroShade {
+    background:
+      linear-gradient(90deg, rgba(14, 17, 41, 0.85) 0%, rgba(14, 17, 41, 0.35) 55%, rgba(14, 17, 41, 0) 80%),
+      linear-gradient(180deg, transparent 50%, rgba(14, 17, 41, 0.6) 100%);
+  }
+  .hero {
+    align-items: flex-end;
+  }
+}

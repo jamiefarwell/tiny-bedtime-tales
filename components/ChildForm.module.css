@@ -86,3 +86,38 @@ select.input option {
   font-size: 13px;
   color: var(--mist);
 }
+
+.look {
+  display: grid;
+  gap: 10px;
+}
+.lookLabel {
+  font-weight: 800;
+  font-size: 14px;
+  color: var(--cream-dim);
+}
+.swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.swatches button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.18);
+  transition: transform 0.15s var(--ease-spring);
+}
+.swatches button[aria-pressed='true'] {
+  border-color: var(--night-900);
+  box-shadow: 0 0 0 3px var(--glow);
+  transform: scale(1.08);
+}
+.clear {
+  justify-self: start;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--mist);
+  min-height: 36px;
+}

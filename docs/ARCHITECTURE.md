@@ -54,6 +54,25 @@ If `ANTHROPIC_API_KEY` is absent the route returns `503 not_connected`. The UI e
 - **Sleepy mode:** amber-on-brown palette, art dimming and desaturating with progress, voice rate and volume easing down, synthesised rain, waves or hush, and a lights-out lock on the end screen.
 - **Device behaviour:** progress is saved per book or story, and a wake lock is held while narrating.
 
+## Accounts, tokens and payments
+Three layers, each switched on by its own env vars, so the app runs in preview mode without them (see `GOING_LIVE.md`):
+- **Accounts** (Supabase):
+  - Sign-in is by magic link (`lib/account.ts`, `app/auth/callback`).
+  - `proxy.ts` refreshes the session on every navigation.
+  - Children and stories are stored as JSON documents (`family_children`, `family_stories`), keyed by the app's own ids. The device copy stays the instant, offline-friendly source; `syncFamily()` merges it with the account.
+- **Tokens:**
+  - The `wallets` table has two buckets (plan and extra) plus an append-only `token_ledger`. Its unique `(kind, ref)` makes every Stripe grant and story spend idempotent.
+  - All changes go through `security definer` SQL functions called with the service role (`lib/server/wallet.ts`). `/api/story` spends one token before writing and refunds it automatically on refusal, error, cancellation or a too-short story.
+  - Plan tokens refill lazily each month (`refill_wallet`), so monthly and yearly billing work without a scheduler.
+  - `npm run test:db` exercises it all in PGlite.
+- **Payments** (Stripe):
+  - `/api/billing` opens Checkout or the billing portal.
+  - `/api/stripe/webhook` verifies the signature and mirrors subscriptions and pack purchases onto the wallet (`lib/server/billing.ts`).
+  - Plans and packs are defined once in `lib/plans.ts`.
+
+## Character reuse
+`lib/heroLook.ts` describes a child's look as a fixed palette (skin, hair colour, style, glasses, freckles), never a photo. `heroLookKey()` names a shared reference sheet, so each combination is drawn once and reused by every family who picks it. Look data is kept out of story-writing prompts. See `COST_OPTIMISATION.md` for the full reuse plan.
+
 ## Data
 - **Today:** `lib/store.ts` keeps everything in one versioned localStorage key, exposed through `useSyncExternalStore`.
 - **Next:** Supabase tables (`supabase/migrations/0001–0003`) mirror the same shapes: `child_profiles`, `stories` (chapters and series), `books`, `reading_progress`, `family_settings`, plus jobs, media and generation events. RLS is scoped to the parent.
