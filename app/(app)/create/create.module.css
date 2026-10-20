@@ -336,3 +336,9 @@
   font-size: 14px;
   margin-top: 2px;
 }
+.code {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--mist-dim);
+  letter-spacing: 0.04em;
+}

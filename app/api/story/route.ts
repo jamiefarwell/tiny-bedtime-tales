@@ -25,7 +25,28 @@ function rateLimited(request: Request): boolean {
   return entry.n > 15;
 }
 
-type Out = ParseEvent | { type: 'done'; model: string; promptVersion: string } | { type: 'error'; message: string };
+type Out =
+  | ParseEvent
+  | { type: 'done'; model: string; promptVersion: string }
+  | { type: 'error'; message: string; code: string };
+
+// Short codes shown under the error so a parent's screenshot tells us the cause.
+function classify(error: unknown): { code: string; message: string } {
+  const busy = 'The storyteller is very busy right now. Try again in a minute.';
+  const generic = 'Something went wrong writing tonight’s story.';
+  if (!(error instanceof Anthropic.APIError)) {
+    return { code: error instanceof Anthropic.APIConnectionTimeoutError ? 'timeout' : 'network', message: busy };
+  }
+  const text = String(error.message).toLowerCase();
+  if (error instanceof Anthropic.AuthenticationError) return { code: 'auth', message: generic };
+  if (error instanceof Anthropic.PermissionDeniedError) return { code: 'permission', message: generic };
+  if (error instanceof Anthropic.NotFoundError) return { code: 'model', message: generic };
+  if (error instanceof Anthropic.RateLimitError) return { code: 'rate', message: busy };
+  if (text.includes('workspace')) return { code: 'workspace', message: generic };
+  if (text.includes('credit balance')) return { code: 'credit', message: generic };
+  if ((error.status ?? 0) >= 500) return { code: `busy-${error.status}`, message: busy };
+  return { code: `api-${error.status ?? 'x'}`, message: generic };
+}
 
 export async function POST(request: Request) {
   if (!process.env.ANTHROPIC_API_KEY) {
@@ -88,7 +109,7 @@ export async function POST(request: Request) {
         for (const event of parser.end()) send(event);
 
         if (final.stop_reason === 'refusal') {
-          send({ type: 'error', message: 'The storyteller couldn’t write that one. Try a different idea?' });
+          send({ type: 'error', code: 'refusal', message: 'The storyteller couldn’t write that one. Try a different idea?' });
         } else {
           send({ type: 'done', model: final.model, promptVersion: PROMPT_VERSION });
         }
@@ -101,13 +122,13 @@ export async function POST(request: Request) {
           banned: bannedPhraseCount(full),
         });
       } catch (error) {
-        if (request.signal.aborted) return controller.close();
-        console.error('story generation failed', error instanceof Anthropic.APIError ? error.status : '', String(error));
-        const message =
-          error instanceof Anthropic.RateLimitError || (error instanceof Anthropic.APIError && (error.status ?? 0) >= 500)
-            ? 'The storyteller is very busy right now. Try again in a minute.'
-            : 'Something went wrong writing tonight’s story.';
-        send({ type: 'error', message });
+        const { code, message } = request.signal.aborted ? { code: 'cancelled', message: 'The story was interrupted.' } : classify(error);
+        console.error('story generation failed', code, error instanceof Anthropic.APIError ? error.status : '', String(error));
+        try {
+          send({ type: 'error', code, message });
+        } catch {
+          // The client has gone; nothing left to tell it.
+        }
       }
       controller.close();
     },

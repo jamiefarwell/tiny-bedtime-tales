@@ -28,6 +28,7 @@ interface Writing {
   pages: { heading: string; text: string }[];
   expected: number;
   error: string | null;
+  code: string;
   notConnected: boolean;
 }
 
@@ -90,9 +91,11 @@ export function CreateFlow({ initialWorld, continueId, againId }: { initialWorld
   async function make() {
     if (!child || !mood || !worldText) return;
     const continuing = Boolean(continueId && base);
-    setWriting({ title: '', hook: '', pages: [], expected: 10, error: null, notConnected: false });
+    setWriting({ title: '', hook: '', pages: [], expected: 10, error: null, code: '', notConnected: false });
     go('writing');
     abort.current = new AbortController();
+    // Writing takes up to a minute; if the phone auto-locks, the connection drops.
+    const wake = await (navigator as any).wakeLock?.request('screen').catch(() => null);
 
     const body = {
       child: {
@@ -121,7 +124,7 @@ export function CreateFlow({ initialWorld, continueId, againId }: { initialWorld
       });
       if (!res.ok || !res.body) {
         const err = await res.json().catch(() => ({}));
-        setWriting((w) => w && { ...w, error: err.message || 'Something went wrong.', notConnected: err.error === 'not_connected' });
+        setWriting((w) => w && { ...w, error: err.message || 'Something went wrong.', code: err.error || `http-${res.status}`, notConnected: err.error === 'not_connected' });
         return;
       }
 
@@ -148,13 +151,15 @@ export function CreateFlow({ initialWorld, continueId, againId }: { initialWorld
           } else if (ev.type === 'page') pages[ev.index] = { heading: ev.heading, text: ev.text };
           else if (ev.type === 'memory') memory = ev.text;
           else if (ev.type === 'done') model = ev.model;
-          else if (ev.type === 'error') throw new Error(ev.message);
+          else if (ev.type === 'error') throw Object.assign(new Error(ev.message), { code: ev.code });
           setWriting((w) => w && { ...w, title, hook, pages: pages.filter(Boolean) });
         }
       }
 
       const finished = pages.filter(Boolean);
-      if (finished.length < 3) throw new Error('The story came out too short. Let’s try again.');
+      if (finished.length < 3) {
+        throw Object.assign(new Error('The story came out too short. Let’s try again.'), { code: `short-${finished.length}${model ? '' : '-nodone'}` });
+      }
       const story: PersonalStory = {
         id: uid(),
         childId: child.id,
@@ -184,7 +189,11 @@ export function CreateFlow({ initialWorld, continueId, againId }: { initialWorld
       router.push(`/read/mine/${story.id}?listen=1`);
     } catch (e: any) {
       if (e?.name === 'AbortError') return;
-      setWriting((w) => w && { ...w, error: e?.message || 'Something went wrong.' });
+      // A dropped connection (phone locked, signal lost) surfaces as a TypeError.
+      const code = e?.code || (e instanceof TypeError ? 'connection' : 'client');
+      setWriting((w) => w && { ...w, error: e?.message || 'Something went wrong.', code });
+    } finally {
+      wake?.release?.().catch(() => {});
     }
   }
 
@@ -454,6 +463,7 @@ function WritingScreen({
       <main className={styles.writing}>
         <h1>That one got away</h1>
         <p className={styles.sub}>{writing.error}</p>
+        {writing.code && <p className={styles.code}>Code: {writing.code}</p>}
         <button className="btn btn-primary btn-block" onClick={onRetry}>
           Try again
         </button>
