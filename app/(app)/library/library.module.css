@@ -1,0 +1,32 @@
+.feature {
+  display: grid;
+  gap: 18px;
+  border-radius: var(--radius-xl);
+  padding: 14px;
+  background:
+    radial-gradient(80% 60% at 20% 0%, rgba(255, 196, 107, 0.16), transparent 70%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.featureArt > div {
+  aspect-ratio: 16 / 11;
+  border-radius: var(--radius-l);
+}
+.featureBody {
+  display: grid;
+  gap: 10px;
+  padding: 0 6px 8px;
+}
+.featureBody h2 {
+  font-size: clamp(28px, 7vw, 38px);
+}
+.featureBody > p:not(:global(.eyebrow)) {
+  color: var(--cream-dim);
+}
+@media (min-width: 760px) {
+  .feature {
+    grid-template-columns: 1.2fr 1fr;
+    align-items: center;
+    padding: 18px;
+  }
+}

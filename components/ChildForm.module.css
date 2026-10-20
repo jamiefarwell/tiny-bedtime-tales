@@ -1,0 +1,88 @@
+.form {
+  display: grid;
+  gap: 22px;
+}
+.field {
+  display: grid;
+  gap: 10px;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+.field > span,
+.field legend {
+  font-weight: 800;
+  font-size: 16px;
+  padding: 0;
+  margin-bottom: 10px;
+}
+.field small {
+  color: var(--mist);
+  font-size: 13px;
+  margin-top: -4px;
+}
+.input {
+  width: 100%;
+  min-height: 52px;
+  padding: 0 16px;
+  border-radius: var(--radius-m);
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--cream);
+  font-size: 17px;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+}
+.input::placeholder {
+  color: var(--mist-dim);
+}
+.input:focus {
+  border-color: var(--glow);
+  background: rgba(255, 255, 255, 0.08);
+}
+select.input {
+  appearance: none;
+  width: auto;
+  min-width: 110px;
+}
+select.input option {
+  color: #111;
+}
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.pills button {
+  min-height: 42px;
+  padding: 0 16px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  font-weight: 800;
+  font-size: 15px;
+  color: var(--cream-dim);
+  transition: all 0.18s var(--ease-out);
+}
+.pills button[aria-pressed='true'] {
+  background: var(--glow);
+  border-color: var(--glow);
+  color: #2a1a05;
+}
+.addRow {
+  display: flex;
+  gap: 8px;
+}
+.add {
+  flex: none;
+  min-height: 52px;
+  padding: 0 18px;
+  border-radius: var(--radius-m);
+  background: rgba(255, 255, 255, 0.1);
+  font-weight: 800;
+}
+.privacy {
+  font-size: 13px;
+  color: var(--mist);
+}

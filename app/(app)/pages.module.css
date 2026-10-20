@@ -1,0 +1,95 @@
+/* Shared screen layout for the tabbed app. */
+
+.pageHead {
+  display: grid;
+  gap: 8px;
+  margin: 8px 0 22px;
+}
+.pageHead h1 {
+  font-size: clamp(34px, 9vw, 52px);
+}
+.pageHead p {
+  color: var(--cream-dim);
+  max-width: 36ch;
+}
+
+.section {
+  margin-top: 34px;
+}
+.sectionHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.sectionHead h2 {
+  font-size: 24px;
+}
+.sectionHead a {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--glow);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px 14px;
+}
+@media (min-width: 640px) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (min-width: 960px) {
+  .grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.rail {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: min(42%, 190px);
+  gap: 14px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  margin: 0 calc(var(--gutter) * -1);
+  padding: 4px var(--gutter) 10px;
+  scrollbar-width: none;
+}
+.rail::-webkit-scrollbar {
+  display: none;
+}
+.rail > * {
+  scroll-snap-align: start;
+}
+
+.card {
+  border-radius: var(--radius-l);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.03));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 20px;
+}
+
+.empty {
+  text-align: center;
+  padding: 44px 20px;
+  display: grid;
+  gap: 12px;
+  justify-items: center;
+}
+.empty h2 {
+  font-size: 26px;
+}
+.empty p {
+  color: var(--cream-dim);
+  max-width: 32ch;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}

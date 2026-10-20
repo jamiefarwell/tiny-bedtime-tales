@@ -7,7 +7,7 @@ on:
 jobs:
   smoke:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 10
     steps:
       - name: Wait for this exact production deployment
         shell: bash
@@ -15,24 +15,36 @@ jobs:
           set -euo pipefail
           for i in {1..30}; do
             if curl -fsS --max-time 15 https://tiny-bedtime-tales.vercel.app/api/health -o /tmp/health.json; then
-              cat /tmp/health.json
-              DEPLOYED_SHA=$(node -e "const fs=require('fs');const h=JSON.parse(fs.readFileSync('/tmp/health.json','utf8'));process.stdout.write(h.commit||'')")
-              if [ "$DEPLOYED_SHA" = "$GITHUB_SHA" ]; then
-                node -e "const fs=require('fs');const h=JSON.parse(fs.readFileSync('/tmp/health.json','utf8'));if(!h.ok)process.exit(1);console.log('AI gateway auth:',h.aiGatewayAuth);console.log('Cloud database:',h.cloudDatabase);"
-                exit 0
-              fi
+              SHA=$(node -e "process.stdout.write(require('/tmp/health.json').commit||'')")
+              if [ "$SHA" = "$GITHUB_SHA" ]; then cat /tmp/health.json; exit 0; fi
             fi
             sleep 10
           done
-          echo "Production never reached expected commit $GITHUB_SHA"
-          exit 1
+          echo "Production never reached $GITHUB_SHA"; exit 1
 
-      - name: Generate a safe test story
+      - name: Library and reader pages render
         shell: bash
         run: |
           set -euo pipefail
-          curl -fsS --max-time 120 -X POST https://tiny-bedtime-tales.vercel.app/api/story \
+          for path in / /library /library/lily-and-the-lantern-feather /read/lily-and-the-lantern-feather /create; do
+            curl -fsS --max-time 20 -o /dev/null "https://tiny-bedtime-tales.vercel.app$path"
+            echo "ok $path"
+          done
+
+      - name: Storyteller writes a real story (when connected)
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "$(node -e "process.stdout.write(String(require('/tmp/health.json').storyteller))")" != "true" ]; then
+            echo "Storyteller not connected yet; skipping."; exit 0
+          fi
+          curl -fsS --max-time 240 -N -X POST https://tiny-bedtime-tales.vercel.app/api/story \
             -H 'Content-Type: application/json' \
-            --data '{"profile":{"childName":"Milo","ageBand":"6–7","interests":"space, puzzles","pets":"","friends":"","favouriteThings":"stars","preferredTone":"Magical and adventurous","storyLength":"Quick — about 4 minutes","avoid":""},"brief":{"theme":"Moon","format":"standalone","request":"a gentle moon treasure hunt","packageType":"illustrated"}}' \
-            -o /tmp/story.json
-          node -e "const fs=require('fs');const s=JSON.parse(fs.readFileSync('/tmp/story.json','utf8'));if(!s.title||!Array.isArray(s.pages)||s.pages.length<3)throw new Error('Invalid story response');if(s.engine!=='ai-gateway')console.warn('AI Gateway unavailable; safe fallback used:',s.engine||'unknown');console.log('Story:',s.title);console.log('Pages:',s.pages.length);console.log('Engine:',s.engine);console.log('Model:',s.model||'unknown');"
+            --data '{"child":{"name":"Milo","ageBand":"4–5","pronouns":"he","loves":["Space"],"companions":[],"avoid":[]},"mood":"something really funny","world":"outer space","minutes":5}' \
+            -o /tmp/story.ndjson
+          node -e "
+            const ev=require('fs').readFileSync('/tmp/story.ndjson','utf8').trim().split('\n').map(JSON.parse);
+            const pages=ev.filter(e=>e.type==='page'); const done=ev.find(e=>e.type==='done');
+            if(!done||pages.length<4) throw new Error('Story incomplete: '+JSON.stringify(ev.slice(-2)));
+            console.log('Story:', ev.find(e=>e.type==='meta')?.title, '| pages', pages.length, '| model', done.model);
+          "

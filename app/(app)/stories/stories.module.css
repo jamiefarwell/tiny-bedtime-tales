@@ -1,0 +1,73 @@
+.list {
+  display: grid;
+  gap: 16px;
+}
+.series {
+  border-radius: var(--radius-l);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 16px;
+  display: grid;
+  gap: 14px;
+}
+.head {
+  display: grid;
+  grid-template-columns: 76px 1fr;
+  gap: 14px;
+  align-items: start;
+}
+.head h2 {
+  font-size: 22px;
+  margin: 4px 0;
+}
+.hook {
+  color: var(--cream-dim);
+  font-size: 14px;
+}
+.chapters {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+.chapters a {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 14px;
+  border-radius: var(--radius-s);
+  background: rgba(255, 255, 255, 0.05);
+}
+.chapters span {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--glow);
+}
+.chapters strong {
+  font-size: 15px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.chapters svg {
+  color: var(--rose);
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.actions :global(.btn) {
+  min-height: 46px;
+  font-size: 15px;
+}
+.remove {
+  margin-left: auto;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--mist);
+  padding: 10px;
+}

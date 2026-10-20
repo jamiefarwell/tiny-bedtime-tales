@@ -1,0 +1,177 @@
+{
+  "slug": "grandads-runaway-snore",
+  "title": "Grandad's Runaway Snore",
+  "ages": "4–7",
+  "minutes": 10,
+  "tags": ["Funny", "Cosy", "Grandparents", "First sleepover"],
+  "hook": "On her first night at Grandad's, Nell wishes his snore away — and it goes.",
+  "blurb": "Grandad's snore is the loudest thing Nell has ever heard. So on her very first sleepover she whispers a wish at his bedroom door… and the snore squeezes out, gives her a hurt look, and bounces off down the stairs. Now the house is far too quiet, the cat thinks it's found the biggest mouse in the world, and Nell has one night to bring the snore home.",
+  "cover": "/books/grandads-runaway-snore/cover.svg",
+  "coverAlt": "Nell in her pyjamas and red wellies, holding a yellow torch, standing nose to nose with a round, woolly, rain-cloud-coloured snore in a moonlit garden",
+  "palette": { "sky": "#24304f", "glow": "#f2b45a", "ink": "#2a2238" },
+  "artStatus": "pending",
+  "narrator": {
+    "voice": "",
+    "notes": "Warm, unhurried, a smile in the voice. Snores performed with relish — big on page 1, soft and drowsy on page 10. Slow right down on the last page."
+  },
+  "style": "Premium contemporary picture-book illustration: soft painterly 3D look, rounded expressive characters, warm lamp-light against deep blue night, gentle film grain, cosy British house interiors, rich but uncluttered compositions, cinematic depth of field. Consistent characters on every page. Absolutely no text, letters, numbers, signs or captions anywhere in the image.",
+  "world": "Grandad's old terraced house and long back garden in an English town, at night. Narrow hall with a tall grandfather clock (no visible numbers), a steep carpeted staircase, a framed portrait of a stern great-aunt in a feathered hat on the landing wall. Cream-and-mustard kitchen with a bread bin, laundry basket and cat flap in the back door. Garden: crazy-paving path, apple tree, washing line, wooden bench, small pond with a stone frog, an old greenhouse full of tomato plants.",
+  "cast": [
+    {
+      "id": "nell",
+      "name": "Nell",
+      "role": "Hero, aged 5",
+      "look": "Nell, a 5-year-old girl with warm light-brown skin, a few freckles across her nose, big dark-brown eyes and a big puff of dark curly hair tied on top of her head with a yellow scrunchie. She wears sage-green pyjamas printed with small orange foxes. From page 5 onwards she also wears shiny red wellington boots over her pyjama trousers. Small, determined, expressive eyebrows."
+    },
+    {
+      "id": "snore",
+      "name": "The Snore",
+      "role": "Grandad's runaway snore",
+      "look": "The Snore: a round, woolly, cloud-like creature the soft grey-blue of a rain cloud, about the size of a sheepdog, with no legs (it bounces and floats), two heavy-lidded sleepy eyes and no visible mouth. Its fluffy surface ripples when it rumbles. It shrinks to tea-cosy size when frightened and puffs up when cross. Leaves small tufts of grey fluff behind it."
+    },
+    {
+      "id": "grandad",
+      "name": "Grandad",
+      "role": "Nell's grandad",
+      "look": "Grandad: a tall, thin, kindly older man with pale skin, a bald head with a fringe of white hair, big ears, bushy white eyebrows and a large white walrus moustache. Blue-and-white striped pyjamas and tartan slippers."
+    },
+    {
+      "id": "mustard",
+      "name": "Mustard",
+      "role": "Grandad's cat",
+      "look": "Mustard: an enormous, fluffy ginger cat with white socks on all four paws and one ear that bends over at the tip. Smug, round, magnificent."
+    }
+  ],
+  "pages": [
+    {
+      "heading": "Not Quiet at All",
+      "mood": "funny",
+      "text": "Nell had never slept at Grandad's house on her own before.\n\nTea was fish-finger sandwiches. The bath had far too many bubbles. Mustard, Grandad's enormous ginger cat, sat on Nell's feet as if she were furniture. Even the clock in the hall was interesting. It had lost its tick years ago, Grandad said, so now it only went tock.\n\nIt was all going very well.\n\nThen Grandad went to bed.\n\nThrough the wall came a sound like a tractor gargling custard.\n\nHRRRRNK… shwoooo.\n\nThe glass of water by Nell's bed shivered. Out on the landing, the picture of Great-Aunt Iris slid wonky.\n\nNell stared at the ceiling. It was going to be a very long night.",
+      "image": null,
+      "imageAlt": "Nell wide awake in a cosy spare bedroom, duvet pulled to her chin, while the wall beside her seems to shake",
+      "audio": null,
+      "timings": null,
+      "art": {
+        "shot": "Medium-wide, slightly high angle, looking down at the bed.",
+        "prompt": "Nell lies wide awake in a small, cosy spare bedroom at night with the duvet pulled up to her chin, eyes wide. A bedside lamp glows amber. The glass of water on the bedside table is visibly rippling. Through the half-open door we glimpse the landing and a wonky framed portrait of a stern great-aunt in a feathered hat. Mustard the ginger cat sleeps heavily on her feet, unbothered. Comic, warm, a little exasperated."
+      }
+    },
+    {
+      "heading": "A Wish Said Out Loud",
+      "mood": "curious",
+      "text": "Nell tried a pillow over her head. HRRRRNK.\n\nShe tried counting sheep. The sheep kept falling over.\n\nAt last she tiptoed onto the landing and stood outside Grandad's door. \"I wish,\" she whispered, as loudly as a whisper can go, \"that snore would go away and never come back.\"\n\nThe snoring stopped.\n\nThe door creaked open.\n\nSomething squeezed out through the gap. It was round and woolly, the grey-blue of a rain cloud and about the size of a sheepdog. It had two sleepy eyes, and they were looking straight at Nell.\n\nThey looked hurt.\n\nThe snore gave one small, sad rumble. Then it bounced away down the stairs.\n\n\"Eek,\" said the third stair, the way it always did.",
+      "image": null,
+      "imageAlt": "A round woolly grey-blue snore squeezing out of Grandad's bedroom door while Nell stares at it on the dark landing",
+      "audio": null,
+      "timings": null,
+      "art": {
+        "shot": "Low angle from the landing floor, Nell in the foreground left, the door on the right.",
+        "prompt": "On a dim upstairs landing lit by a nightlight, Nell stands frozen in her fox pyjamas. Grandad's bedroom door is ajar and The Snore is squeezing out through the gap, its woolly body squashed by the door frame, its sleepy eyes looking at Nell with a hurt expression. Through the gap, a hint of Grandad asleep in bed, moustache visible. Surprised, magical, slightly funny."
+      }
+    },
+    {
+      "heading": "Much Too Quiet",
+      "mood": "tense",
+      "text": "At first the quiet was lovely.\n\nThen it went on a bit too long.\n\nWithout the snore, Nell could hear everything else. The fridge humming to itself. A tap going plip. Tock, went the clock in the hall. Something rustled in the garden.\n\nThe house felt bigger in the quiet, and much less like Grandad's.\n\nNell peeped round his door. Grandad lay on his back with his mouth wide open, perfectly silent, like a teapot that had forgotten how to pour. It looked all wrong.\n\nNell chewed her lip. She had sent the snore away. That meant it was her job to bring it back.\n\nShe found Grandad's big yellow torch in the drawer, and switched it on.",
+      "image": null,
+      "imageAlt": "Nell peeping round the bedroom door at Grandad, who sleeps silently with his mouth open, a big yellow torch in her hand",
+      "audio": null,
+      "timings": null,
+      "art": {
+        "shot": "Over Nell's shoulder from the doorway, Grandad in the bed beyond.",
+        "prompt": "Nell peers round Grandad's bedroom door holding a big yellow torch that throws a warm beam across the floor. Grandad lies flat on his back in bed, mouth open beneath his walrus moustache, perfectly still and silent. Moonlight through thin curtains, long shadows, the room feels too big and too quiet. Gentle suspense, not scary."
+      }
+    },
+    {
+      "heading": "The Biggest Mouse in the World",
+      "mood": "funny",
+      "text": "There were tufts of grey fluff on the stairs. Nell followed them down, stepping over the third stair just in case, and into the kitchen.\n\nMustard was crouched by the bread bin with his tail swishing. Behind it, shrunk to the size of a tea cosy, the snore was trembling. Mustard had clearly decided it was the biggest mouse he had ever seen.\n\n\"Shoo, Mustard,\" whispered Nell.\n\nMustard did not shoo.\n\nSo Nell tried Plan One. She tipped the laundry basket upside down over the snore. Got it!\n\nThe snore rumbled. The basket hopped. It hopped across the floor like a frog in a hurry, bumped open the cat flap, and the snore shot out into the night.",
+      "image": null,
+      "imageAlt": "An upside-down laundry basket hopping across the kitchen floor towards the cat flap, with Nell and Mustard watching open-mouthed",
+      "audio": null,
+      "timings": null,
+      "art": {
+        "shot": "Floor-level wide shot across the kitchen, the cat flap on the right.",
+        "prompt": "A cream-and-mustard kitchen at night lit by Nell's torch and the glow of an open fridge. An upside-down wicker laundry basket is mid-hop across the tiled floor towards the cat flap in the back door, a woolly grey-blue tuft poking out from under it. Nell stands with both hands on her cheeks. Mustard the ginger cat is mid-pounce, ears flat, utterly outraged. Slapstick energy, warm colours."
+      }
+    },
+    {
+      "heading": "The Garden in the Dark",
+      "mood": "tense",
+      "text": "Nell stood at the back door.\n\nShe had been in Grandad's garden a hundred times, but never at night, and never on her own. The apple tree was a black shape with long arms. The pond was a hole full of moon.\n\nNell pulled her red wellies on over her pyjamas. They felt braver than slippers.\n\nCrunch, crunch, went the path. Rustle, went the hedge, and Nell's heart jumped right up into her throat.\n\nOut trundled a hedgehog. It gave her a look, as if she were the strange one, and trundled off again.\n\nNell let her breath out. Her torch found a tuft of grey fluff on the greenhouse door.\n\nInside, among the tomato plants, something was trying very hard to look like a cloud.\n\nIt was not a good hider. All the tomatoes were trembling.",
+      "image": null,
+      "imageAlt": "Nell in red wellies shining her torch along a moonlit garden path while a hedgehog trundles out of the hedge",
+      "audio": null,
+      "timings": null,
+      "art": {
+        "shot": "Wide establishing shot of the long back garden from behind Nell.",
+        "prompt": "A long English back garden at night under a full moon. Nell, now in shiny red wellies over her fox pyjamas, walks down the crazy-paving path holding the yellow torch. A hedgehog trundles out of the hedge looking unimpressed. The apple tree reaches out dark branches, the pond reflects the moon, a washing line crosses the garden, and at the far end an old greenhouse glows faintly where something grey-blue and woolly hides among trembling tomato plants. Deep blues with a warm torch beam."
+      }
+    },
+    {
+      "heading": "Why the Snore Ran Away",
+      "mood": "warm",
+      "text": "Nell tried Plan Two. She put her hands on her hips, the way Mum did.\n\n\"You come back inside this minute!\"\n\nThe snore puffed itself up huge and grumbled so hard the greenhouse windows rattled. Then, all at once, it shrank. Smaller than a tea cosy. Smaller than a sock.\n\nNell sat down on an upturned flowerpot and thought about it properly.\n\nEvery night, somebody told this snore to hush. The neighbours banged on the wall. Mustard gave it looks. And tonight a girl it had never even met had told it to go away and never come back.\n\nNell's cheeks went hot.\n\n\"I only said it because everything here is different,\" she said quietly. \"And you are extremely loud.\"\n\nThe snore made a tiny noise. Hnk.\n\nIt sounded a lot like sorry.",
+      "image": null,
+      "imageAlt": "Nell sitting on an upturned flowerpot in the greenhouse beside a tiny shrunken snore among the tomato plants",
+      "audio": null,
+      "timings": null,
+      "art": {
+        "shot": "Intimate close two-shot at Nell's eye level inside the greenhouse.",
+        "prompt": "Inside an old wooden greenhouse at night, moonlight through dusty glass panes. Nell sits on an upturned terracotta flowerpot, torch resting in her lap, cheeks pink, looking down kindly. Beside her among the tomato plants, The Snore has shrunk to the size of a sock, sleepy eyes lowered, a single tuft of fluff drifting. Tender, quiet, warm torchlight against cool blue."
+      }
+    },
+    {
+      "heading": "Up and Away",
+      "mood": "tense",
+      "text": "Then the snore did something unexpected. It began to float.\n\nUp it went, out of the greenhouse door, past the washing line, past the top of the apple tree, rising towards the big soft clouds above the rooftops.\n\nNell knew exactly where it was going. Up there, rumbles were called thunder, and nobody ever told thunder to hush.\n\n\"Wait!\" She climbed onto the garden bench and stretched as high as she could. Not high enough. She waved the torch. She tried whistling, but Nell had never been able to whistle, and it just came out as wind.\n\nThe snore kept rising.\n\nIn a moment it would be gone for good, and Grandad's house would be quiet forever.",
+      "image": null,
+      "imageAlt": "Nell standing on a garden bench reaching up as the snore floats away above the apple tree towards the night clouds",
+      "audio": null,
+      "timings": null,
+      "art": {
+        "shot": "Dramatic low angle looking up past Nell towards the sky.",
+        "prompt": "Nell stands on tiptoe on a wooden garden bench in her red wellies, one arm stretched up, the torch beam reaching into the sky. High above the apple tree and the washing line, The Snore floats upward, small against huge soft moonlit clouds over a row of rooftops and chimneys. Wide night sky, sense of height and longing, the most dramatic page of the book but never scary."
+      }
+    },
+    {
+      "heading": "The Truth, Very Loudly",
+      "mood": "wonder",
+      "text": "Nell took the biggest breath of her life.\n\n\"When you stopped,\" she shouted up into the sky, \"the house went wrong!\"\n\nThe snore slowed down.\n\n\"I could hear the fridge and the tap and every single creak, and it was scary. But when you were there, I knew where Grandad was. All night long. Even through the wall.\" Her voice wobbled. \"You're how I know he's there.\"\n\nFor a long moment, nothing happened.\n\nThen, very gently, like a balloon remembering it was tired, the snore began to drift back down. Down past the apple tree. Down past the washing line. It settled on the grass in front of Nell, as big as a sheepdog again, and rumbled softly.\n\nIt sounded a lot like a purr.",
+      "image": null,
+      "imageAlt": "The snore drifting gently down to the moonlit lawn in front of Nell, big and woolly again",
+      "audio": null,
+      "timings": null,
+      "art": {
+        "shot": "Eye-level medium shot on the lawn, the two characters face to face.",
+        "prompt": "On the moonlit lawn, The Snore has drifted down and settles in front of Nell, round and full-sized again, its woolly surface rippling with a soft contented rumble, sleepy eyes almost smiling. Nell stands close, torch lowered, a relieved, teary smile. A few tufts of fluff float in the air like slow snow. The apple tree frames the scene. Joyful, tender, the emotional climax."
+      }
+    },
+    {
+      "heading": "The Way Back Inside",
+      "mood": "warm",
+      "text": "They went back together.\n\nThrough the dark garden, where the hedgehog watched from under the hedge. Nell went in through the back door. The snore came through the cat flap. It was a squash. Mustard pretended he had never been interested in mice in the first place.\n\nThe house didn't feel big and strange any more. Not with a gentle rumble bobbing along beside her.\n\nAt the bottom of the stairs, the snore stopped. It looked at the third stair. Then it hopped right over it, as lightly as a cloud can hop.\n\nNell hopped over too.\n\nFor once, the third stair said nothing at all.\n\nAt Grandad's door, the snore gave Nell one last sleepy look. Then it squeezed through the gap and was gone.",
+      "image": null,
+      "imageAlt": "Nell and the snore hopping over the third stair together on the way up to bed",
+      "audio": null,
+      "timings": null,
+      "art": {
+        "shot": "Side-on view of the staircase from the hall, the grandfather clock in the foreground.",
+        "prompt": "In the narrow hall at night, the tall grandfather clock stands in the foreground. Nell and The Snore are both mid-hop over the third step of the carpeted staircase, side by side, Nell grinning in her red wellies and fox pyjamas. Mustard the ginger cat sits at the foot of the stairs pointedly looking the other way. Warm landing light spills down from above. Playful and cosy."
+      }
+    },
+    {
+      "heading": "Tock and Hrrrnk",
+      "mood": "sleepy",
+      "text": "Nell climbed into bed and pulled the covers up to her nose.\n\nThrough the wall, very softly at first, came a sound.\n\nHrrrnk… shwoooo.\n\nThen a bit louder. HRRRNK… shwoooo.\n\nOut on the landing, Great-Aunt Iris slid wonky again. Nell didn't mind one bit.\n\nIn between snores, Grandad mumbled in his sleep. \"Shoo, Mustard… not a mouse…\"\n\nNell grinned into her pillow.\n\nTock, said the clock. Hrrrnk, said the snore. Tock. Shwoooo. It was a bit like the sea, Nell thought, if the sea had a big white moustache.\n\nShe would have to tell Mum that home was much too quiet.\n\nAnd before the clock could say tock again, Nell was fast asleep.",
+      "image": null,
+      "imageAlt": "Nell fast asleep and smiling in bed, a faint woolly shape of the snore curled contentedly on the other side of the wall",
+      "audio": null,
+      "timings": null,
+      "art": {
+        "shot": "Soft, high, wide final shot of the bedroom, mirroring page 1.",
+        "prompt": "The same cosy spare bedroom as page 1, now very dark and peaceful, only a dim amber nightlight. Nell is fast asleep with a little smile, curls spread on the pillow, red wellies standing neatly by the bed. Mustard is curled at her feet. Through a cutaway of the wall we glimpse Grandad asleep in the next room with The Snore nestled happily against his moustache. Deep warm darkness, very calm, the quietest image in the book."
+      }
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+.shell {
+  width: min(1080px, 100%);
+  margin: 0 auto;
+  padding: calc(var(--safe-t) + 18px) var(--gutter) calc(var(--nav-h) + var(--safe-b) + 40px);
+  min-height: 100dvh;
+}

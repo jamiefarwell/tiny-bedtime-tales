@@ -1,0 +1,75 @@
+.page {
+  max-width: 640px;
+  margin: 0 auto;
+}
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 800;
+  font-size: 14px;
+  color: var(--cream-dim);
+  min-height: 40px;
+  margin-bottom: 8px;
+}
+.hero {
+  margin: 0 auto;
+  width: min(100%, 420px);
+  filter: drop-shadow(0 30px 40px rgba(0, 0, 0, 0.45));
+  animation: rise 0.6s var(--ease-out) both;
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.98);
+  }
+}
+.body {
+  display: grid;
+  gap: 16px;
+  margin-top: 22px;
+}
+.blurb {
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--cream-dim);
+}
+.resume {
+  font-weight: 800;
+  color: var(--glow);
+  font-size: 15px;
+}
+.actions {
+  display: grid;
+  gap: 10px;
+}
+.note {
+  font-size: 13px;
+  color: var(--mist);
+  text-align: center;
+}
+.peek {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: var(--radius-m);
+}
+.cast {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+.cast li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: var(--radius-m);
+  background: rgba(255, 255, 255, 0.05);
+}
+.cast span {
+  color: var(--mist);
+  text-align: right;
+}

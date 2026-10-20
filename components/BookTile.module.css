@@ -1,0 +1,31 @@
+.tile {
+  display: block;
+  transition: transform 0.25s var(--ease-out);
+}
+.tile:active {
+  transform: scale(0.97);
+}
+@media (hover: hover) {
+  .tile:hover {
+    transform: translateY(-4px) rotate(-0.6deg);
+  }
+}
+.meta {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--glow);
+  letter-spacing: 0.02em;
+}
+.hook {
+  margin-top: 4px;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--cream-dim);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

@@ -1,0 +1,135 @@
+{
+  "slug": "maya-and-the-midnight-sock-train",
+  "title": "Maya and the Midnight Sock Train",
+  "ages": "4–7",
+  "minutes": 10,
+  "tags": ["Funny", "Adventure", "Trains", "Lost things"],
+  "hook": "Maya's missing sock turns out to be the night conductor of the Lost Things Line.",
+  "blurb": "Maya likes pairs. So when one sock vanishes from the washing basket, she can't stop thinking about it — until a tiny whistle draws her to the washing machine, and inside it, instead of a drum, there's a railway platform. All aboard the Lost Things Line, where a mitten, a dinosaur tail and a very nervous spoon are all trying to get somewhere.",
+  "cover": "/books/maya-and-the-midnight-sock-train/cover.svg",
+  "coverAlt": "Maya in yellow moon pyjamas leaning into an open washing machine where a tiny train waits on a platform, a sock in a conductor's cap waving",
+  "palette": { "sky": "#1f3a4d", "glow": "#f6c25b", "ink": "#2a2238" },
+  "artStatus": "pending",
+  "narrator": {
+    "voice": "",
+    "notes": "Bright and brisk on the train, slowing right down after page 8. Tumble is fussy and official; the spoon is tiny and quavery."
+  },
+  "style": "Premium contemporary picture-book illustration, soft painterly 3D, miniature world built from household objects, warm amber lighting with teal shadows, no text or signage lettering anywhere.",
+  "world": "Beneath a family house at night: the laundry room, a railway hidden inside the washing machine, tunnels behind skirting boards, and a station of lost things under the sofa.",
+  "cast": [
+    {
+      "id": "maya",
+      "name": "Maya",
+      "role": "Hero, aged 5",
+      "look": "Maya, 5, with warm brown skin, big dark-brown eyes and shoulder-length dark curls in two loose puffs. Mustard-yellow pyjamas with tiny white moons, one teal sock, red dressing gown."
+    },
+    {
+      "id": "tumble",
+      "name": "Tumble",
+      "role": "Night conductor, also a sock",
+      "look": "Tumble, a small turquoise-and-orange striped sock standing upright, with a stitched smile, button eyes, a tiny brass conductor's cap and little black shoes."
+    }
+  ],
+  "pages": [
+    {
+      "heading": "The Missing Sock",
+      "mood": "curious",
+      "text": "Maya liked pairs. Two slippers. Two hair clips. Two toast triangles pointing the same way.\n\nSo when one turquoise-and-orange sock vanished from the washing basket, it bothered her all evening. At bedtime she checked under the bed, behind the curtains and even inside her toy kitchen. Nothing.\n\nThen, just as Mum switched off the landing light, Maya heard a very small whistle coming from the laundry room.\n\nPeeep-peeeep!\n\nShe crept downstairs. The washing machine door stood open.\n\nInside it was not a drum.\n\nInside it was a railway platform.",
+      "image": null,
+      "imageAlt": "Maya peering into an open washing machine that contains a tiny lit railway platform",
+      "audio": null,
+      "timings": null,
+      "art": { "shot": "Close, Maya's face lit from inside the machine.", "prompt": "Dark laundry room at night. Maya kneels and peers into an open front-loading washing machine; inside, instead of a drum, is a miniature lamp-lit railway platform with a tiny waiting train. Warm light spills onto her amazed face." }
+    },
+    {
+      "heading": "Platform Spin Cycle",
+      "mood": "funny",
+      "text": "A tiny train waited beneath the washing-machine light. Its carriages were made of matchboxes, buttons and shiny biscuit-tin lids.\n\nStanding beside it was Maya's missing sock, wearing a brass conductor's cap.\n\n\"Tickets, please!\" he called.\n\nMaya stared. \"You're my sock.\"\n\n\"Tumble,\" said the sock. \"Night conductor, Lost Things Line.\" He checked a pocket watch no bigger than a pea. \"And we are extremely late.\"\n\nPassengers hurried aboard: a red mitten, a toy dinosaur's tail, three puzzle pieces and somebody's spoon.\n\nTumble looked up at Maya. \"Well? Are you coming, or shall I mark you down as luggage?\"",
+      "image": null,
+      "imageAlt": "Tumble the sock in a conductor's cap checking a tiny pocket watch beside a train made of matchboxes",
+      "audio": null,
+      "timings": null,
+      "art": { "shot": "Platform level, miniature scale, Maya's giant curious face in the background.", "prompt": "Tumble the striped sock conductor stands on the tiny platform checking a pea-sized pocket watch. Behind him a train of matchbox and biscuit-tin carriages; a red mitten, a toy dinosaur tail, puzzle pieces and a small silver spoon climb aboard. Maya, shrunk to fit, stands at the platform edge in her red dressing gown." }
+    },
+    {
+      "heading": "The Wrong Turn",
+      "mood": "tense",
+      "text": "Maya squeezed into the front carriage. The train rattled through a tunnel behind the skirting board and burst out into a moonlit maze beneath the house.\n\nTracks crossed everywhere. Little signposts pointed to SOFA GAP, GARDEN SHED, SCHOOL CLOAKROOM and SOMEWHERE VERY ANNOYING.\n\nTumble pulled a lever. Nothing happened. He pulled it again. Still nothing.\n\n\"Oh,\" he said. \"That's awkward.\"\n\nAhead, a red signal blinked beside a tunnel marked FOREVER LOST. The train was rolling straight towards it.\n\nMaya grabbed the brake cord.\n\nIt came off in her hand.",
+      "image": null,
+      "imageAlt": "The tiny train speeding through a maze of tracks under the house towards a dark tunnel and a red signal",
+      "audio": null,
+      "timings": null,
+      "art": { "shot": "Wide, dynamic three-quarter view of the track maze.", "prompt": "A vast moonlit underfloor world of criss-crossing miniature railway tracks between joists and pipes, wooden signposts with blank boards. The matchbox train rattles towards a dark tunnel beside a glowing red signal lamp. Maya in the front carriage holds up a snapped brake cord in dismay; Tumble clutches a lever. Signposts must have NO legible letters." }
+    },
+    {
+      "heading": "Maya Makes a Plan",
+      "mood": "curious",
+      "text": "Everyone shouted at once. The mitten flapped. The spoon fainted dramatically. Tumble ran in circles saying, \"This is not in the timetable!\"\n\nMaya wanted to shout too. Instead, she noticed something.\n\nBeside each track ran a coloured thread. Red. Blue. Yellow. Green. And on the carriage floor lay scraps of the very same colours.\n\n\"Stop talking!\" Maya called.\n\nEveryone stopped. Even the spoon sat up.\n\nMaya laid the scraps out in four neat lines. The green thread led away from FOREVER LOST.\n\n\"Which passenger belongs somewhere green?\" she asked.\n\nVery slowly, the dinosaur tail raised itself.",
+      "image": null,
+      "imageAlt": "Maya kneeling in the carriage arranging coloured thread scraps while the passengers watch",
+      "audio": null,
+      "timings": null,
+      "art": { "shot": "Inside the matchbox carriage, top-down-ish.", "prompt": "Inside a matchbox carriage, Maya kneels and lays out red, blue, yellow and green thread scraps in neat lines. The passengers crowd round: the spoon sitting up dizzily, the mitten, the puzzle pieces, and the green dinosaur tail slowly raising itself. Tumble peers over her shoulder. Focused and funny." }
+    },
+    {
+      "heading": "The Station Under the Sofa",
+      "mood": "warm",
+      "text": "The train followed the green thread and escaped the tunnel by the width of a button.\n\nIt stopped at a station built under the sofa. Hundreds of lost things lived there: crayons too short to hold, keys nobody recognised, marbles, hair bobbles and one very lonely roller skate.\n\nThe dinosaur tail bounced with excitement. Across the station, a toy dinosaur with no tail gasped. They crashed together in the happiest plastic hug Maya had ever seen.\n\nA green lamp flicked on beside the track.\n\nTumble blinked. \"You read the route without a timetable.\"\n\nMaya shrugged. \"I like things where they belong.\"",
+      "image": null,
+      "imageAlt": "A toy dinosaur reunited with its tail at a bustling station of lost things under the sofa",
+      "audio": null,
+      "timings": null,
+      "art": { "shot": "Wide station interior under the sofa fabric canopy.", "prompt": "A cosy station beneath a sofa, its fabric underside like a canopy, crowded with lost things: stubby crayons, keys, marbles, hair bobbles, a lonely roller skate. Centre: a green toy dinosaur hugging its reunited tail. A green lamp glows on. Maya and Tumble watch, delighted." }
+    },
+    {
+      "heading": "Not Everything Wants to Go Back",
+      "mood": "warm",
+      "text": "At the next station, Maya found the red mitten's twin in the pocket of an old coat. At the next, two puzzle pieces clicked neatly into a farmyard sky.\n\nMaya began to enjoy herself. Pair. Match. Home. Pair. Match. Home.\n\nThen they reached the stop for the small silver spoon.\n\n\"Kitchen drawer!\" Maya announced.\n\nBut the spoon shook so hard it rattled. \"I don't want to go back,\" he whispered. \"I was always the smallest spoon. Nobody ever chose me.\"\n\nTumble looked at Maya. For once, there was no obvious place to put something.\n\nMaya did not like that feeling at all.",
+      "image": null,
+      "imageAlt": "A small trembling silver spoon refusing to get off the train at the kitchen drawer stop",
+      "audio": null,
+      "timings": null,
+      "art": { "shot": "Close on the spoon, Maya crouched to its level.", "prompt": "At a tiny platform beneath a kitchen drawer, the small silver spoon trembles in the carriage doorway, refusing to get off. Maya crouches beside it, uncertain. Tumble stands behind with his cap in his hands. Soft, emotional lighting." }
+    },
+    {
+      "heading": "A Different Kind of Place",
+      "mood": "warm",
+      "text": "The train waited. Nobody rushed Maya.\n\nShe looked around. Nearby, a family of toy teacups were having a midnight picnic. They had jam, but nothing to eat it with.\n\nThe spoon leaned forward. \"Could I… stay here?\"\n\nMaya almost said no. Things belonged where they started. That was the rule.\n\nWasn't it?\n\nThen she remembered how happy the dinosaur tail had looked, and how frightened the spoon looked now.\n\n\"You could try,\" said Maya.\n\nThe teacups cheered. The spoon bowed so deeply he toppled over. A silver lamp lit up beside the track.\n\nTumble smiled. \"Interesting route choice, Conductor Maya.\"",
+      "image": null,
+      "imageAlt": "The spoon bowing to a family of toy teacups at a midnight jam picnic",
+      "audio": null,
+      "timings": null,
+      "art": { "shot": "Medium shot of the picnic, train in background.", "prompt": "A family of toy teacups at a midnight picnic on a doily, a pot of jam in the middle. The small silver spoon bows so deeply he is toppling over while the teacups cheer. A silver lamp glows by the track. Maya and Tumble smile from the train." }
+    },
+    {
+      "heading": "Tumble's Stop",
+      "mood": "warm",
+      "text": "Only one passenger was left. Tumble.\n\nThe train climbed through warm pipes until Maya saw her own laundry room glowing ahead.\n\n\"Your stop,\" she said.\n\nTumble stared at the washing basket. \"Yes.\" But he didn't move.\n\nAnd suddenly Maya understood why her sock had gone missing.\n\n\"You don't want to come back either.\"\n\nTumble straightened his tiny cap. \"I like being your sock. But I also like running the Midnight Train.\"\n\nMaya looked down at her feet. One wore a turquoise-and-orange sock. The other was bare.\n\nShe had spent all evening wanting a perfect pair. Now that seemed like a very small problem.",
+      "image": null,
+      "imageAlt": "Tumble standing on the platform by the laundry basket, not wanting to get off",
+      "audio": null,
+      "timings": null,
+      "art": { "shot": "Two-shot, Maya and Tumble on the last platform, laundry basket looming.", "prompt": "The train has arrived back at the laundry room platform; the wicker washing basket looms above. Tumble stands very still, cap straight, looking up at it. Maya, one sock on and one foot bare, looks at him with sudden understanding. Warm pipes glow behind." }
+    },
+    {
+      "heading": "One Sock at Bedtime",
+      "mood": "wonder",
+      "text": "Maya picked Tumble up carefully. \"Can you be both?\" she asked. \"A sock sometimes. A conductor sometimes.\"\n\nTumble's stitched smile grew wider. \"That,\" he said, \"is an excellent timetable.\"\n\nSo they made a deal. On ordinary days, Tumble would live in Maya's drawer beside his matching sock. But whenever the washing machine gave three quiet clicks after bedtime, the Lost Things Line would be running.\n\nMaya set him down on the platform.\n\n\"All aboard!\" Tumble shouted.\n\nThe train vanished into the spinning silver tunnel. Just before it disappeared, he tossed Maya his brass cap.\n\n\"Assistant conductor!\" he called.",
+      "image": null,
+      "imageAlt": "Tumble tossing his brass cap to Maya as the train vanishes into the washing machine",
+      "audio": null,
+      "timings": null,
+      "art": { "shot": "Dynamic, cap mid-air between them.", "prompt": "The tiny train speeds into a swirling silver tunnel inside the washing machine. Tumble leans out of the last carriage, mid-toss, his brass conductor's cap flying through the air towards Maya's outstretched hands. Joyful, magical motion." }
+    },
+    {
+      "heading": "Almost a Pair",
+      "mood": "sleepy",
+      "text": "Maya climbed back into bed wearing one turquoise-and-orange sock and one completely different purple one.\n\nMum noticed straight away. \"Interesting choice.\"\n\nMaya tucked the tiny brass cap under her pillow. \"They're both good socks.\"\n\nMum smiled and kissed her forehead.\n\nSomewhere downstairs, the washing machine went click.\n\nThen click again.\n\nMaya waited. Nothing.\n\nShe closed her eyes. And just before sleep found her, a third click travelled softly through the house.\n\nMaya smiled into her pillow. Tomorrow she might look for her missing blue crayon. Or perhaps she wouldn't.\n\nSome lost things, she knew now, were simply on their way somewhere else.",
+      "image": null,
+      "imageAlt": "Maya asleep and smiling in bed with odd socks, a tiny brass cap peeking from under her pillow",
+      "audio": null,
+      "timings": null,
+      "art": { "shot": "Quiet, high, soft final shot.", "prompt": "Maya's bedroom, very dim and peaceful. Maya asleep with a small smile, one turquoise-and-orange sock and one purple sock poking from under the duvet, a tiny brass conductor's cap peeking from under her pillow. Moonlight on the floor. The calmest image in the book." }
+    }
+  ]
+}

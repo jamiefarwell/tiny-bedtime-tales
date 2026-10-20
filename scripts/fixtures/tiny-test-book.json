@@ -1,0 +1,58 @@
+{
+  "slug": "tiny-test-book",
+  "title": "Otto and the Sleepy Moon",
+  "ages": "3–5",
+  "minutes": 2,
+  "tags": ["test"],
+  "blurb": "Otto the otter helps the Moon find its way to bed.",
+  "hook": "Even the Moon needs tucking in.",
+  "cover": null,
+  "coverAlt": "Otto the otter floating on his back on a calm river, holding up a tiny glowing crescent moon",
+  "palette": { "sky": "#1d2a4d", "glow": "#f6d58e", "ink": "#2b1d14" },
+  "artStatus": "pending",
+  "narrator": { "voice": "", "notes": "Soft and slow." },
+  "cast": [
+    {
+      "id": "otto",
+      "name": "Otto",
+      "role": "Hero, a young otter",
+      "look": "Otto: a small, round river otter with glossy chocolate-brown fur, a cream face and tummy, tiny round ears, long whiskers and a knitted mustard-yellow scarf."
+    },
+    {
+      "id": "moon",
+      "name": "The Moon",
+      "role": "A sleepy crescent moon",
+      "look": "The Moon: a small crescent moon the size of a beach ball, glowing soft butter-yellow, with sleepy half-closed eyes and rosy cheeks."
+    }
+  ],
+  "world": "A calm river at night between willow trees, fireflies, smooth stepping stones.",
+  "style": "Soft painterly 3D picture-book illustration, warm moonlight, deep blue night, no text.",
+  "pages": [
+    {
+      "heading": "Up Too Late",
+      "mood": "curious",
+      "text": "“Psst,” whispered someone. Otto looked up… and up.\n\nThe Moon was sitting in the willow tree — wide awake at 9 o’clock!",
+      "image": null,
+      "imageAlt": "Otto the otter on a riverbank looking up at the Moon sitting in a willow tree",
+      "audio": null,
+      "timings": null,
+      "art": {
+        "shot": "Low angle from the riverbank, looking up into the willow.",
+        "prompt": "Otto stands on a mossy riverbank, head tilted back, looking up at The Moon perched in the branches of a willow tree. Fireflies drift around."
+      }
+    },
+    {
+      "heading": "Goodnight",
+      "mood": "sleepy",
+      "text": "Otto floated on his back and sang the Moon a slow, slow song.\n\nBy the end, they were both asleep.",
+      "image": null,
+      "imageAlt": "Otto floating asleep on the river while the Moon dozes above",
+      "audio": null,
+      "timings": null,
+      "art": {
+        "shot": "Wide, calm, high angle over the river.",
+        "prompt": "Otto floats asleep on his back on the still river, scarf trailing, while The Moon dozes low in the sky above the willows."
+      }
+    }
+  ]
+}

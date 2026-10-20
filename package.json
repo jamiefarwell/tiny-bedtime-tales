@@ -1,17 +1,27 @@
 {
   "name": "tiny-bedtime-tales",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "illustrate": "node scripts/illustrate-book.mjs",
+    "narrate": "node scripts/narrate-book.mjs",
+    "test:pipeline": "node --test scripts/test/pipeline.test.mjs"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.136.0",
     "@supabase/supabase-js": "^2.57.4",
     "next": "16.4.0",
     "react": "19.3.0",
-    "react-dom": "19.3.0",
-    "ai": "latest"
+    "react-dom": "19.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "typescript": "^7.0.2"
   }
 }

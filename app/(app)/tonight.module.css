@@ -1,0 +1,183 @@
+.hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-xl);
+  min-height: min(78dvh, 640px);
+  display: flex;
+  align-items: flex-end;
+  margin: 0 calc(var(--gutter) * -0.4);
+  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.8);
+  isolation: isolate;
+}
+.heroArt {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 30% 30%;
+  z-index: -2;
+  animation: slowZoom 30s ease-out both;
+}
+@keyframes slowZoom {
+  from {
+    transform: scale(1.08);
+  }
+}
+.heroShade {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(180deg, rgba(14, 17, 41, 0.1) 0%, rgba(14, 17, 41, 0.05) 30%, rgba(14, 17, 41, 0.78) 62%, var(--night-900) 100%);
+}
+.heroBody {
+  display: grid;
+  gap: 14px;
+  padding: 26px 22px 24px;
+  width: 100%;
+}
+.hello {
+  font-weight: 800;
+  color: var(--glow);
+  font-size: 15px;
+}
+.heroBody h1 {
+  font-size: clamp(40px, 11vw, 64px);
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+  max-width: 11ch;
+}
+.heroBody h1 em {
+  font-style: italic;
+  color: var(--glow);
+}
+.lede {
+  color: var(--cream-dim);
+  font-size: 17px;
+  max-width: 34ch;
+}
+.switch {
+  font-size: 14px;
+  color: var(--mist);
+  text-align: center;
+}
+.switch a {
+  color: var(--glow);
+  font-weight: 800;
+}
+
+.resume {
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: 64px 1fr auto;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px 12px 12px;
+  border-radius: var(--radius-l);
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.resume strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 18px;
+  line-height: 1.15;
+  margin: 2px 0;
+}
+.resume span {
+  font-size: 13px;
+  color: var(--mist);
+  font-weight: 700;
+}
+.resumeCover > div {
+  border-radius: 8px 12px 12px 8px;
+}
+.resumePlay {
+  color: var(--rose);
+}
+
+.series {
+  margin-top: 12px;
+  display: grid;
+  gap: 4px;
+  padding: 18px;
+  border-radius: var(--radius-l);
+  background:
+    radial-gradient(120% 100% at 100% 0%, rgba(127, 211, 208, 0.18), transparent 60%),
+    rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(127, 211, 208, 0.25);
+}
+.series :global(.eyebrow) {
+  color: var(--sea);
+}
+.series strong {
+  font-family: var(--font-display);
+  font-size: 19px;
+  line-height: 1.2;
+}
+.series span {
+  color: var(--cream-dim);
+  font-size: 14px;
+}
+
+.worlds {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+.world {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  padding: 14px 4px 12px;
+  border-radius: var(--radius-m);
+  background: radial-gradient(100% 90% at 50% 0%, color-mix(in srgb, var(--tint) 45%, transparent), transparent 75%), rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  font-size: 13px;
+  font-weight: 800;
+  text-align: center;
+  transition: transform 0.2s var(--ease-spring);
+}
+.world:active {
+  transform: scale(0.94);
+}
+.worldEmoji {
+  font-size: 30px;
+  line-height: 1;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.35));
+}
+
+.promises {
+  display: grid;
+  gap: 10px;
+}
+.promises > div {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  column-gap: 12px;
+  padding: 16px;
+  border-radius: var(--radius-m);
+  background: rgba(255, 255, 255, 0.04);
+}
+.promises svg {
+  grid-row: span 2;
+  color: var(--glow);
+}
+.promises strong {
+  font-size: 16px;
+}
+.promises span {
+  color: var(--mist);
+  font-size: 14px;
+}
+@media (min-width: 760px) {
+  .promises {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .worlds {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+  }
+  .hero {
+    min-height: 520px;
+  }
+}

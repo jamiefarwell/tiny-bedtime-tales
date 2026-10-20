@@ -1,0 +1,125 @@
+{
+  "slug": "lily-and-the-lantern-feather",
+  "title": "Lily and the Lantern Feather",
+  "ages": "4–7",
+  "minutes": 10,
+  "tags": ["Dragons", "Adventure", "Friendship", "Magic"],
+  "hook": "Lily keeps everything. Tonight the Great Lantern needs the one thing she wants to keep.",
+  "blurb": "Lily's pockets are full of treasures, and Pip — the small blue dragon who lives in her garden shed — has a very big job. Tonight is the Long Night, and it's Pip's turn to light the Great Lantern that guides every lost creature in Lantern Hollow home. There's a shy fox cub on the bridge, a grumpy owl with a glowing gift, a waterfall that only knows one song… and a choice Lily really doesn't want to make.",
+  "cover": "/books/lily-and-the-lantern-feather/page-09.webp",
+  "coverAlt": "Lily riding on the back of Pip, a small blue dragon, flying over a glowing lantern-lit village at night",
+  "palette": { "sky": "#2b2a6b", "glow": "#ffc46b", "ink": "#2a2238" },
+  "artStatus": "interim",
+  "narrator": {
+    "voice": "",
+    "notes": "Warm and wondering. Old Hoo is dry and grumpy; Pip is eager and a little breathless. The song on page 5 is half-sung, half-spoken. Slow and hushed on page 10."
+  },
+  "style": "Premium soft 3D storybook illustration, warm golden lantern-light against violet night, rounded expressive faces, rich detailed fantasy village, no text.",
+  "world": "Lantern Hollow: a valley village of tree-houses, stone bridges and waterfalls lit by hundreds of hanging lanterns, reached through a gap in the hedge at the bottom of Lily's garden.",
+  "cast": [
+    {
+      "id": "lily",
+      "name": "Lily",
+      "role": "Hero, aged 6",
+      "look": "Lily, about 6, with long voluminous chestnut curls, small white flowers tucked in her hair, rosy cheeks and big brown eyes. Chunky periwinkle-blue knitted cardigan, cream pyjamas with tiny blue stars, small brown satchel, brown boots."
+    },
+    {
+      "id": "pip",
+      "name": "Pip",
+      "role": "A very young dragon",
+      "look": "Pip, a small baby dragon with sky-blue scales, a cream belly, big round blue-grey eyes, a crest of soft blue spikes, translucent pale-blue wings and a long curling tail."
+    }
+  ],
+  "pages": [
+    {
+      "heading": "Pockets Full of Treasure",
+      "mood": "warm",
+      "text": "Lily kept everything.\n\nHer pockets held a conker, two marbles, a button shaped like a duck and a snail shell with nobody home. Treasures, Lily called them. Mum called them the reason the washing machine makes that noise.\n\nPip had been living in the garden shed ever since the night he fell out of the sky into the gooseberry bush. He was a very young dragon, mostly tail, and every evening he led Lily through the gap in the hedge to Lantern Hollow.\n\nTonight, lanterns glowed all over the Hollow. All except the biggest one of all.\n\n\"It's the Long Night,\" said Pip, looking up at her with enormous eyes. \"And it's my turn to light the Great Lantern.\"",
+      "image": "/books/lily-and-the-lantern-feather/page-01.webp",
+      "imageAlt": "Lily sitting on a mossy rock with her chin in her hand while Pip the small blue dragon looks up at her, lanterns glowing in the village behind",
+      "audio": null,
+      "timings": null
+    },
+    {
+      "heading": "The Long Way Round",
+      "mood": "curious",
+      "text": "The Great Lantern lived at the very top of the Lantern Tower, high above the Singing Falls.\n\n\"Most dragons just fly up,\" said Pip, trotting along beside her. \"But I've never carried anyone before. I might drop you. So we're walking.\"\n\n\"How long does walking take?\"\n\n\"Ages,\" said Pip cheerfully.\n\nLily hitched up her satchel. It clinked. The path wound between roots as big as armchairs, past doors no taller than teacups.\n\nLily kept stopping to pick things up. A pebble with a stripe. A seed like a tiny helicopter. An acorn still wearing its hat.\n\n\"Lily,\" said Pip. \"We really haven't got time for treasures.\"\n\nLily put the acorn in her pocket anyway.",
+      "image": "/books/lily-and-the-lantern-feather/page-02.webp",
+      "imageAlt": "Lily walking along a lantern-lit forest path with her satchel, Pip trotting beside her",
+      "audio": null,
+      "timings": null
+    },
+    {
+      "heading": "Someone Small on the Bridge",
+      "mood": "warm",
+      "text": "Halfway across the old stone bridge, something was in the way. It was a fox cub, all ears and worry, pressed flat against the stones.\n\n\"I can't find my den,\" he whispered. \"Mum says follow the Great Lantern home. But the Great Lantern isn't on.\"\n\nPip's tail drooped. \"That's my job,\" he said. \"I'm a bit late.\"\n\nLily knelt down slowly, the way you do with anything shy. She thought about giving the fox one of her treasures to cheer him up. Her fingers found the duck button. Then she thought: no. That one was her favourite.\n\nSo she held out her hand instead, and the fox cub put one cold paw in it.\n\n\"We'll light it,\" Lily promised. \"Keep watching the top of the tower.\"",
+      "image": "/books/lily-and-the-lantern-feather/page-03.webp",
+      "imageAlt": "Lily kneeling on a mossy stone bridge, gently holding the paw of a shy fox cub while Pip watches",
+      "audio": null,
+      "timings": null
+    },
+    {
+      "heading": "Old Hoo",
+      "mood": "funny",
+      "text": "At the foot of the falls, in a tree thick with moss, lived an owl called Old Hoo, who looked after the Great Lantern.\n\n\"You're late,\" said Old Hoo.\n\n\"We walked,\" said Pip.\n\nOld Hoo ruffled up, plucked one feather from her wing and dropped it into Lily's hands. It was long and warm, and it glowed like the inside of a lantern.\n\nLily gasped. It was the best treasure she had ever held. Better than the duck button. Better than everything in her pockets put together.\n\n\"For the lantern,\" said Old Hoo. \"Don't lose it, don't drop it, and don't let that dragon sneeze on it.\"\n\n\"I don't sneeze,\" said Pip, and sneezed a small blue spark.",
+      "image": "/books/lily-and-the-lantern-feather/page-04.webp",
+      "imageAlt": "A large tawny owl on a mossy branch handing a glowing feather down to Lily, with Pip beside her and a waterfall behind",
+      "audio": null,
+      "timings": null
+    },
+    {
+      "heading": "The Singing Falls",
+      "mood": "wonder",
+      "text": "The waterfall was so tall its top was lost among the stars. And it was singing.\n\nNot words at first. Just a long, low hum, like someone running a wet finger round the rim of a glass. Then the hum became a tune, and the tune became words:\n\nClimb the hill where the moon sits low.\nGive what you'd keep, and the light will grow.\n\n\"What does that mean?\" asked Lily.\n\n\"No idea,\" said Pip. \"It only knows the one song. It sings it every year.\"\n\nLily held the feather tight against her cardigan. She didn't like the sound of give what you'd keep.\n\nShe didn't like it one bit.",
+      "image": "/books/lily-and-the-lantern-feather/page-05.webp",
+      "imageAlt": "Lily and Pip listening in delight beside a towering waterfall that seems to sing",
+      "audio": null,
+      "timings": null
+    },
+    {
+      "heading": "Up the Moonlit Hill",
+      "mood": "curious",
+      "text": "The path behind the falls was steep and twisty. Far below, the lights of the Hollow looked like crumbs of gold. And there was the moon, low and round, sitting right on top of the hill, just like the song said.\n\nLily climbed with the feather in one hand. Every few steps she looked at it. It was so warm. It would look perfect on her windowsill.\n\nI could give the lantern something else, she thought. A marble. A conker. It doesn't have to be the feather.\n\nPip was puffing along beside her. \"Nearly there,\" he panted. \"Lily? You've gone quiet.\"\n\n\"I'm thinking,\" said Lily, which was true.",
+      "image": "/books/lily-and-the-lantern-feather/page-06.webp",
+      "imageAlt": "Lily climbing a moonlit hillside holding the glowing feather, Pip beside her, the lantern village far below",
+      "audio": null,
+      "timings": null
+    },
+    {
+      "heading": "The Great Lantern",
+      "mood": "tense",
+      "text": "At the top of the Lantern Tower was a room made of crystal, and in the middle of it stood the Great Lantern, with a dark and empty heart.\n\nPip took a deep breath and blew. A blue flame curled out, the best he had ever done, and touched the lantern.\n\nNothing happened.\n\nHe tried again. A puff. A spark. Nothing.\n\nLily emptied her pockets. She tried the conker. The marbles. The acorn in its hat. The lantern stayed dark.\n\nThen she understood. Give what you'd keep. Not the treasures she could spare. The one she wanted most.\n\nLily looked at the feather for a long moment.\n\nThen she laid it in the lantern's heart. \"Now, Pip,\" she said.",
+      "image": "/books/lily-and-the-lantern-feather/page-07.webp",
+      "imageAlt": "In a crystal room, Lily places the glowing feather into an ornate lantern as Pip breathes a ribbon of blue flame",
+      "audio": null,
+      "timings": null
+    },
+    {
+      "heading": "The Light Comes On",
+      "mood": "wonder",
+      "text": "Pip breathed.\n\nThis time the flame caught the feather, and the feather caught the lantern, and the lantern went WHOOMPH, so bright that Lily had to squint.\n\nA great beam of gold leapt from the top of the tower and stretched right across the Hollow, over the bridges and roofs and treetops, all the way to the edge of the woods.\n\nFar below, a small orange shape stood up on the old stone bridge. Then it was running, ears back and tail flying, along the bright path the light had made. All the way home.\n\n\"He found it,\" Lily breathed.\n\nPip did a little dance that was mostly tail. \"We found it,\" he said.",
+      "image": "/books/lily-and-the-lantern-feather/page-08.webp",
+      "imageAlt": "Lily and Pip watching in joy as the Lantern Tower blazes with golden light across the valley, while the fox cub runs home",
+      "audio": null,
+      "timings": null
+    },
+    {
+      "heading": "Hold On Tight",
+      "mood": "wonder",
+      "text": "\"It's a long walk home,\" said Lily, yawning.\n\nPip looked at her. He looked at his wings. Then he crouched down very low. \"Climb on,\" he said. \"Hold my neck. Not my horns, they're ticklish.\"\n\n\"I thought you were scared you'd drop me.\"\n\n\"I am,\" said Pip. \"I'm scared, and I'm doing it anyway.\" And he jumped.\n\nFor one wobbly moment, they dropped. Then his wings caught the warm air rising from the lantern, and they swooped up and out. Over the falls, over the bridge, over a thousand glowing windows, with the moon racing along beside them.\n\nLily laughed so much she forgot to be scared at all.",
+      "image": "/books/lily-and-the-lantern-feather/page-09.webp",
+      "imageAlt": "Lily riding on Pip's back as he flies over the glowing village, both laughing, the full moon behind them",
+      "audio": null,
+      "timings": null
+    },
+    {
+      "heading": "Back Before Morning",
+      "mood": "sleepy",
+      "text": "Pip landed in the garden as softly as a falling leaf, and only squashed one gooseberry bush.\n\nUpstairs, Lily climbed into bed. Her pockets were empty for the first time in weeks. It felt strange. Not bad. Just light.\n\nPip curled up by her bedside lantern, nose tucked under his tail. Far away beyond the hedge, a golden glow still shone over the Hollow, showing every small creature the way home.\n\nLily snuggled down. Then her fingers found something in the very bottom of her cardigan pocket. Something soft.\n\nA tiny feather, no bigger than an eyelash. Still warm.\n\nLily smiled, closed her hand around it, and fell asleep.",
+      "image": "/books/lily-and-the-lantern-feather/page-10.webp",
+      "imageAlt": "Lily tucked up in bed with her toy rabbit, smiling sleepily at Pip curled up beside a glowing lantern",
+      "audio": null,
+      "timings": null
+    }
+  ]
+}
