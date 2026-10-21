@@ -22,8 +22,8 @@ In demo mode, everything is stored on the device, including a pretend token wall
 ## 2. Stripe
 1. Create the products in **test mode** first:
    - "Family plan": two recurring prices, £6.99 monthly and £59.99 yearly.
-   - "3 story tokens": a one-off price of £2.99.
-   - "10 story tokens": a one-off price of £7.99.
+   - "3 story tokens": a one-off price of £5.99.
+   - "10 story tokens": a one-off price of £9.99.
 2. Copy the four price ids (`price_…`) into the `STRIPE_PRICE_*` variables.
 3. **Developers → Webhooks → Add endpoint**: `https://<domain>/api/stripe/webhook`.
    - Events: `checkout.session.completed`, `customer.subscription.created`, `customer.subscription.updated`, `customer.subscription.deleted`.

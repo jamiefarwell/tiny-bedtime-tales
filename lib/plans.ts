@@ -44,8 +44,8 @@ export const FAMILY_PLAN: Plan = {
 };
 
 export const PACKS: Pack[] = [
-  { code: 'pack3', tokens: 3, price: '£2.99', note: 'Three extra books', env: 'STRIPE_PRICE_PACK_3' },
-  { code: 'pack10', tokens: 10, price: '£7.99', note: 'Best value: 80p a book', env: 'STRIPE_PRICE_PACK_10' },
+  { code: 'pack3', tokens: 3, price: '£5.99', note: 'Three extra books', env: 'STRIPE_PRICE_PACK_3' },
+  { code: 'pack10', tokens: 10, price: '£9.99', note: 'Best value: under £1 a book', env: 'STRIPE_PRICE_PACK_10' },
 ];
 
 export const WELCOME_TOKENS = 1;

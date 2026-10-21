@@ -56,8 +56,8 @@ The top complaints across the category:
 |---|---|---|
 | Welcome | Free | 1 token on sign-up (first personalised book free) |
 | Family plan | **£6.99/mo or £59.99/yr** | 4 tokens a month (one book a week), roll-over up to 8, unlimited library, all children |
-| 3 tokens | **£2.99** | Never expire |
-| 10 tokens | **£7.99** | Never expire (80p a book) |
+| 3 tokens | **£5.99** | Never expire |
+| 10 tokens | **£9.99** | Never expire (under £1 a book) |
 
 **Token rules:**
 - 1 token = 1 personalised book.
