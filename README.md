@@ -23,6 +23,7 @@ Without a key, everything except personalised story writing works.
 - `docs/ENGINE_COSTS.md`: per-story unit costs.
 - `docs/COST_OPTIMISATION.md`: cheaper engines and character reuse, without losing quality.
 - `docs/GOING_LIVE.md`: switching on accounts, tokens and Stripe.
+- `docs/BACKLOG.md`: agreed items to revisit.
 - `docs/PIPELINE.md`: generating art and narration for books.
 - `docs/HISTORY_CHATGPT_HANDOFF.md`: decisions from the original prototype.
 
