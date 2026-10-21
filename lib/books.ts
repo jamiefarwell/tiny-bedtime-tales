@@ -5,7 +5,7 @@ import sockTrain from '@/content/books/maya-and-the-midnight-sock-train.json';
 
 // The Ready-to-Read catalogue. Static JSON today; the same shape moves to the
 // database when the library grows past a handful of titles.
-const BOOKS = [lantern, snore, sockTrain] as Book[];
+const BOOKS = [snore, lantern, sockTrain] as Book[];
 
 export function allBooks(): Book[] {
   return BOOKS;

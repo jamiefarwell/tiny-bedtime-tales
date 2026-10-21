@@ -66,7 +66,14 @@ export function Reader({ title, pages, progressKey, backHref, glow, artNote, end
 
   const page = pages[index];
   const tokens = useMemo(() => pages.map((p) => tokenise(p.text)), [pages]);
-  const durations = useMemo(() => tokens.map((t) => estimateSeconds(t.length)), [tokens]);
+  // Real recording length where we have one, otherwise a reading-pace estimate.
+  const durations = useMemo(
+    () => tokens.map((t, i) => {
+      const timed = pages[i]?.timings;
+      return timed?.length ? timed[timed.length - 1].end + 1.4 : estimateSeconds(t.length);
+    }),
+    [tokens, pages],
+  );
   const last = pages.length - 1;
   const sleepy = settings.sleepy;
   const windDown = last > 0 ? index / last : 0;

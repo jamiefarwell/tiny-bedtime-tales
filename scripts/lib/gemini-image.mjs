@@ -53,7 +53,7 @@ export function priceFor(model, size) {
  */
 
 /** Build the HTTP request for a generation call, for either transport. */
-export function buildImageRequest({ api = 'interactions', model, parts, aspectRatio, imageSize, outputMime = 'image/png', apiKey = '<GEMINI_API_KEY>' }) {
+export function buildImageRequest({ api = 'interactions', model, parts, aspectRatio, imageSize, outputMime = 'image/jpeg', apiKey = '<GEMINI_API_KEY>' }) {
   const headers = { 'content-type': 'application/json', 'x-goog-api-key': apiKey };
   if (api === 'generateContent') {
     return {
