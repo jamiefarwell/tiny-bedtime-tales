@@ -1,6 +1,8 @@
 # Going live: accounts, tokens and payments
 
-The app runs in **preview mode** until these are switched on. In preview mode, everything is stored on the device and personalised stories are free. Each layer switches itself on when its keys are present in Vercel.
+The app runs in **demo payments mode** until these are switched on. Each layer switches itself on when its keys are present in Vercel.
+
+In demo mode, everything is stored on the device, including a pretend token wallet that follows exactly the same rules as the real one (`lib/demoWallet.ts`). Buying opens a clearly marked pretend checkout (`/demo-checkout`) that never asks for card details and only adds demo tokens. The Account page has demo controls: "Simulate next month", "Cancel plan", "Reset demo wallet", plus a token history. Use it to test the whole token journey with real people before any money is involved.
 
 | Layer | Switched on by | What changes |
 |---|---|---|

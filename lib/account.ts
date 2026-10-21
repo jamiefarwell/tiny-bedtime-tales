@@ -4,7 +4,8 @@ import { createBrowserClient } from '@supabase/ssr';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { useCallback, useEffect, useState } from 'react';
 import type { WalletView } from './plans';
-import { family } from './store';
+import { family, useFamily } from './store';
+import type { DemoWallet } from './demoWalletState';
 import type { ChildProfile, PersonalStory } from './types';
 
 const URL_ = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -20,7 +21,24 @@ export function supabaseBrowser(): SupabaseClient | null {
 
 export const cloudOnClient = () => Boolean(URL_ && KEY);
 
-const PREVIEW_WALLET: WalletView = { cloud: false, payments: false, signedIn: false, planTokens: 0, extraTokens: 0, plan: null };
+const PREVIEW_WALLET: WalletView = { cloud: false, payments: false, demo: true, signedIn: true, planTokens: 0, extraTokens: 0, plan: null };
+
+function demoView(d: DemoWallet): WalletView {
+  return {
+    ...PREVIEW_WALLET,
+    planTokens: d.planTokens,
+    extraTokens: d.extraTokens,
+    plan: d.plan
+      ? {
+          code: 'family',
+          status: d.plan.status,
+          renewsAt: new Date(d.plan.renewsAt).toISOString(),
+          cancelAtPeriodEnd: d.plan.cancelAtPeriodEnd,
+          cycle: d.plan.cycle,
+        }
+      : null,
+  };
+}
 
 // One shared fetch so every chip and screen shows the same numbers.
 let cached: WalletView | null = null;
@@ -41,9 +59,10 @@ export async function refreshWallet(): Promise<WalletView> {
   return inflight;
 }
 
-/** Current wallet. `null` while loading. Preview mode resolves immediately. */
+/** Current wallet. `null` while loading. Without accounts, the demo wallet. */
 export function useWallet(): WalletView | null {
-  const [wallet, setWallet] = useState<WalletView | null>(cloudOnClient() ? cached : PREVIEW_WALLET);
+  const demo = useFamily((s) => s.demoWallet);
+  const [wallet, setWallet] = useState<WalletView | null>(cloudOnClient() ? cached : null);
   useEffect(() => {
     if (!cloudOnClient()) return;
     listeners.add(setWallet);
@@ -52,7 +71,7 @@ export function useWallet(): WalletView | null {
       listeners.delete(setWallet);
     };
   }, []);
-  return wallet;
+  return cloudOnClient() ? wallet : demoView(demo);
 }
 
 export function useSignIn() {
@@ -77,6 +96,11 @@ export async function signOut() {
 }
 
 export async function openBilling(body: { action: 'checkout'; item: string } | { action: 'portal' }): Promise<string | null> {
+  if (!cloudOnClient()) {
+    // Demo payments: the pretend checkout, or the demo plan controls.
+    window.location.href = body.action === 'checkout' ? `/demo-checkout?item=${body.item}` : '/account#demo-plan';
+    return null;
+  }
   const res = await fetch('/api/billing', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
   const data = await res.json().catch(() => ({}));
   if (data.url) {

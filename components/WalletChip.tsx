@@ -11,13 +11,6 @@ export function WalletChip({ className, plain = false }: { className?: string; p
   // `plain` renders a non-interactive chip for use inside another link.
   const Tag = (plain ? 'span' : Link) as typeof Link;
   if (!wallet) return <span className={`${styles.chip} ${styles.loading} ${className ?? ''}`} aria-hidden />;
-  if (!wallet.cloud) {
-    return (
-      <span className={`${styles.chip} ${styles.preview} ${className ?? ''}`} title="While we test, personalised stories are free">
-        Preview · stories free
-      </span>
-    );
-  }
   if (!wallet.signedIn) {
     return (
       <Tag href="/account" className={`${styles.chip} ${className ?? ''}`}>
@@ -32,6 +25,7 @@ export function WalletChip({ className, plain = false }: { className?: string; p
         ✦
       </span>
       {n} {n === 1 ? 'token' : 'tokens'}
+      {wallet.demo && <span className={styles.demo}>demo</span>}
     </Tag>
   );
 }

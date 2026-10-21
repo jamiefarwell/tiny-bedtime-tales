@@ -2,6 +2,7 @@
 
 import { useCallback, useSyncExternalStore } from 'react';
 import type { ChildProfile, PersonalStory } from './types';
+import { DEMO_WALLET_DEFAULT, type DemoWallet } from './demoWalletState';
 
 // Family data lives on the device until parent accounts ship. Everything goes
 // through this module so swapping localStorage for Supabase touches one file.
@@ -28,6 +29,8 @@ interface State {
   stories: PersonalStory[];
   progress: Record<string, ReadingProgress>;
   settings: Settings;
+  /** Pretend token wallet for testing without payments (lib/demoWallet.ts). */
+  demoWallet: DemoWallet;
 }
 
 const KEY = 'tbt:v2';
@@ -40,7 +43,14 @@ const DEFAULT_SETTINGS: Settings = {
   ambient: 'off',
   voiceURI: '',
 };
-const EMPTY: State = { children: [], activeChildId: null, stories: [], progress: {}, settings: DEFAULT_SETTINGS };
+const EMPTY: State = {
+  children: [],
+  activeChildId: null,
+  stories: [],
+  progress: {},
+  settings: DEFAULT_SETTINGS,
+  demoWallet: DEMO_WALLET_DEFAULT,
+};
 
 let state: State = EMPTY;
 let loaded = false;
@@ -53,7 +63,7 @@ function load(): State {
     const raw = window.localStorage.getItem(KEY);
     if (raw) {
       const parsed = JSON.parse(raw) as Partial<State>;
-      state = { ...EMPTY, ...parsed, settings: { ...DEFAULT_SETTINGS, ...parsed.settings } };
+      state = { ...EMPTY, ...parsed, settings: { ...DEFAULT_SETTINGS, ...parsed.settings }, demoWallet: parsed.demoWallet ?? DEMO_WALLET_DEFAULT };
     }
   } catch {
     // Private browsing or corrupted data: start fresh rather than crash.
@@ -150,6 +160,10 @@ export const family = {
   updateSettings(patch: Partial<Settings>) {
     const s = load();
     commit({ ...s, settings: { ...s.settings, ...patch } });
+  },
+
+  setDemoWallet(demoWallet: DemoWallet) {
+    commit({ ...load(), demoWallet });
   },
 };
 

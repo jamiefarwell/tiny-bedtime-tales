@@ -91,3 +91,34 @@
   color: var(--mist);
   font-weight: 800;
 }
+.demoButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.demoButtons :global(.btn) {
+  min-height: 46px;
+  font-size: 15px;
+  flex: 1;
+}
+.history {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+.history li {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-radius: var(--radius-s);
+  background: rgba(255, 255, 255, 0.04);
+  font-size: 14px;
+}
+.plus {
+  color: var(--sea);
+}
+.minus {
+  color: var(--rose);
+}

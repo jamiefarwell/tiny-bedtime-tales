@@ -28,3 +28,14 @@
   width: 92px;
   opacity: 0.4;
 }
+
+.demo {
+  margin-left: 2px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: rgba(127, 211, 208, 0.18);
+  color: var(--sea);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}

@@ -5,6 +5,8 @@ import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { openBilling, refreshWallet, signOut, syncFamily, useSignIn, useWallet } from '@/lib/account';
 import { totalTokens } from '@/lib/plans';
+import { demoCancelPlan, demoNextMonth, demoReset } from '@/lib/demoWallet';
+import { useFamily } from '@/lib/store';
 import ui from '../pages.module.css';
 import styles from './account.module.css';
 
@@ -32,28 +34,7 @@ function Account() {
 
   if (!wallet) return <main className={styles.page} />;
 
-  if (!wallet.cloud) {
-    return (
-      <main className={styles.page}>
-        <header className={ui.pageHead}>
-          <p className="eyebrow">Account</p>
-          <h1>Preview mode</h1>
-          <p>Family accounts switch on at launch. Until then, everything is saved on this device and personalised stories are free.</p>
-        </header>
-        <div className={`${ui.card} ${styles.stack}`}>
-          <p>When accounts arrive you’ll be able to:</p>
-          <ul className={styles.list}>
-            <li>Sign in with just your email: no password to remember</li>
-            <li>See the same stories and children on every phone and tablet</li>
-            <li>Choose a plan, or top up tokens whenever you need them</li>
-          </ul>
-          <Link href="/plans" className="btn btn-ghost btn-block">
-            See the plans
-          </Link>
-        </div>
-      </main>
-    );
-  }
+  if (wallet.demo) return <DemoAccount />;
 
   if (!wallet.signedIn) {
     return (
@@ -170,5 +151,106 @@ export default function AccountPage() {
     <Suspense>
       <Account />
     </Suspense>
+  );
+}
+
+const KIND_LABEL: Record<string, string> = {
+  welcome: 'Welcome token',
+  plan_refill: 'Monthly plan tokens',
+  pack_purchase: 'Token pack',
+  spend_story: 'Story made',
+  refund_story: 'Story failed: token returned',
+  free_redo: 'Free redo',
+};
+
+/** Account screen for demo payments: everything on this device, nothing charged. */
+function DemoAccount() {
+  const wallet = useWallet()!;
+  const demo = useFamily((s) => s.demoWallet);
+  const q = useSearchParams();
+  const tokens = totalTokens(wallet);
+  const plan = demo.plan;
+  return (
+    <main className={styles.page}>
+      <header className={ui.pageHead}>
+        <p className="eyebrow">Account · demo</p>
+        <h1>Your family</h1>
+        <p>Demo payments are on: buying opens a pretend checkout and nothing is ever charged. Tokens are kept on this device.</p>
+      </header>
+
+      {q.get('checkout') === 'success' && <p className={styles.success}>Test purchase complete: your tokens are in.</p>}
+
+      <section className={styles.tokens}>
+        <span className={styles.big}>{tokens}</span>
+        <div>
+          <strong>story {tokens === 1 ? 'token' : 'tokens'}</strong>
+          <small>
+            {wallet.planTokens} from plan · {wallet.extraTokens} extra
+          </small>
+        </div>
+        <Link href="/plans" className="btn btn-primary">
+          Get more
+        </Link>
+      </section>
+
+      <section id="demo-plan" className={`${ui.card} ${styles.stack}`}>
+        <h2>Plan</h2>
+        {plan ? (
+          <>
+            <p>
+              Family plan ({plan.cycle}) · <span className={styles.status}>{plan.status}</span>
+            </p>
+            <p className={styles.muted}>
+              {plan.status === 'active'
+                ? `Next ${4} tokens arrive ${new Date(plan.nextRefillAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long' })}.`
+                : 'Cancelled: no more monthly tokens. Stories you’ve made stay on your shelf.'}
+            </p>
+            {plan.status === 'active' && (
+              <div className={styles.demoButtons}>
+                <button className="btn btn-ghost" onClick={() => demoNextMonth()}>
+                  Simulate next month
+                </button>
+                <button className="btn btn-ghost" onClick={() => demoCancelPlan()}>
+                  Cancel plan
+                </button>
+              </div>
+            )}
+          </>
+        ) : (
+          <>
+            <p className={styles.muted}>No plan. Try starting one from the plans page; it’s all pretend.</p>
+            <Link href="/plans" className="btn btn-ghost btn-block">
+              See plans
+            </Link>
+          </>
+        )}
+      </section>
+
+      <section className={`${ui.card} ${styles.stack}`}>
+        <h2>Token history</h2>
+        <ul className={styles.history}>
+          {[...demo.ledger]
+            .reverse()
+            .slice(0, 12)
+            .map((l, i) => (
+              <li key={i}>
+                <span>{KIND_LABEL[l.kind] ?? l.kind}</span>
+                <strong className={l.delta > 0 ? styles.plus : l.delta < 0 ? styles.minus : undefined}>
+                  {l.delta > 0 ? `+${l.delta}` : l.delta < 0 ? l.delta : l.kind === 'plan_refill' ? '+0 (full)' : 'free'}
+                </strong>
+              </li>
+            ))}
+        </ul>
+      </section>
+
+      <button
+        className={styles.signOut}
+        onClick={() => {
+          if (confirm('Reset the demo wallet back to one free token?')) demoReset();
+        }}
+      >
+        Reset demo wallet
+      </button>
+    </main>
   );
 }

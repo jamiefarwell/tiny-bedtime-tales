@@ -1,0 +1,80 @@
+.page {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 16px;
+  padding: calc(var(--safe-t) + 24px) 16px calc(var(--safe-b) + 24px);
+  background: #f4f2ee;
+  color: #1d1b26;
+}
+.ribbon {
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: #ffe1a6;
+  color: #6a3d00;
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+}
+.card {
+  width: min(420px, 100%);
+  display: grid;
+  gap: 10px;
+  padding: 26px 22px;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 20px 50px -24px rgba(0, 0, 0, 0.35);
+}
+.card h1 {
+  font-size: 24px;
+  color: #1d1b26;
+}
+.card hr {
+  border: 0;
+  border-top: 1px solid #ece8e1;
+  margin: 8px 0;
+}
+.merchant {
+  font-weight: 800;
+  color: #6d6879;
+  font-size: 14px;
+}
+.price {
+  font-family: var(--font-display);
+  font-size: 40px;
+  font-weight: 600;
+}
+.detail,
+.explain {
+  color: #6d6879;
+  font-size: 15px;
+}
+.pay {
+  display: grid;
+  place-items: center;
+  min-height: 54px;
+  border-radius: 12px;
+  background: #3f3bd6;
+  color: #fff;
+  font-weight: 800;
+  font-size: 17px;
+  margin-top: 6px;
+}
+.cancel {
+  justify-self: center;
+  min-height: 40px;
+  display: grid;
+  place-items: center;
+  color: #6d6879;
+  font-weight: 700;
+}
+.success {
+  display: grid;
+  gap: 12px;
+}
+.success p {
+  color: #13804b;
+  font-weight: 800;
+  font-size: 18px;
+}

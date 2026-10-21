@@ -10,7 +10,8 @@ import { Reader } from '@/components/reader/Reader';
 import { pageShape } from '@/lib/engine/prompt';
 import { WalletChip } from '@/components/WalletChip';
 import { cloudOnClient, refreshWallet, syncFamily, useWallet } from '@/lib/account';
-import { totalTokens } from '@/lib/plans';
+import { tokensApply, totalTokens } from '@/lib/plans';
+import { DemoNoTokens, demoRefund, demoSpend } from '@/lib/demoWallet';
 import { LENGTHS, MOODS, WORLDS } from './options';
 import styles from './create.module.css';
 
@@ -46,7 +47,7 @@ export function CreateFlow({ initialWorld, continueId, againId }: { initialWorld
   const stories = useFamily((s) => s.stories);
   const base = stories.find((s) => s.id === (continueId || againId)) ?? null;
   const wallet = useWallet();
-  const outOfTokens = Boolean(wallet?.cloud && wallet.signedIn && totalTokens(wallet) === 0 && !againId);
+  const outOfTokens = Boolean(wallet && tokensApply(wallet) && wallet.signedIn && totalTokens(wallet) === 0 && !againId);
 
   const [step, setStep] = useState<Step>('who');
   const [editingChild, setEditingChild] = useState(false);
@@ -138,6 +139,22 @@ export function CreateFlow({ initialWorld, continueId, againId }: { initialWorld
       redoOf: againId && base ? base.id : undefined,
     };
 
+    // Demo payments: take the token on this device (the server only charges
+    // real wallets). Refunded below if the story doesn't arrive.
+    const demo = Boolean(wallet?.demo);
+    if (demo) {
+      try {
+        demoSpend(id, againId && base ? base.id : undefined);
+      } catch (e) {
+        if (e instanceof DemoNoTokens) {
+          setWriting((w) => w && { ...w, error: 'Out of tokens', code: 'no_tokens' });
+          wake?.release?.().catch(() => {});
+          return;
+        }
+      }
+    }
+    const refundDemo = () => demo && demoRefund(id);
+
     try {
       const res = await fetch('/api/story', {
         method: 'POST',
@@ -146,6 +163,7 @@ export function CreateFlow({ initialWorld, continueId, againId }: { initialWorld
         signal: abort.current.signal,
       });
       if (!res.ok || !res.body) {
+        refundDemo();
         const err = await res.json().catch(() => ({}));
         setWriting((w) => w && { ...w, error: err.message || 'Something went wrong.', code: err.error || `http-${res.status}`, notConnected: err.error === 'not_connected' });
         return;
@@ -218,6 +236,7 @@ export function CreateFlow({ initialWorld, continueId, againId }: { initialWorld
         return w && { ...w, pages: story.pages, done: true };
       });
     } catch (e: any) {
+      refundDemo();
       if (e?.name === 'AbortError') return;
       // A dropped connection (phone locked, signal lost) surfaces as a TypeError.
       const code = e?.code || (e instanceof TypeError ? 'connection' : 'client');
@@ -477,7 +496,7 @@ export function CreateFlow({ initialWorld, continueId, againId }: { initialWorld
             )}
             <div className={styles.costLine}>
               <WalletChip />
-              {wallet?.cloud && <span>{againId ? 'First redo within 24 hours is free' : 'Uses 1 token'}</span>}
+              {tokensApply(wallet) && <span>{againId ? 'First redo within 24 hours is free' : 'Uses 1 token'}</span>}
             </div>
           </div>
         </section>

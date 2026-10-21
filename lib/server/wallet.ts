@@ -19,6 +19,7 @@ export async function walletView(): Promise<WalletView> {
   const base: WalletView = {
     cloud: cloudEnabled(),
     payments: paymentsEnabled(),
+    demo: false,
     signedIn: false,
     planTokens: 0,
     extraTokens: 0,

@@ -56,12 +56,19 @@ export interface WalletView {
   /** Accounts and billing are switched on for this deployment. */
   cloud: boolean;
   payments: boolean;
+  /** Demo payments: pretend checkout and an on-device wallet (no accounts). */
+  demo: boolean;
   signedIn: boolean;
   email?: string;
   planTokens: number;
   extraTokens: number;
-  plan: { code: string; status: string; renewsAt: string | null; cancelAtPeriodEnd: boolean } | null;
+  plan: { code: string; status: string; renewsAt: string | null; cancelAtPeriodEnd: boolean; cycle?: string } | null;
 }
+
+/** Stories cost tokens (real or demo). */
+export const tokensApply = (w: WalletView | null) => Boolean(w && (w.cloud || w.demo));
+/** Buying is possible (real Stripe or the pretend checkout). */
+export const canBuy = (w: WalletView | null) => Boolean(w && (w.payments || w.demo));
 
 export function totalTokens(w: Pick<WalletView, 'planTokens' | 'extraTokens'>): number {
   return w.planTokens + w.extraTokens;

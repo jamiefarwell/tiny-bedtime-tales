@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { openBilling, useWallet } from '@/lib/account';
-import { FAMILY_PLAN, PACKS, totalTokens, type BillingItem } from '@/lib/plans';
+import { FAMILY_PLAN, PACKS, canBuy, totalTokens, type BillingItem } from '@/lib/plans';
 import { Icon } from '@/components/reader/icons';
 import ui from '../pages.module.css';
 import styles from './plans.module.css';
@@ -14,9 +14,9 @@ export default function PlansPage() {
   const [busy, setBusy] = useState<string | null>(null);
   const [error, setError] = useState('');
 
-  const ready = Boolean(wallet?.payments);
+  const ready = canBuy(wallet);
   const signedIn = Boolean(wallet?.signedIn);
-  const onPlan = wallet?.plan && ['active', 'trialing', 'past_due'].includes(wallet.plan.status);
+  const onPlan = Boolean(wallet?.plan && ['active', 'trialing', 'past_due'].includes(wallet.plan.status));
 
   async function buy(item: BillingItem) {
     if (!signedIn) {
@@ -109,13 +109,10 @@ export default function PlansPage() {
       </section>
 
       {error && <p className={styles.error}>{error}</p>}
-      {wallet && !ready && (
-        <p className={styles.notice}>
-          {wallet.cloud
-            ? 'Payments switch on at launch. Your free story is waiting.'
-            : 'Preview: payments aren’t switched on yet, and personalised stories are free while we test.'}
-        </p>
+      {wallet?.demo && (
+        <p className={styles.notice}>Demo payments: buttons open a pretend checkout. Nothing is charged, and tokens are kept on this device.</p>
       )}
+      {wallet && !ready && <p className={styles.notice}>Payments switch on at launch. Your free story is waiting.</p>}
 
       <section className={ui.section}>
         <div className={ui.sectionHead}>
