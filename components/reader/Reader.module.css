@@ -658,3 +658,50 @@
     height: 52px;
   }
 }
+
+/* --- Page turns ---------------------------------------------------------
+   The new page slides in over the old one, which drifts back and dims,
+   like a page lifting away. Direction follows the reader. */
+.enterFwd {
+  z-index: 1;
+  animation: enterFwd 0.56s var(--ease-out) both;
+  box-shadow: -24px 0 40px -24px rgba(0, 0, 0, 0.45);
+}
+.enterBack {
+  z-index: 1;
+  animation: enterBack 0.56s var(--ease-out) both;
+  box-shadow: 24px 0 40px -24px rgba(0, 0, 0, 0.45);
+}
+.leaveFwd,
+.leaveBack {
+  z-index: 0;
+  pointer-events: none;
+}
+.leaveFwd {
+  animation: leaveFwd 0.56s ease-in both;
+}
+.leaveBack {
+  animation: leaveBack 0.56s ease-in both;
+}
+@keyframes enterFwd {
+  from {
+    transform: translateX(100%);
+  }
+}
+@keyframes enterBack {
+  from {
+    transform: translateX(-100%);
+  }
+}
+@keyframes leaveFwd {
+  to {
+    transform: translateX(-22%) scale(0.97);
+    filter: brightness(0.6);
+  }
+}
+@keyframes leaveBack {
+  to {
+    transform: translateX(22%) scale(0.97);
+    filter: brightness(0.6);
+  }
+}

@@ -302,3 +302,15 @@ node --test scripts/test/pipeline.test.mjs
 node scripts/illustrate-book.mjs tiny-test-book --book scripts/fixtures/tiny-test-book.json --dry-run
 node scripts/narrate-book.mjs tiny-test-book --book scripts/fixtures/tiny-test-book.json --voice TEST --dry-run
 ```
+
+## Production notes (21 Oct 2026, first real runs)
+- **Image format:** `gemini-nano-banana-2.1` only returns JPEG (`response_format.mime_type` must be `image/jpeg`). The script now requests JPEG and converts it to WebP.
+- **Run order:**
+  1. Make the reference sheets first and look at them: `--refs-only`, then `--refs-only --cast <id>` to redo just one.
+  2. Then run the full book.
+  3. A 10-page book with 4 characters took about 4 minutes and cost about $0.56.
+- **Narrator:**
+  - **Auditions:** `node scripts/audition-voices.mjs --list` lists the account's voices. `node scripts/audition-voices.mjs <slug> --voices id1,id2 --out ../voice-samples` records short samples (about 400 characters each).
+  - **House voice:** "Lily" (`pFZP5JQG7iQjIQuC4Bku`), `--style 0.25 --speed 0.92`.
+- **Audio size:** narration now defaults to `mp3_44100_64` (64 kbps), about 350 KB per page. To re-encode older 128k files without re-buying them: `ffmpeg -i in.mp3 -ac 1 -b:a 64k out.mp3`. Durations, and so word timings, are unchanged.
+- **Reader:** fetches the next page's picture and audio while the current page is read, and plays all narration through one shared audio element. Phones allow auto page-turns that way.

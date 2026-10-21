@@ -47,7 +47,7 @@ Delivery (bedtime defaults; env overrides in brackets)
   --no-wind-down       Do not slow the last page and "sleepy" pages a little further
   --seed <n>           Best-effort determinism. Default: derived from the slug
   --language <iso>     ISO 639-1 code (not supported by eleven_multilingual_v2)
-  --output-format <f>  Default mp3_44100_128 [NARRATION_OUTPUT_FORMAT]
+  --output-format <f>  Default mp3_44100_64 (speech; half the download of 128k) [NARRATION_OUTPUT_FORMAT]
   --book <file>        Read/write this JSON instead of content/books/<slug>.json
   -h, --help
 `;
@@ -116,7 +116,7 @@ async function main() {
   const total = book.pages.length;
   const model = opts.model ?? env('NARRATION_MODEL', DEFAULT_NARRATION_MODEL);
   const info = modelInfo(model);
-  const outputFormat = opts['output-format'] ?? env('NARRATION_OUTPUT_FORMAT', 'mp3_44100_128');
+  const outputFormat = opts['output-format'] ?? env('NARRATION_OUTPUT_FORMAT', 'mp3_44100_64');
   if (!outputFormat.startsWith('mp3_')) throw new Error('--output-format must be an mp3_* format (files are saved as .mp3)');
 
   const voiceId = opts.voice || book.narrator?.voice || env('NARRATOR_VOICE_ID');

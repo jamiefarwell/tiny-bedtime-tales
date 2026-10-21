@@ -1,0 +1,206 @@
+{
+  "version": 1,
+  "assets": {
+    "audio/page-01": {
+      "file": "page-01.mp3",
+      "provider": "elevenlabs",
+      "model": "eleven_multilingual_v2",
+      "voiceId": "pFZP5JQG7iQjIQuC4Bku",
+      "outputFormat": "mp3_44100_64",
+      "voiceSettings": {
+        "stability": 0.55,
+        "similarity_boost": 0.75,
+        "use_speaker_boost": true,
+        "style": 0.25,
+        "speed": 0.92
+      },
+      "seed": 296420799,
+      "textSha": "e3228704c80bc52f",
+      "words": 119,
+      "alignmentCoverage": 1,
+      "durationSec": 51.642,
+      "createdAt": "2026-10-21T07:03:07.721Z"
+    },
+    "audio/page-02": {
+      "file": "page-02.mp3",
+      "provider": "elevenlabs",
+      "model": "eleven_multilingual_v2",
+      "voiceId": "pFZP5JQG7iQjIQuC4Bku",
+      "outputFormat": "mp3_44100_64",
+      "voiceSettings": {
+        "stability": 0.55,
+        "similarity_boost": 0.75,
+        "use_speaker_boost": true,
+        "style": 0.25,
+        "speed": 0.92
+      },
+      "seed": 296420799,
+      "textSha": "ef7c7d53231872dc",
+      "words": 114,
+      "alignmentCoverage": 1,
+      "durationSec": 45.511,
+      "createdAt": "2026-10-21T07:03:14.842Z"
+    },
+    "audio/page-03": {
+      "file": "page-03.mp3",
+      "provider": "elevenlabs",
+      "model": "eleven_multilingual_v2",
+      "voiceId": "pFZP5JQG7iQjIQuC4Bku",
+      "outputFormat": "mp3_44100_64",
+      "voiceSettings": {
+        "stability": 0.55,
+        "similarity_boost": 0.75,
+        "use_speaker_boost": true,
+        "style": 0.25,
+        "speed": 0.92
+      },
+      "seed": 296420799,
+      "textSha": "78631c0b3977febd",
+      "words": 126,
+      "alignmentCoverage": 1,
+      "durationSec": 51.223,
+      "createdAt": "2026-10-21T07:03:22.980Z"
+    },
+    "audio/page-04": {
+      "file": "page-04.mp3",
+      "provider": "elevenlabs",
+      "model": "eleven_multilingual_v2",
+      "voiceId": "pFZP5JQG7iQjIQuC4Bku",
+      "outputFormat": "mp3_44100_64",
+      "voiceSettings": {
+        "stability": 0.55,
+        "similarity_boost": 0.75,
+        "use_speaker_boost": true,
+        "style": 0.25,
+        "speed": 0.92
+      },
+      "seed": 296420799,
+      "textSha": "40935e8f0616c014",
+      "words": 118,
+      "alignmentCoverage": 1,
+      "durationSec": 47.926,
+      "createdAt": "2026-10-21T07:03:30.336Z"
+    },
+    "audio/page-05": {
+      "file": "page-05.mp3",
+      "provider": "elevenlabs",
+      "model": "eleven_multilingual_v2",
+      "voiceId": "pFZP5JQG7iQjIQuC4Bku",
+      "outputFormat": "mp3_44100_64",
+      "voiceSettings": {
+        "stability": 0.55,
+        "similarity_boost": 0.75,
+        "use_speaker_boost": true,
+        "style": 0.25,
+        "speed": 0.92
+      },
+      "seed": 296420799,
+      "textSha": "f56b7fd0d78737ed",
+      "words": 110,
+      "alignmentCoverage": 1,
+      "durationSec": 40.914,
+      "createdAt": "2026-10-21T07:03:36.842Z"
+    },
+    "audio/page-06": {
+      "file": "page-06.mp3",
+      "provider": "elevenlabs",
+      "model": "eleven_multilingual_v2",
+      "voiceId": "pFZP5JQG7iQjIQuC4Bku",
+      "outputFormat": "mp3_44100_64",
+      "voiceSettings": {
+        "stability": 0.55,
+        "similarity_boost": 0.75,
+        "use_speaker_boost": true,
+        "style": 0.25,
+        "speed": 0.92
+      },
+      "seed": 296420799,
+      "textSha": "1d6ccd494642412b",
+      "words": 108,
+      "alignmentCoverage": 1,
+      "durationSec": 43.05,
+      "createdAt": "2026-10-21T07:03:43.428Z"
+    },
+    "audio/page-07": {
+      "file": "page-07.mp3",
+      "provider": "elevenlabs",
+      "model": "eleven_multilingual_v2",
+      "voiceId": "pFZP5JQG7iQjIQuC4Bku",
+      "outputFormat": "mp3_44100_64",
+      "voiceSettings": {
+        "stability": 0.55,
+        "similarity_boost": 0.75,
+        "use_speaker_boost": true,
+        "style": 0.25,
+        "speed": 0.92
+      },
+      "seed": 296420799,
+      "textSha": "85de4b0a6a01d2cc",
+      "words": 119,
+      "alignmentCoverage": 1,
+      "durationSec": 49.83,
+      "createdAt": "2026-10-21T07:03:51.212Z"
+    },
+    "audio/page-08": {
+      "file": "page-08.mp3",
+      "provider": "elevenlabs",
+      "model": "eleven_multilingual_v2",
+      "voiceId": "pFZP5JQG7iQjIQuC4Bku",
+      "outputFormat": "mp3_44100_64",
+      "voiceSettings": {
+        "stability": 0.55,
+        "similarity_boost": 0.75,
+        "use_speaker_boost": true,
+        "style": 0.25,
+        "speed": 0.92
+      },
+      "seed": 296420799,
+      "textSha": "56ad97d97672bbff",
+      "words": 114,
+      "alignmentCoverage": 1,
+      "durationSec": 45.139,
+      "createdAt": "2026-10-21T07:03:58.093Z"
+    },
+    "audio/page-09": {
+      "file": "page-09.mp3",
+      "provider": "elevenlabs",
+      "model": "eleven_multilingual_v2",
+      "voiceId": "pFZP5JQG7iQjIQuC4Bku",
+      "outputFormat": "mp3_44100_64",
+      "voiceSettings": {
+        "stability": 0.55,
+        "similarity_boost": 0.75,
+        "use_speaker_boost": true,
+        "style": 0.25,
+        "speed": 0.92
+      },
+      "seed": 296420799,
+      "textSha": "3e0451bbd99958a9",
+      "words": 109,
+      "alignmentCoverage": 1,
+      "durationSec": 45.372,
+      "createdAt": "2026-10-21T07:04:05.118Z"
+    },
+    "audio/page-10": {
+      "file": "page-10.mp3",
+      "provider": "elevenlabs",
+      "model": "eleven_multilingual_v2",
+      "voiceId": "pFZP5JQG7iQjIQuC4Bku",
+      "outputFormat": "mp3_44100_64",
+      "voiceSettings": {
+        "stability": 0.55,
+        "similarity_boost": 0.75,
+        "use_speaker_boost": true,
+        "style": 0.25,
+        "speed": 0.87
+      },
+      "seed": 296420799,
+      "textSha": "1a5a8213778ae71d",
+      "words": 109,
+      "alignmentCoverage": 1,
+      "durationSec": 47.74,
+      "createdAt": "2026-10-21T07:04:12.253Z"
+    }
+  },
+  "updatedAt": "2026-10-21T07:04:12.254Z"
+}

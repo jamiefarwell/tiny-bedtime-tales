@@ -1,0 +1,377 @@
+{
+  "version": 1,
+  "assets": {
+    "refs/maya": {
+      "file": "maya.webp",
+      "model": "gemini-nano-banana-2.1",
+      "api": "interactions",
+      "size": "1K",
+      "aspectRatio": "3:4",
+      "createdAt": "2026-10-21T07:03:15.180Z",
+      "sha": "fc4e40ee91df44e1",
+      "lookSha": "e95cf323b023876d"
+    },
+    "refs/tumble": {
+      "file": "tumble.webp",
+      "model": "gemini-nano-banana-2.1",
+      "api": "interactions",
+      "size": "1K",
+      "aspectRatio": "3:4",
+      "createdAt": "2026-10-21T07:03:33.321Z",
+      "sha": "89c3cd3330ef3431",
+      "lookSha": "cc191e1827e72541"
+    },
+    "page-01": {
+      "file": "page-01.webp",
+      "model": "gemini-nano-banana-2.1",
+      "api": "interactions",
+      "size": "1K",
+      "aspectRatio": "4:5",
+      "createdAt": "2026-10-21T07:03:50.300Z",
+      "sha": "53f34cb6f6bd278a",
+      "artSha": "b5982bbd74ae62b4",
+      "refs": {
+        "maya": "fc4e40ee91df44e1"
+      }
+    },
+    "page-02": {
+      "file": "page-02.webp",
+      "model": "gemini-nano-banana-2.1",
+      "api": "interactions",
+      "size": "1K",
+      "aspectRatio": "4:5",
+      "createdAt": "2026-10-21T07:04:31.070Z",
+      "sha": "81e29bcc0521464e",
+      "artSha": "5f5cc377162c2714",
+      "refs": {
+        "maya": "fc4e40ee91df44e1",
+        "tumble": "89c3cd3330ef3431"
+      }
+    },
+    "page-03": {
+      "file": "page-03.webp",
+      "model": "gemini-nano-banana-2.1",
+      "api": "interactions",
+      "size": "1K",
+      "aspectRatio": "4:5",
+      "createdAt": "2026-10-21T07:04:51.846Z",
+      "sha": "9dd94151e3507ec2",
+      "artSha": "24a355e9a5548947",
+      "refs": {
+        "maya": "fc4e40ee91df44e1",
+        "tumble": "89c3cd3330ef3431"
+      }
+    },
+    "page-04": {
+      "file": "page-04.webp",
+      "model": "gemini-nano-banana-2.1",
+      "api": "interactions",
+      "size": "1K",
+      "aspectRatio": "4:5",
+      "createdAt": "2026-10-21T07:05:12.002Z",
+      "sha": "52dfa8ab0a44080c",
+      "artSha": "21cceeabd21f8ca2",
+      "refs": {
+        "maya": "fc4e40ee91df44e1",
+        "tumble": "89c3cd3330ef3431"
+      }
+    },
+    "page-05": {
+      "file": "page-05.webp",
+      "model": "gemini-nano-banana-2.1",
+      "api": "interactions",
+      "size": "1K",
+      "aspectRatio": "4:5",
+      "createdAt": "2026-10-21T07:05:32.939Z",
+      "sha": "beadab459e9c57cb",
+      "artSha": "f3a9c4938d2fb2a3",
+      "refs": {
+        "maya": "fc4e40ee91df44e1",
+        "tumble": "89c3cd3330ef3431"
+      }
+    },
+    "page-06": {
+      "file": "page-06.webp",
+      "model": "gemini-nano-banana-2.1",
+      "api": "interactions",
+      "size": "1K",
+      "aspectRatio": "4:5",
+      "createdAt": "2026-10-21T07:06:08.131Z",
+      "sha": "4decace903977938",
+      "artSha": "6f342052621abd47",
+      "refs": {
+        "maya": "fc4e40ee91df44e1",
+        "tumble": "89c3cd3330ef3431"
+      }
+    },
+    "page-07": {
+      "file": "page-07.webp",
+      "model": "gemini-nano-banana-2.1",
+      "api": "interactions",
+      "size": "1K",
+      "aspectRatio": "4:5",
+      "createdAt": "2026-10-21T07:06:29.995Z",
+      "sha": "ca7eddb1788bbf0f",
+      "artSha": "d42c9a00764f7020",
+      "refs": {
+        "maya": "fc4e40ee91df44e1",
+        "tumble": "89c3cd3330ef3431"
+      }
+    },
+    "page-08": {
+      "file": "page-08.webp",
+      "model": "gemini-nano-banana-2.1",
+      "api": "interactions",
+      "size": "1K",
+      "aspectRatio": "4:5",
+      "createdAt": "2026-10-21T07:06:52.772Z",
+      "sha": "c49dd31023f8e133",
+      "artSha": "ea26658eff1b6e39",
+      "refs": {
+        "maya": "fc4e40ee91df44e1",
+        "tumble": "89c3cd3330ef3431"
+      }
+    },
+    "page-09": {
+      "file": "page-09.webp",
+      "model": "gemini-nano-banana-2.1",
+      "api": "interactions",
+      "size": "1K",
+      "aspectRatio": "4:5",
+      "createdAt": "2026-10-21T07:07:31.584Z",
+      "sha": "5eca30626789c892",
+      "artSha": "896ed5d5f3f19003",
+      "refs": {
+        "maya": "fc4e40ee91df44e1",
+        "tumble": "89c3cd3330ef3431"
+      }
+    },
+    "page-10": {
+      "file": "page-10.webp",
+      "model": "gemini-nano-banana-2.1",
+      "api": "interactions",
+      "size": "1K",
+      "aspectRatio": "4:5",
+      "createdAt": "2026-10-21T07:07:53.087Z",
+      "sha": "fac9a88f2a971186",
+      "artSha": "638ad2fbad2b07f8",
+      "refs": {
+        "maya": "fc4e40ee91df44e1"
+      }
+    },
+    "cover": {
+      "file": "cover.webp",
+      "model": "gemini-nano-banana-2.1",
+      "api": "interactions",
+      "size": "1K",
+      "aspectRatio": "3:4",
+      "createdAt": "2026-10-21T07:08:03.201Z",
+      "sha": "a7cc1b973bda58de",
+      "refs": {
+        "maya": "fc4e40ee91df44e1",
+        "tumble": "89c3cd3330ef3431"
+      }
+    },
+    "audio/page-01": {
+      "file": "page-01.mp3",
+      "provider": "elevenlabs",
+      "model": "eleven_multilingual_v2",
+      "voiceId": "pFZP5JQG7iQjIQuC4Bku",
+      "outputFormat": "mp3_44100_64",
+      "voiceSettings": {
+        "stability": 0.55,
+        "similarity_boost": 0.75,
+        "use_speaker_boost": true,
+        "style": 0.25,
+        "speed": 0.92
+      },
+      "seed": 3448046408,
+      "textSha": "733f3d7414896453",
+      "words": 89,
+      "alignmentCoverage": 1,
+      "durationSec": 40.82,
+      "createdAt": "2026-10-21T07:08:23.526Z"
+    },
+    "audio/page-02": {
+      "file": "page-02.mp3",
+      "provider": "elevenlabs",
+      "model": "eleven_multilingual_v2",
+      "voiceId": "pFZP5JQG7iQjIQuC4Bku",
+      "outputFormat": "mp3_44100_64",
+      "voiceSettings": {
+        "stability": 0.55,
+        "similarity_boost": 0.75,
+        "use_speaker_boost": true,
+        "style": 0.25,
+        "speed": 0.92
+      },
+      "seed": 3448046408,
+      "textSha": "1ec769921c762626",
+      "words": 97,
+      "alignmentCoverage": 1,
+      "durationSec": 47.183,
+      "createdAt": "2026-10-21T07:08:30.744Z"
+    },
+    "audio/page-03": {
+      "file": "page-03.mp3",
+      "provider": "elevenlabs",
+      "model": "eleven_multilingual_v2",
+      "voiceId": "pFZP5JQG7iQjIQuC4Bku",
+      "outputFormat": "mp3_44100_64",
+      "voiceSettings": {
+        "stability": 0.55,
+        "similarity_boost": 0.75,
+        "use_speaker_boost": true,
+        "style": 0.25,
+        "speed": 0.92
+      },
+      "seed": 3448046408,
+      "textSha": "c0e7b7c0f3cccaa3",
+      "words": 89,
+      "alignmentCoverage": 1,
+      "durationSec": 40.078,
+      "createdAt": "2026-10-21T07:08:37.084Z"
+    },
+    "audio/page-04": {
+      "file": "page-04.mp3",
+      "provider": "elevenlabs",
+      "model": "eleven_multilingual_v2",
+      "voiceId": "pFZP5JQG7iQjIQuC4Bku",
+      "outputFormat": "mp3_44100_64",
+      "voiceSettings": {
+        "stability": 0.55,
+        "similarity_boost": 0.75,
+        "use_speaker_boost": true,
+        "style": 0.25,
+        "speed": 0.92
+      },
+      "seed": 3448046408,
+      "textSha": "32e989d3cba6f907",
+      "words": 96,
+      "alignmentCoverage": 1,
+      "durationSec": 46.951,
+      "createdAt": "2026-10-21T07:08:44.128Z"
+    },
+    "audio/page-05": {
+      "file": "page-05.mp3",
+      "provider": "elevenlabs",
+      "model": "eleven_multilingual_v2",
+      "voiceId": "pFZP5JQG7iQjIQuC4Bku",
+      "outputFormat": "mp3_44100_64",
+      "voiceSettings": {
+        "stability": 0.55,
+        "similarity_boost": 0.75,
+        "use_speaker_boost": true,
+        "style": 0.25,
+        "speed": 0.92
+      },
+      "seed": 3448046408,
+      "textSha": "ec4d3af71d8cea00",
+      "words": 101,
+      "alignmentCoverage": 1,
+      "durationSec": 46.626,
+      "createdAt": "2026-10-21T07:08:51.247Z"
+    },
+    "audio/page-06": {
+      "file": "page-06.mp3",
+      "provider": "elevenlabs",
+      "model": "eleven_multilingual_v2",
+      "voiceId": "pFZP5JQG7iQjIQuC4Bku",
+      "outputFormat": "mp3_44100_64",
+      "voiceSettings": {
+        "stability": 0.55,
+        "similarity_boost": 0.75,
+        "use_speaker_boost": true,
+        "style": 0.25,
+        "speed": 0.92
+      },
+      "seed": 3448046408,
+      "textSha": "9109127d1022ade7",
+      "words": 102,
+      "alignmentCoverage": 1,
+      "durationSec": 41.842,
+      "createdAt": "2026-10-21T07:08:58.370Z"
+    },
+    "audio/page-07": {
+      "file": "page-07.mp3",
+      "provider": "elevenlabs",
+      "model": "eleven_multilingual_v2",
+      "voiceId": "pFZP5JQG7iQjIQuC4Bku",
+      "outputFormat": "mp3_44100_64",
+      "voiceSettings": {
+        "stability": 0.55,
+        "similarity_boost": 0.75,
+        "use_speaker_boost": true,
+        "style": 0.25,
+        "speed": 0.92
+      },
+      "seed": 3448046408,
+      "textSha": "940992b78156dada",
+      "words": 100,
+      "alignmentCoverage": 1,
+      "durationSec": 45.511,
+      "createdAt": "2026-10-21T07:09:05.647Z"
+    },
+    "audio/page-08": {
+      "file": "page-08.mp3",
+      "provider": "elevenlabs",
+      "model": "eleven_multilingual_v2",
+      "voiceId": "pFZP5JQG7iQjIQuC4Bku",
+      "outputFormat": "mp3_44100_64",
+      "voiceSettings": {
+        "stability": 0.55,
+        "similarity_boost": 0.75,
+        "use_speaker_boost": true,
+        "style": 0.25,
+        "speed": 0.92
+      },
+      "seed": 3448046408,
+      "textSha": "66f5ddb0662c299a",
+      "words": 103,
+      "alignmentCoverage": 1,
+      "durationSec": 45.326,
+      "createdAt": "2026-10-21T07:09:12.829Z"
+    },
+    "audio/page-09": {
+      "file": "page-09.mp3",
+      "provider": "elevenlabs",
+      "model": "eleven_multilingual_v2",
+      "voiceId": "pFZP5JQG7iQjIQuC4Bku",
+      "outputFormat": "mp3_44100_64",
+      "voiceSettings": {
+        "stability": 0.55,
+        "similarity_boost": 0.75,
+        "use_speaker_boost": true,
+        "style": 0.25,
+        "speed": 0.92
+      },
+      "seed": 3448046408,
+      "textSha": "bae71070da7aa016",
+      "words": 98,
+      "alignmentCoverage": 1,
+      "durationSec": 47.415,
+      "createdAt": "2026-10-21T07:09:20.095Z"
+    },
+    "audio/page-10": {
+      "file": "page-10.mp3",
+      "provider": "elevenlabs",
+      "model": "eleven_multilingual_v2",
+      "voiceId": "pFZP5JQG7iQjIQuC4Bku",
+      "outputFormat": "mp3_44100_64",
+      "voiceSettings": {
+        "stability": 0.55,
+        "similarity_boost": 0.75,
+        "use_speaker_boost": true,
+        "style": 0.25,
+        "speed": 0.87
+      },
+      "seed": 3448046408,
+      "textSha": "c2b225c2d53f6ba2",
+      "words": 102,
+      "alignmentCoverage": 1,
+      "durationSec": 49.18,
+      "createdAt": "2026-10-21T07:09:27.107Z"
+    }
+  },
+  "updatedAt": "2026-10-21T07:09:27.107Z"
+}

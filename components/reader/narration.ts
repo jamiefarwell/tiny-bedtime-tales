@@ -15,6 +15,8 @@ export interface NarrateOptions {
   onWord: (index: number) => void;
   onProgress: (fraction: number) => void;
   onEnd: () => void;
+  /** Playback was refused (e.g. needs a tap first). */
+  onBlocked?: () => void;
 }
 
 export interface Narration {
@@ -32,17 +34,39 @@ export function narrate(opts: NarrateOptions): Narration {
   return opts.audio ? narrateAudio(opts) : narrateSpeech(opts);
 }
 
+// Recorded narration plays through ONE shared audio element: phones only let
+// a page start sound after a tap, and that permission belongs to the element,
+// so reusing it keeps auto page-turns working. Upcoming pages are fetched
+// ahead into memory, so turning a page never waits on the network.
+let player: HTMLAudioElement | null = null;
+function sharedPlayer(): HTMLAudioElement {
+  if (!player) {
+    player = new Audio();
+    player.preload = 'auto';
+  }
+  return player;
+}
+
+const fetched = new Map<string, Promise<string>>();
+/** Start downloading a page's narration; resolves to a playable local URL. */
+export function preloadAudio(url: string): Promise<string> {
+  let p = fetched.get(url);
+  if (!p) {
+    p = fetch(url)
+      .then((r) => (r.ok ? r.blob() : Promise.reject(new Error(String(r.status)))))
+      .then((b) => URL.createObjectURL(b))
+      .catch(() => url); // fall back to streaming it directly
+    fetched.set(url, p);
+  }
+  return p;
+}
+
 function narrateAudio(o: NarrateOptions): Narration {
-  const el = new Audio(o.audio!);
-  el.preload = 'auto';
-  el.volume = o.volume;
-  el.playbackRate = Math.max(0.75, Math.min(1.1, o.rate));
+  const el = sharedPlayer();
   let raf = 0;
   let current = o.fromWord ?? 0;
   let stopped = false;
   const timings = o.timings ?? [];
-
-  if (o.fromWord && timings[o.fromWord]) el.currentTime = timings[o.fromWord].start;
 
   const tick = () => {
     if (stopped) return;
@@ -53,20 +77,33 @@ function narrateAudio(o: NarrateOptions): Narration {
     if (timings[current]) o.onWord(timings[current].w);
     raf = requestAnimationFrame(tick);
   };
-  el.onended = () => {
+  const onEnded = () => {
     if (stopped) return;
     cancelAnimationFrame(raf);
     o.onProgress(1);
     o.onEnd();
   };
-  el.play().then(() => (raf = requestAnimationFrame(tick)), () => o.onEnd());
+
+  preloadAudio(o.audio!).then((src) => {
+    if (stopped) return;
+    el.onended = onEnded;
+    if (el.src !== src) el.src = src;
+    el.volume = o.volume;
+    el.playbackRate = Math.max(0.75, Math.min(1.1, o.rate));
+    el.currentTime = o.fromWord && timings[o.fromWord] ? timings[o.fromWord].start : 0;
+    el.play().then(
+      () => (raf = requestAnimationFrame(tick)),
+      // The browser refused to play without a tap: pause rather than skip pages.
+      () => !stopped && (o.onBlocked ? o.onBlocked() : o.onEnd()),
+    );
+  });
 
   return {
     stop() {
       stopped = true;
       cancelAnimationFrame(raf);
+      if (el.onended === onEnded) el.onended = null;
       el.pause();
-      el.src = '';
     },
     position: () => (timings[current] ? timings[current].w : 0),
   };

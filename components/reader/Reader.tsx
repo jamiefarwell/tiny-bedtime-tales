@@ -6,7 +6,7 @@ import type { Page } from '@/lib/types';
 import { family, useFamily, useHydrated, useSettings } from '@/lib/store';
 import { tokenise, type Token } from '@/lib/tokenise';
 import { Scene } from '@/components/Scene';
-import { bestVoice, estimateSeconds, loadVoices, narrate, type Narration } from './narration';
+import { bestVoice, estimateSeconds, loadVoices, narrate, preloadAudio, type Narration } from './narration';
 import { startAmbient, type Ambient } from './ambient';
 import { Icon } from './icons';
 import styles from './Reader.module.css';
@@ -29,7 +29,9 @@ export interface ReaderProps {
   expectedPages?: number;
 }
 
-const TURN_DELAY = 1400;
+// A breath between pages: long enough to feel like turning, short enough not to drag.
+const TURN_DELAY = 800;
+const TURN_MS = 560;
 const AMBIENT_AFTER_END_MS = 10 * 60 * 1000;
 
 export function Reader({ title, pages, progressKey, backHref, glow, artNote, endActions, autoPlay, pending, expectedPages }: ReaderProps) {
@@ -48,6 +50,9 @@ export function Reader({ title, pages, progressKey, backHref, glow, artNote, end
   const [restored, setRestored] = useState(false);
   // Narration reached the newest page while the rest is still being written.
   const [waiting, setWaiting] = useState(false);
+  // The page being turned away from, kept on screen while it animates out.
+  const [turn, setTurn] = useState<{ from: number; dir: 1 | -1 } | null>(null);
+  const prevIndex = useRef(0);
 
   const narrationRef = useRef<Narration | null>(null);
   const turnTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -116,6 +121,7 @@ export function Reader({ title, pages, progressKey, backHref, glow, artNote, end
       fromWord: resumeWord,
       onWord: setWord,
       onProgress: setPageProgress,
+      onBlocked: () => setPlaying(false),
       onEnd: () => {
         narrationRef.current = null;
         setWord(-1);
@@ -142,10 +148,24 @@ export function Reader({ title, pages, progressKey, backHref, glow, artNote, end
     textRef.current?.scrollTo({ top: 0 });
   }, [index]);
 
+  // Fetch the next page's picture and narration while this one is read, so
+  // turning the page never waits on the network.
   useEffect(() => {
-    const next = pages[index + 1]?.image;
-    if (next) new Image().src = next;
+    const here = pages[index];
+    const next = pages[index + 1];
+    if (here?.audio) preloadAudio(here.audio);
+    if (next?.image) new Image().src = next.image;
+    if (next?.audio) preloadAudio(next.audio);
   }, [index, pages]);
+
+  // Page-turn animation: the old page slides away as the new one arrives.
+  useEffect(() => {
+    if (prevIndex.current === index) return;
+    setTurn({ from: prevIndex.current, dir: index > prevIndex.current ? 1 : -1 });
+    prevIndex.current = index;
+    const t = setTimeout(() => setTurn(null), TURN_MS);
+    return () => clearTimeout(t);
+  }, [index]);
 
   // The page we were waiting for has arrived (or the story is complete).
   useEffect(() => {
@@ -306,10 +326,28 @@ export function Reader({ title, pages, progressKey, backHref, glow, artNote, end
           setDragX(0);
         }}
       >
+        {!ended && turn && pages[turn.from] && (
+          <div key={`leave-${turn.from}`} className={`${styles.spread} ${turn.dir > 0 ? styles.leaveFwd : styles.leaveBack}`} aria-hidden>
+            <figure className={styles.art}>
+              {pages[turn.from].image ? (
+                <img src={pages[turn.from].image!} alt="" draggable={false} />
+              ) : (
+                <Scene mood={pages[turn.from].mood} seed={turn.from + 1} glow={glow} className={styles.scene} />
+              )}
+            </figure>
+            <article className={styles.paper}>
+              <div className={styles.paperInner}>
+                <h2 className={styles.heading}>{pages[turn.from].heading}</h2>
+                <StoryText text={pages[turn.from].text} tokens={tokens[turn.from]} current={-1} />
+              </div>
+            </article>
+          </div>
+        )}
+
         {!ended && page && (
           <div
             key={index}
-            className={styles.spread}
+            className={`${styles.spread} ${turn ? (turn.dir > 0 ? styles.enterFwd : styles.enterBack) : ''}`}
             style={{ transform: dragX ? `translateX(${dragX}px)` : undefined, transition: dragX ? 'none' : undefined }}
           >
             <figure className={styles.art} data-playing={playing || undefined}>
