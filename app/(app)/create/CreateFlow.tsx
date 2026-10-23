@@ -12,7 +12,8 @@ import { WalletChip } from '@/components/WalletChip';
 import { cloudOnClient, refreshWallet, syncFamily, useWallet } from '@/lib/account';
 import { tokensApply, totalTokens } from '@/lib/plans';
 import { DemoNoTokens, demoRefund, demoSpend } from '@/lib/demoWallet';
-import { LENGTHS, MOODS, WORLDS } from './options';
+import { LENGTHS, MOODS, WORLDS, suggestWorlds } from './options';
+import { WorldTile } from '@/components/WorldTile';
 import styles from './create.module.css';
 
 type Step = 'who' | 'mood' | 'world' | 'touches' | 'writing';
@@ -374,23 +375,14 @@ export function CreateFlow({ initialWorld, continueId, againId }: { initialWorld
         <section className={styles.step}>
           <p className="eyebrow">{mood?.label}</p>
           <h1>Where shall we go?</h1>
-          <div className={styles.worlds}>
-            {WORLDS.map((w) => (
-              <button
-                key={w.id}
-                className={styles.world}
-                aria-pressed={draft.world === w.id}
-                style={{ '--tint': w.tint } as React.CSSProperties}
-                onClick={() => {
-                  setDraft({ ...draft, world: w.id });
-                  if (w.id !== 'other') setTimeout(next, 180);
-                }}
-              >
-                <span aria-hidden>{w.emoji}</span>
-                {w.label}
-              </button>
-            ))}
-          </div>
+          <WorldPicker
+            child={child}
+            selected={draft.world}
+            onPick={(id) => {
+              setDraft({ ...draft, world: id });
+              if (id !== 'other') setTimeout(next, 180);
+            }}
+          />
           {draft.world === 'other' && (
             <div className={styles.other}>
               <label htmlFor="world">Where’s the story set?</label>
@@ -659,5 +651,45 @@ function QuickQuestion({ child }: { child: ChildProfile }) {
       <p className="eyebrow">Quick question · makes tonight’s story better</p>
       <ProfileExtras child={child} toggle={toggle} set={set} only={asking} />
     </div>
+  );
+}
+
+/** Suggested worlds for this child first (their interests, then their age), the rest on request. */
+function WorldPicker({
+  child,
+  selected,
+  onPick,
+}: {
+  child: ChildProfile | null;
+  selected: Draft['world'];
+  onPick: (id: Draft['world'] & string) => void;
+}) {
+  const ordered = suggestWorlds(child).filter((w) => w.id !== 'other');
+  const other = WORLDS.find((w) => w.id === 'other')!;
+  const selectedIndex = ordered.findIndex((w) => w.id === selected);
+  const [showAll, setShowAll] = useState(selectedIndex >= 6);
+  const visible = showAll ? ordered : ordered.slice(0, 6);
+  const loves = (child?.loves ?? []).map((l) => l.toLowerCase());
+  const isMatch = (matches: readonly string[]) => matches.some((m) => loves.some((l) => l.includes(m) || m.includes(l)));
+  return (
+    <>
+      <div className={styles.worldGrid}>
+        {visible.map((w) => (
+          <WorldTile
+            key={w.id}
+            world={w}
+            pressed={selected === w.id}
+            onSelect={() => onPick(w.id)}
+            badge={isMatch(w.matches) ? `${child?.name ?? 'They'} loves this` : undefined}
+          />
+        ))}
+        <WorldTile world={other} pressed={selected === 'other'} onSelect={() => onPick('other')} />
+      </div>
+      {!showAll && (
+        <button className="btn btn-ghost btn-block" onClick={() => setShowAll(true)}>
+          More worlds ({ordered.length - visible.length})
+        </button>
+      )}
+    </>
   );
 }

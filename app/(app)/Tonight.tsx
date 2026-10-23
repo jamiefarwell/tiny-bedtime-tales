@@ -6,7 +6,8 @@ import { activeChild, useFamily, useHydrated } from '@/lib/store';
 import { BookTile } from '@/components/BookTile';
 import { BookCover } from '@/components/BookCover';
 import { Icon } from '@/components/reader/icons';
-import { WORLDS } from './create/options';
+import { suggestWorlds } from './create/options';
+import { WorldTile } from '@/components/WorldTile';
 import { WalletChip } from '@/components/WalletChip';
 import ui from './pages.module.css';
 import styles from './tonight.module.css';
@@ -48,18 +49,26 @@ export function Tonight({ books }: { books: Book[] }) {
   return (
     <main>
       <section className={styles.hero}>
-        <img src="/books/lily-and-the-lantern-feather/page-05.webp" alt="" className={styles.heroArt} />
+        <picture>
+          <source media="(min-width: 760px)" srcSet="/art/hero-wide.webp" />
+          <img
+            src="/art/hero-mobile.webp"
+            alt="A child at a bedroom window, looking out at a night sky full of story worlds"
+            className={styles.heroArt}
+            fetchPriority="high"
+          />
+        </picture>
         <div className={styles.heroShade} />
+        <div className={styles.heroTop}>
+          <p className={styles.hello}>{hydrated ? greeting() : ' '}</p>
+          <WalletChip />
+        </div>
         <div className={styles.heroBody}>
-          <div className={styles.heroTop}>
-            <p className={styles.hello}>{hydrated ? greeting() : ' '}</p>
-            <WalletChip />
-          </div>
           <h1>
             Tonight, <em>{name ?? 'they’re'}</em>
             {name ? ' is' : ''} the hero.
           </h1>
-          <p className={styles.lede}>A brand-new story starring {name ?? 'your child'}, ready in about a minute, in a world that remembers them.</p>
+          <p className={styles.lede}>A brand-new story starring {name ?? 'your child'}, in a world that remembers them.</p>
           <Link href="/create" className="btn btn-primary btn-block">
             <Icon name="sparkle" size={20} />
             {name ? `Make ${name}’s story` : 'Make tonight’s story'}
@@ -100,18 +109,16 @@ export function Tonight({ books }: { books: Book[] }) {
 
       <section className={ui.section}>
         <div className={ui.sectionHead}>
-          <h2>Pick a world</h2>
-          <Link href="/create">All options</Link>
+          <h2>{name ? `Worlds for ${name}` : 'Pick a world'}</h2>
+          <Link href="/create">All worlds</Link>
         </div>
-        <div className={styles.worlds}>
-          {WORLDS.filter((w) => w.id !== 'other').map((w) => (
-            <Link key={w.id} href={`/create?world=${w.id}`} className={styles.world} style={{ '--tint': w.tint } as React.CSSProperties}>
-              <span className={styles.worldEmoji} aria-hidden>
-                {w.emoji}
-              </span>
-              <span>{w.label}</span>
-            </Link>
-          ))}
+        <div className={`${ui.rail} ${styles.worldRail}`}>
+          {suggestWorlds(hydrated ? child : null)
+            .filter((w) => w.id !== 'other')
+            .slice(0, 8)
+            .map((w) => (
+              <WorldTile key={w.id} world={w} href={`/create?world=${w.id}`} size="l" />
+            ))}
         </div>
       </section>
 

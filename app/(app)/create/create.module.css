@@ -150,35 +150,6 @@
   border-color: var(--glow);
   background: rgba(255, 196, 107, 0.14);
 }
-
-.worlds {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
-}
-.world {
-  display: grid;
-  justify-items: center;
-  gap: 8px;
-  padding: 18px 6px 14px;
-  border-radius: var(--radius-l);
-  background: radial-gradient(100% 90% at 50% 0%, color-mix(in srgb, var(--tint) 45%, transparent), transparent 75%), rgba(255, 255, 255, 0.05);
-  border: 1.5px solid rgba(255, 255, 255, 0.08);
-  font-weight: 800;
-  font-size: 14px;
-  transition: transform 0.2s var(--ease-spring), border-color 0.2s;
-}
-.world span {
-  font-size: 38px;
-  line-height: 1;
-  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.35));
-}
-.world:active {
-  transform: scale(0.95);
-}
-.world[aria-pressed='true'] {
-  border-color: var(--glow);
-}
 .other {
   display: grid;
   gap: 10px;
@@ -369,4 +340,15 @@
 }
 .quick :global(.eyebrow) {
   color: var(--sea);
+}
+
+.worldGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+@media (min-width: 560px) {
+  .worldGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
