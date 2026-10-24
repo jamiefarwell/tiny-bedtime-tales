@@ -352,3 +352,95 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
+
+/* Pictures starring the child */
+.pictures {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px 12px 12px;
+  border-radius: var(--radius-l);
+  text-align: left;
+  background:
+    radial-gradient(120% 100% at 0% 0%, rgba(255, 196, 107, 0.16), transparent 60%),
+    rgba(255, 255, 255, 0.05);
+  border: 1.5px solid rgba(255, 196, 107, 0.35);
+}
+.pictures[aria-pressed='false'] {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+}
+.pictures[aria-pressed='false'] figure {
+  opacity: 0.45;
+  filter: grayscale(0.6);
+}
+.pictures strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 18px;
+  line-height: 1.2;
+}
+.pictures small {
+  display: block;
+  margin-top: 2px;
+  color: var(--mist);
+  font-size: 13px;
+  font-weight: 700;
+}
+.picturesIcon {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 1.5px dashed rgba(255, 196, 107, 0.6);
+  color: var(--glow);
+}
+.switch {
+  width: 46px;
+  height: 28px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  position: relative;
+  transition: background 0.2s;
+}
+.switch::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--cream);
+  transition: transform 0.25s var(--ease-spring);
+}
+.pictures[aria-pressed='true'] .switch {
+  background: var(--glow);
+}
+.pictures[aria-pressed='true'] .switch::after {
+  transform: translateX(18px);
+}
+.heroWait {
+  margin-bottom: 8px;
+  animation: glowPulse 3.2s ease-in-out infinite;
+}
+.thumbs {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+.thumbs img,
+.thumbs span {
+  width: 44px;
+  height: 55px;
+  border-radius: 8px;
+  object-fit: cover;
+  background: rgba(255, 255, 255, 0.07);
+  animation: stepIn 0.6s var(--ease-out) both;
+}
+.thumbs span {
+  animation: breathe 2.4s ease-in-out infinite;
+}

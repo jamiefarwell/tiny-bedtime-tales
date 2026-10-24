@@ -5,6 +5,7 @@ import type { ChildProfile, Pronouns } from '@/lib/types';
 import { uid } from '@/lib/store';
 import { AGE_OPTIONS, AVOIDS, LAUGHS, LOVES, PERSONALITY } from '@/app/(app)/create/options';
 import { HAIR_COLOURS, HAIR_STYLES, SKIN_TONES, type HeroLook } from '@/lib/heroLook';
+import { HeroPreview } from './HeroPreview';
 import styles from './ChildForm.module.css';
 
 const KINDS = ['pet', 'friend', 'sibling', 'toy', 'grown-up'];
@@ -270,16 +271,16 @@ export function ProfileExtras({
   );
 }
 
-const DEFAULT_LOOK: HeroLook = { skin: 's3', hair: 'brown', style: 'short', glasses: false, freckles: false };
+export const DEFAULT_LOOK: HeroLook = { skin: 's3', hair: 'brown', style: 'short', glasses: false, freckles: false };
 
 /** Optional: how they look in illustrated stories. Swatches, never photos. */
-function LookPicker({ child, set }: { child: ChildProfile; set: (patch: Partial<ChildProfile>) => void }) {
+export function LookPicker({ child, set, legend = 'How they look in pictures (optional)' }: { child: ChildProfile; set: (patch: Partial<ChildProfile>) => void; legend?: string }) {
   const look = child.look;
   const patch = (p: Partial<HeroLook>) => set({ look: { ...(look ?? DEFAULT_LOOK), ...p } });
   return (
     <fieldset className={styles.field}>
-      <legend>How they look in pictures (optional)</legend>
-      <small>Keeps their character looking the same in every illustrated story. No photos, ever.</small>
+      <legend>{legend}</legend>
+      <small>So {child.name || 'they'} can star in the pictures of their own stories, looking the same every night. No photos, ever.</small>
       {!look ? (
         <button type="button" className={styles.add} onClick={() => set({ look: DEFAULT_LOOK })}>
           Choose their look
@@ -328,6 +329,7 @@ function LookPicker({ child, set }: { child: ChildProfile; set: (patch: Partial<
               Freckles
             </button>
           </div>
+          <HeroPreview child={child} />
           <button type="button" className={styles.clear} onClick={() => set({ look: undefined })}>
             Clear look
           </button>

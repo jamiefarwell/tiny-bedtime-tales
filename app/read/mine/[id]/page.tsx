@@ -1,16 +1,25 @@
 'use client';
 
 import Link from 'next/link';
-import { use } from 'react';
+import { use, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 import { useFamily, useHydrated } from '@/lib/store';
 import { Reader } from '@/components/reader/Reader';
+import { ensureStoryPictures, useStoryPictures } from '@/lib/pictures';
 
 function MyStory({ id }: { id: string }) {
   const hydrated = useHydrated();
   const story = useFamily((s) => s.stories.find((x) => x.id === id));
+  const child = useFamily((s) => s.children.find((c) => c.id === story?.childId) ?? null);
   const listen = useSearchParams().get('listen') === '1';
+  const art = useStoryPictures(id, story?.pages ?? [], child?.name);
+  // Finish any pictures that didn't get drawn last time (e.g. the tab closed).
+  useEffect(() => {
+    if (story) ensureStoryPictures(story, child);
+    // Once per story.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [story?.id, Boolean(child)]);
 
   if (!hydrated) return null;
   if (!story) {
@@ -27,7 +36,8 @@ function MyStory({ id }: { id: string }) {
   return (
     <Reader
       title={story.title}
-      pages={story.pages}
+      pages={art.pages}
+      artNote={story.illustrated && art.ready < art.total ? 'Drawing this picture…' : undefined}
       progressKey={`story:${story.id}`}
       backHref="/stories"
       autoPlay={listen}

@@ -28,6 +28,11 @@ export default function PrivacyPage() {
           calm endings and nothing from your “keep out” list. Our Ready-to-Read library is written, illustrated and checked before it
           is published.
         </p>
+        <p>
+          Pictures in personalised stories are drawn by an AI illustrator (Google’s Gemini). It only ever receives the look you chose
+          from our palette (skin tone, hair, glasses, freckles) and a description of each scene. Your child’s name is never sent, we
+          never ask for photos, and Google is told not to keep the requests. The finished pictures are saved on this device.
+        </p>
       </div>
     </main>
   );

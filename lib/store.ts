@@ -3,6 +3,7 @@
 import { useCallback, useSyncExternalStore } from 'react';
 import type { ChildProfile, PersonalStory } from './types';
 import { DEMO_WALLET_DEFAULT, type DemoWallet } from './demoWalletState';
+import { deleteStoryPictures } from './pictures';
 
 // Family data lives on the device until parent accounts ship. Everything goes
 // through this module so swapping localStorage for Supabase touches one file.
@@ -150,6 +151,7 @@ export const family = {
   removeStory(id: string) {
     const s = load();
     commit({ ...s, stories: s.stories.filter((x) => x.id !== id) });
+    deleteStoryPictures(id);
   },
 
   setProgress(key: string, progress: ReadingProgress) {

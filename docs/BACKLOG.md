@@ -30,7 +30,11 @@ Agreed items to revisit, newest first. Move to done with a date when shipped.
 - Set an Anthropic monthly spend limit before sharing widely.
 
 ## Product
-- Illustrated personalised stories, using the hero-look reference bank (`lib/heroLook.ts`, `COST_OPTIMISATION.md`).
+- Shared hero-sheet bank in cloud storage, so each look is drawn once for everyone (today each device draws its own).
+- Pyjama colour per child, so siblings with similar looks are easy to tell apart.
 - Recorded narration for personalised stories (ElevenLabs Flash), cached per family.
 - Installable app (PWA), plus offline reading of downloaded books.
 - Blind quality test: Opus vs Sonnet for continuations (`COST_OPTIMISATION.md`).
+
+## Done
+- **24 Oct 2026:** Pictures starring the child in personalised stories (see `ARCHITECTURE.md`).

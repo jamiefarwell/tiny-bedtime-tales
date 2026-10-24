@@ -1,6 +1,6 @@
 import type { AgeBand, Pronouns } from '@/lib/types';
 
-export const PROMPT_VERSION = 'storyteller-2026-10-21';
+export const PROMPT_VERSION = 'storyteller-2026-10-24';
 
 export interface StoryRequest {
   child: {
@@ -29,6 +29,8 @@ export interface StoryRequest {
   history: { title: string; premise: string; shape: string }[];
   /** Chosen server-side from STORY_SHAPES. */
   shape: string;
+  /** Tonight's story gets pictures: the engine adds CAST and ART lines. */
+  illustrated: boolean;
 }
 
 // Story structures the engine rotates through so a child's library never
@@ -123,6 +125,9 @@ export const LEVELS: Record<
   },
 };
 
+/** Pictures in an illustrated story: one per two pages, plus the last page's own. */
+export const pictureCount = (pages: number) => Math.ceil(pages / 2) + (pages % 2 === 0 ? 1 : 0);
+
 export function pageShape(ageBand: AgeBand, minutes: 5 | 10 | 15) {
   const level = LEVELS[ageBand] ?? LEVELS['6–7'];
   const pages = minutes === 5 ? Math.max(4, Math.round(level.pages * 0.6)) : minutes === 15 ? Math.round(level.pages * 1.2) : level.pages;
@@ -171,13 +176,22 @@ SAFETY AND PRIVACY
 - If tonight's detail mentions something hard (a worry, a new sibling, starting school, a loss), treat it gently and indirectly through the story; don't give advice or diagnose; never make it frightening.
 - British English spelling and vocabulary throughout.
 
+PICTURES (only when tonight's request says the story is illustrated)
+- An illustrator draws one picture for every two pages. You direct them with CAST and ART lines, which the reader never sees.
+- The illustrator already knows exactly how the hero looks and draws them in cosy pyjamas. In CAST and ART lines, call the hero HERO, never by name, and never describe HERO's face, skin, hair or body. Mention anything extra HERO is holding or wearing in that picture (a crown, a torch).
+- CAST lines: one for each character other than HERO who appears in more than one picture, at most three. Give each a fixed look the illustrator can repeat exactly: what they are, size next to HERO, colours, clothing and one distinctive feature, 15–35 words. For real people from the child's life (family, friends), describe only age, build and clothes, never skin, hair or face.
+- ART lines: pages 1, 3, 5 and so on start with one ART line, before the page text, for the single picture that faces that page and the next. The last page always gets its own ART line too, for the sleepy final picture. Write the camera and framing (one short sentence), then a | and the scene in 30–60 words: who is in it, what they are doing, where, the light and the feeling. Show one clear moment a child can read at a glance, taken from the first of the two pages.
+- Pictures are never frightening, and contain no writing, signs or labels. The last page's picture is calm, dim and sleepy: HERO safe and drifting off.
+
 OUTPUT FORMAT
 Write exactly this structure as plain text, nothing before or after it, no markdown:
 
 TITLE: <title, under 60 characters>
 HOOK: <one tempting sentence for the library shelf, under 110 characters, in words the child would understand>
 PREMISE: <one plain sentence saying what happens, for our records>
+CAST: <name> | <what they are, 2–5 words> | <fixed look>   (illustrated stories only; one line per character)
 === PAGE 1: <short page heading, 2–5 words>
+ART: <camera and framing> | <scene>   (illustrated stories only; pages 1, 3, 5…)
 <page text; paragraphs separated by a blank line>
 === PAGE 2: <heading>
 <page text>
@@ -228,6 +242,11 @@ export function buildUserMessage(req: StoryRequest): string {
   }
   if (req.avoidTitle) {
     lines.push(`The parent asked for a different story from one called "${req.avoidTitle}". Use a different premise, problem and ending.`);
+  }
+  if (req.illustrated) {
+    lines.push(
+      `This story is illustrated: ${pictureCount(level.pages)} pictures, one facing pages 1–2, the next facing pages 3–4, and so on, plus a sleepy one on the last page. Follow the PICTURES rules: CAST lines after PREMISE, and an ART line at the start of every odd-numbered page and the last page.`,
+    );
   }
   lines.push(
     `Length: exactly ${level.pages} pages of ${level.words[0]}–${level.words[1]} words each. Each page should work facing one illustration, so give each page its own clear moment.`,

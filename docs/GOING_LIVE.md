@@ -7,6 +7,7 @@ In demo mode, everything is stored on the device, including a pretend token wall
 | Layer | Switched on by | What changes |
 |---|---|---|
 | Storyteller | `ANTHROPIC_API_KEY` (+ `ANTHROPIC_WORKSPACE_ID`) | Personalised stories are written. |
+| Pictures | `GEMINI_API_KEY` | Personalised stories can star the child in about 6 pictures (≈ 18p a story, included in the token). |
 | Accounts + tokens | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SECRET_KEY` | Magic-link sign-in. Each story costs 1 token, and new parents get 1 free. Children and stories sync across devices. |
 | Payments | `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, 4 × `STRIPE_PRICE_*` | The Plans page sells the Family plan and token packs. The billing portal handles one-tap cancel. |
 

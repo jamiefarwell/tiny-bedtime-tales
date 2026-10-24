@@ -23,6 +23,8 @@ export interface Page {
   mood?: 'warm' | 'curious' | 'funny' | 'tense' | 'wonder' | 'sleepy';
   /** Art direction for the illustration pipeline. Never rendered in the app. */
   art?: { shot: string; prompt: string };
+  /** Personalised stories: server signature over `art`, so only scenes our storyteller wrote get drawn. */
+  artSig?: string;
 }
 
 export interface CastMember {
@@ -98,4 +100,9 @@ export interface PersonalStory {
   chapter: number;
   model: string;
   createdAt: number;
+  /** Pictures starring the child (see lib/pictures.ts). Images live on the device, keyed by story id. */
+  illustrated?: boolean;
+  /** Recurring characters other than the hero, drawn once on a cast sheet. */
+  cast?: { name: string; role: string; look: string }[];
+  castSig?: string;
 }

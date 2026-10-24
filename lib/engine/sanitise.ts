@@ -66,6 +66,7 @@ export function parseStoryRequest(body: unknown): StoryRequest {
       }))
       .filter((h: { title: string }) => h.title),
     shape: '',
+    illustrated: b.illustrated === true,
   };
   req.shape = pickShape(req.history.map((h) => h.shape).filter(Boolean));
 

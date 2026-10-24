@@ -8,6 +8,7 @@ export async function GET() {
       storyteller: Boolean(process.env.ANTHROPIC_API_KEY),
       workspace: Boolean(process.env.ANTHROPIC_WORKSPACE_ID),
       storyModel: process.env.STORY_MODEL || 'claude-opus-5-5',
+      illustrator: Boolean(process.env.GEMINI_API_KEY),
       cloud: cloudEnabled(),
       payments: paymentsEnabled(),
       commit: process.env.VERCEL_GIT_COMMIT_SHA || '',

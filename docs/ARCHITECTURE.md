@@ -70,6 +70,15 @@ Three layers, each switched on by its own env vars, so the app runs in preview m
   - `/api/stripe/webhook` verifies the signature and mirrors subscriptions and pack purchases onto the wallet (`lib/server/billing.ts`).
   - Plans and packs are defined once in `lib/plans.ts`.
 
+## Pictures starring the child
+Personalised stories can be illustrated with the child as the hero (`lib/pictures.ts`, `app/api/illustrate`, `lib/art/prompts.ts`).
+- **Hero sheet:** drawn once per look (palette in `lib/heroLook.ts` + age + pronouns) and reused by every story. Parents can preview it in the look picker ("See Ruby drawn").
+- **Directions:** when the request has `illustrated: true`, the storyteller adds `CAST:` lines (recurring characters, fixed looks) and an `ART:` line on pages 1, 3, 5… and the last page. It calls the hero `HERO`, never by name, and never describes their face, skin or hair.
+- **Signing:** `/api/story` signs each cast list and art line with an HMAC (`lib/server/artSign.ts`). `/api/illustrate` only draws signed directions, so it can't be used as a free image generator. The hero sheet takes only palette ids.
+- **Drawing:** the client starts the hero sheet when writing begins, the cast sheet when the cast arrives, and each scene as its art line streams in (3 at a time). Every scene attaches the hero sheet and the cast sheet as references, so characters match on every page.
+- **Storage:** images live in IndexedDB on the device (`tbt-pictures`), keyed `hero:…`, `cast:<story>`, `scene:<story>:<page>`. Opening a story redraws anything missing. Removing a story deletes its pictures.
+- **Going live:** move the hero-sheet bank to shared storage (Supabase Storage or Vercel Blob) so each look is drawn once for everyone, and story pictures to the family's account.
+
 ## Character reuse
 `lib/heroLook.ts` describes a child's look as a fixed palette (skin, hair colour, style, glasses, freckles), never a photo. `heroLookKey()` names a shared reference sheet, so each combination is drawn once and reused by every family who picks it. Look data is kept out of story-writing prompts. See `COST_OPTIMISATION.md` for the full reuse plan.
 

@@ -6,6 +6,7 @@ import { RequestError, parseStoryRequest } from '@/lib/engine/sanitise';
 import { cloudEnabled } from '@/lib/server/config';
 import { currentUser } from '@/lib/server/supabase';
 import { NoTokensError, refundStoryToken, spendStoryToken } from '@/lib/server/wallet';
+import { signCast, signScene } from '@/lib/server/artSign';
 
 export const runtime = 'nodejs';
 export const maxDuration = 300;
@@ -30,7 +31,7 @@ function rateLimited(request: Request): boolean {
 }
 
 type Out =
-  | ParseEvent
+  | (ParseEvent & { castSig?: string; artSig?: string })
   | { type: 'done'; model: string; promptVersion: string; shape: string; readability: Readability }
   | { type: 'error'; message: string; code: string };
 
@@ -80,6 +81,8 @@ export async function POST(request: Request) {
   // taken before writing starts and given back automatically if it fails.
   // In preview mode (no Supabase) stories are free.
   const clean = (v: unknown) => (typeof v === 'string' && /^[a-z0-9]{6,40}$/i.test(v) ? v : '');
+  // Pictures are signed against the story id, so they need one.
+  if (story.illustrated && !clean(raw.storyId)) story.illustrated = false;
   let charge: { userId: string; ref: string } | null = null;
   if (cloudEnabled()) {
     const user = await currentUser();
@@ -120,8 +123,17 @@ export async function POST(request: Request) {
       const parser = new StoryParser();
       let full = '';
       const pageTexts: string[] = [];
+      const storyId = clean(raw.storyId);
       const emit = (event: ParseEvent) => {
         if (event.type === 'page') pageTexts[event.index] = event.text;
+        if (!story.illustrated) {
+          // Not asked for pictures: drop any stray art directions.
+          if (event.type === 'meta') return send({ ...event, cast: [] });
+          if (event.type === 'page') return send({ ...event, art: undefined });
+          return send(event);
+        }
+        if (event.type === 'meta') return send({ ...event, castSig: signCast(storyId, event.cast) });
+        if (event.type === 'page' && event.art) return send({ ...event, artSig: signScene(storyId, event.index, event.art) });
         send(event);
       };
       try {
@@ -164,6 +176,7 @@ export async function POST(request: Request) {
           banned: bannedPhraseCount(full),
           level: story.child.ageBand,
           shape: story.shape,
+          illustrated: story.illustrated,
           avgSentence: `${read.avgSentence} (limit ${level.avgSentence})`,
           longest: `${read.longestSentence} (limit ${level.maxSentence})`,
           overLimit: read.overLimit,

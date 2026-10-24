@@ -18,7 +18,7 @@ All prices are pay-as-you-go list prices; GBP at about $1 = £0.76.
 
 ## Illustrations: Gemini Nano Banana 2.1
 - **Price:** $0.0336 per 1K image, $0.0504 per 2K.
-- **Personalised illustrated story:** 5 scenes at 1K ≈ $0.17 (≈ 13p).
+- **Personalised illustrated story (measured 24 Oct 2026):** 6 scenes + 1 cast sheet at 1K ≈ $0.24 (≈ 18p), plus a one-off hero sheet per look (≈ 3p). Scenes take 20–28 s each, drawn 3 at a time while the story is read; images are 70–90 KB WebP.
 - **10-page library book:** about 4 reference sheets + 10 pages + 1 cover, with reruns, ≈ $0.60–0.85.
 
 ## Narration: ElevenLabs, with timestamps for read-along

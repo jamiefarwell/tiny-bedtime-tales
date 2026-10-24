@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import { family, useFamily, useHydrated } from '@/lib/store';
 import { BookCover } from '@/components/BookCover';
+import { scenePages, sceneKey, usePicture } from '@/lib/pictures';
+import type { PersonalStory } from '@/lib/types';
 import { Icon } from '@/components/reader/icons';
 import ui from '../pages.module.css';
 import styles from './stories.module.css';
@@ -42,7 +44,7 @@ export default function StoriesPage() {
             <article key={latest.seriesId} className={styles.series}>
               <div className={styles.head}>
                 <div className={styles.cover}>
-                  <BookCover title={latest.title} image={null} alt="" size="s" showTitle={false} />
+                  <StoryCover story={latest} />
                 </div>
                 <div>
                   <p className="eyebrow">
@@ -85,4 +87,11 @@ export default function StoriesPage() {
       </div>
     </main>
   );
+}
+
+/** The story's first picture, when it has one. */
+function StoryCover({ story }: { story: PersonalStory }) {
+  const first = story.illustrated ? scenePages(story.pages)[0] : undefined;
+  const image = usePicture(first !== undefined ? sceneKey(story.id, first) : '');
+  return <BookCover title={story.title} image={image} alt="" size="s" showTitle={false} />;
 }

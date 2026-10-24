@@ -4,10 +4,12 @@ import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import type { ChildProfile, Page, PersonalStory } from '@/lib/types';
 import { activeChild, family, uid, useFamily, useHydrated } from '@/lib/store';
-import { ChildForm, ProfileExtras, blankChild } from '@/components/ChildForm';
+import { ChildForm, DEFAULT_LOOK, LookPicker, ProfileExtras, blankChild } from '@/components/ChildForm';
+import { HeroPreview } from '@/components/HeroPreview';
+import { ensureHero, ensureScene, scenePages, useStoryPictures, usePicturesAvailable } from '@/lib/pictures';
 import { Icon } from '@/components/reader/icons';
 import { Reader } from '@/components/reader/Reader';
-import { pageShape } from '@/lib/engine/prompt';
+import { pageShape, pictureCount } from '@/lib/engine/prompt';
 import { WalletChip } from '@/components/WalletChip';
 import { cloudOnClient, refreshWallet, syncFamily, useWallet } from '@/lib/account';
 import { tokensApply, totalTokens } from '@/lib/plans';
@@ -26,6 +28,8 @@ interface Draft {
   minutes: 5 | 10 | 15;
   todayDetail: string;
   companions: string[];
+  /** Pictures starring the child (needs their look). */
+  pictures: boolean;
 }
 
 interface Writing {
@@ -39,6 +43,7 @@ interface Writing {
   error: string | null;
   code: string;
   notConnected: boolean;
+  illustrated: boolean;
 }
 
 export function CreateFlow({ initialWorld, continueId, againId }: { initialWorld?: string; continueId?: string; againId?: string }) {
@@ -59,7 +64,10 @@ export function CreateFlow({ initialWorld, continueId, againId }: { initialWorld
     minutes: 10,
     todayDetail: '',
     companions: [],
+    pictures: true,
   });
+  const picturesOn = usePicturesAvailable();
+  const [choosingLook, setChoosingLook] = useState(false);
   const [writing, setWriting] = useState<Writing | null>(null);
   const abort = useRef<AbortController | null>(null);
 
@@ -103,7 +111,10 @@ export function CreateFlow({ initialWorld, continueId, againId }: { initialWorld
     const continuing = Boolean(continueId && base);
     const id = uid();
     const expected = pageShape(child.ageBand, draft.minutes).pages;
-    setWriting({ id, title: '', hook: '', pages: [], expected, done: false, reading: false, error: null, code: '', notConnected: false });
+    const illustrated = Boolean(picturesOn && draft.pictures && child.look);
+    setWriting({ id, title: '', hook: '', pages: [], expected, done: false, reading: false, error: null, code: '', notConnected: false, illustrated });
+    // The hero's sheet is usually already drawn; if not, start now, alongside the writing.
+    if (illustrated) ensureHero(child);
     go('writing');
     abort.current = new AbortController();
     // Writing takes up to a minute; if the phone auto-locks, the connection drops.
@@ -138,6 +149,7 @@ export function CreateFlow({ initialWorld, continueId, againId }: { initialWorld
       // story being redone, whose first redo within 24h is free.
       storyId: id,
       redoOf: againId && base ? base.id : undefined,
+      illustrated,
     };
 
     // Demo payments: take the token on this device (the server only charges
@@ -180,6 +192,10 @@ export function CreateFlow({ initialWorld, continueId, againId }: { initialWorld
       const pages: Page[] = [];
       let memory = '';
       let model = '';
+      let cast: NonNullable<PersonalStory['cast']> = [];
+      let castSig = '';
+      let scenes = 0;
+      const totalScenes = pictureCount(expected);
       for (;;) {
         const { value, done } = await reader.read();
         if (done) break;
@@ -193,7 +209,14 @@ export function CreateFlow({ initialWorld, continueId, againId }: { initialWorld
             title = ev.title;
             hook = ev.hook;
             premise = ev.premise || '';
-          } else if (ev.type === 'page') pages[ev.index] = toPage(ev.heading, ev.text, ev.index, expected);
+            cast = Array.isArray(ev.cast) ? ev.cast : [];
+            castSig = ev.castSig || '';
+          } else if (ev.type === 'page') {
+            const page = toPage(ev.heading, ev.text, ev.index, expected, ev.art, ev.artSig);
+            pages[ev.index] = page;
+            // Draw each picture as soon as its direction arrives.
+            if (illustrated && page.art && page.artSig) ensureScene({ id, cast, castSig }, child, page, ev.index, scenes++, totalScenes);
+          }
           else if (ev.type === 'memory') memory = ev.text;
           else if (ev.type === 'done') {
             model = ev.model;
@@ -218,12 +241,13 @@ export function CreateFlow({ initialWorld, continueId, againId }: { initialWorld
         world: draft.world === 'other' ? draft.customWorld.trim() : world!.prompt,
         mood: mood.label,
         minutes: draft.minutes,
-        pages: finished.map((p, i) => toPage(p.heading, p.text, i, finished.length)),
+        pages: finished.map((p, i) => toPage(p.heading, p.text, i, finished.length, p.art, p.artSig)),
         memory,
         seriesId: continuing ? base!.seriesId : uid(),
         chapter: continuing ? base!.chapter + 1 : 1,
         model,
         createdAt: Date.now(),
+        ...(illustrated ? { illustrated: true, cast, castSig } : {}),
       };
       family.saveStory(story);
       if (cloudOnClient()) {
@@ -250,31 +274,14 @@ export function CreateFlow({ initialWorld, continueId, againId }: { initialWorld
   if (!hydrated) return <main className={styles.flow} />;
 
   if (step === 'writing' && writing?.reading) {
-    return (
-      <Reader
-        title={writing.title}
-        pages={writing.pages}
-        pending={!writing.done}
-        expectedPages={writing.expected}
-        progressKey={`story:${writing.id}`}
-        backHref="/stories"
-        autoPlay
-        endActions={
-          writing.done ? (
-            <Link className="btn btn-rose btn-block" href={`/create?continue=${writing.id}`}>
-              Next chapter, tomorrow night
-            </Link>
-          ) : undefined
-        }
-      />
-    );
+    return <WritingReader writing={writing} childName={child?.name ?? ''} />;
   }
 
   if (step === 'writing' && writing) {
     return (
       <WritingScreen
         writing={writing}
-        childName={child?.name ?? ''}
+        child={child}
         onRetry={make}
         onBack={() => go('touches')}
         onRead={() => {
@@ -284,7 +291,6 @@ export function CreateFlow({ initialWorld, continueId, againId }: { initialWorld
       />
     );
   }
-
   return (
     <main className={styles.flow}>
       <div className={styles.top}>
@@ -436,6 +442,53 @@ export function CreateFlow({ initialWorld, continueId, againId }: { initialWorld
             </div>
           </div>
 
+          {picturesOn && (
+            <div className={styles.block}>
+              <span className={styles.label}>Pictures</span>
+              {choosingLook ? (
+                <>
+                  <LookPicker child={child} set={(patch) => family.saveChild({ ...child, ...patch })} legend={`How ${child.name} looks`} />
+                  <button className="btn btn-ghost btn-block" onClick={() => setChoosingLook(false)}>
+                    Done
+                  </button>
+                </>
+              ) : child.look ? (
+                <button
+                  className={styles.pictures}
+                  aria-pressed={draft.pictures}
+                  onClick={() => setDraft({ ...draft, pictures: !draft.pictures })}
+                >
+                  <HeroPreview child={child} size="s" auto />
+                  <span>
+                    <strong>{draft.pictures ? `${child.name} stars in the pictures` : 'No pictures tonight'}</strong>
+                    <small>
+                      {draft.pictures
+                        ? `${pictureCount(pageShape(child.ageBand, draft.minutes).pages)} pictures, drawn while you read`
+                        : 'Tap to add pictures'}
+                    </small>
+                  </span>
+                  <span className={styles.switch} aria-hidden />
+                </button>
+              ) : (
+                <button
+                  className={styles.pictures}
+                  onClick={() => {
+                    family.saveChild({ ...child, look: DEFAULT_LOOK });
+                    setChoosingLook(true);
+                  }}
+                >
+                  <span className={styles.picturesIcon} aria-hidden>
+                    <Icon name="sparkle" size={26} />
+                  </span>
+                  <span>
+                    <strong>Put {child.name} in the pictures</strong>
+                    <small>Choose how they look in 10 seconds. No photos, ever.</small>
+                  </span>
+                </button>
+              )}
+            </div>
+          )}
+
           {child.companions.length > 0 && (
             <div className={styles.block}>
               <span className={styles.label}>Bring along</span>
@@ -516,19 +569,46 @@ function DreamingStatus({ name }: { name: string }) {
   return <>{lines[i]}</>;
 }
 
+/** Reading while the story is still arriving; pictures fill in as they're drawn. */
+function WritingReader({ writing, childName }: { writing: Writing; childName: string }) {
+  const art = useStoryPictures(writing.id, writing.pages, childName);
+  const drawing = writing.illustrated && (!writing.done || art.ready < art.total);
+  return (
+    <Reader
+      title={writing.title}
+      pages={art.pages}
+      pending={!writing.done}
+      expectedPages={writing.expected}
+      progressKey={`story:${writing.id}`}
+      backHref="/stories"
+      autoPlay
+      artNote={drawing ? 'Drawing this picture…' : undefined}
+      endActions={
+        writing.done ? (
+          <Link className="btn btn-rose btn-block" href={`/create?continue=${writing.id}`}>
+            Next chapter, tomorrow night
+          </Link>
+        ) : undefined
+      }
+    />
+  );
+}
+
 function WritingScreen({
   writing,
-  childName,
+  child,
   onRetry,
   onBack,
   onRead,
 }: {
   writing: Writing;
-  childName: string;
+  child: ChildProfile | null;
   onRetry: () => void;
   onBack: () => void;
   onRead: () => void;
 }) {
+  const childName = child?.name ?? '';
+  const art = useStoryPictures(writing.id, writing.pages, childName);
   if (writing.notConnected) {
     return (
       <main className={styles.writing}>
@@ -589,10 +669,24 @@ function WritingScreen({
       : `Writing page ${writing.pages.length + 1}…`;
   return (
     <main className={styles.writing} aria-live="polite">
-      <div className={styles.quill} aria-hidden />
+      {writing.illustrated && child ? (
+        <div className={styles.heroWait}>
+          <HeroPreview child={child} size="s" auto />
+        </div>
+      ) : (
+        <div className={styles.quill} aria-hidden />
+      )}
       <p className="eyebrow">{status}</p>
       <h1 className={writing.title ? styles.titleIn : styles.titleWait}>{writing.title || 'Once there was…'}</h1>
       {writing.hook && <p className={styles.sub}>{writing.hook}</p>}
+      {writing.illustrated && art.total > 0 && (
+        <div className={styles.thumbs} aria-label={`${art.ready} of ${art.total} pictures ready`}>
+          {Array.from({ length: Math.max(art.total, pictureCount(writing.expected)) }, (_, i) => {
+            const page = art.pages[scenePages(writing.pages)[i]];
+            return page?.image ? <img key={i} src={page.image} alt="" /> : <span key={i} />;
+          })}
+        </div>
+      )}
       {writing.pages.length > 0 && (
         <button className={`btn btn-rose btn-block ${styles.readNow}`} onClick={onRead}>
           <Icon name="play" size={20} />
@@ -617,8 +711,9 @@ function WritingScreen({
   );
 }
 
-function toPage(heading: string, text: string, i: number, total: number): Page {
+function toPage(heading: string, text: string, i: number, total: number, art?: Page['art'], artSig?: string): Page {
   return {
+    ...(art && artSig ? { art, artSig } : {}),
     heading,
     text,
     image: null,

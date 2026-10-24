@@ -1,9 +1,19 @@
 // Incremental parser for the storyteller's plain-text format (see
 // SYSTEM_PROMPT). Fed streamed text; emits events as each section completes.
 
+export interface CastLine {
+  name: string;
+  role: string;
+  look: string;
+}
+export interface ArtLine {
+  shot: string;
+  prompt: string;
+}
+
 export type ParseEvent =
-  | { type: 'meta'; title: string; hook: string; premise: string }
-  | { type: 'page'; index: number; heading: string; text: string }
+  | { type: 'meta'; title: string; hook: string; premise: string; cast: CastLine[] }
+  | { type: 'page'; index: number; heading: string; text: string; art?: ArtLine }
   | { type: 'memory'; text: string };
 
 const PAGE_RE = /^=== PAGE (\d+):\s*(.*)$/;
@@ -15,8 +25,9 @@ export class StoryParser {
   private title = '';
   private hook = '';
   private premise = '';
+  private cast: CastLine[] = [];
   private metaSent = false;
-  private page: { index: number; heading: string; body: string[] } | null = null;
+  private page: { index: number; heading: string; body: string[]; art?: ArtLine } | null = null;
   private memory: string[] = [];
 
   push(chunk: string): ParseEvent[] {
@@ -72,7 +83,20 @@ export class StoryParser {
       if (trimmed.startsWith('TITLE:')) this.title = trimmed.slice(6).trim();
       else if (trimmed.startsWith('HOOK:')) this.hook = trimmed.slice(5).trim();
       else if (trimmed.startsWith('PREMISE:')) this.premise = trimmed.slice(8).trim();
+      else if (trimmed.startsWith('CAST:')) {
+        const [name, role, look] = trimmed.slice(5).split('|').map((x) => x.trim());
+        if (name && look && this.cast.length < 3) this.cast.push({ name, role: role || 'friend', look });
+      }
     } else if (this.section === 'page' && this.page) {
+      // Art directions sit before the page text; never show them to the reader.
+      if (trimmed.startsWith('ART:')) {
+        const raw = trimmed.slice(4).trim();
+        const cut = raw.indexOf('|');
+        const shot = cut >= 0 ? raw.slice(0, cut).trim() : '';
+        const prompt = (cut >= 0 ? raw.slice(cut + 1) : raw).trim();
+        if (prompt && !this.page.art) this.page.art = { shot, prompt };
+        return;
+      }
       this.page.body.push(line);
     } else if (this.section === 'memory') {
       this.memory.push(line);
@@ -82,13 +106,13 @@ export class StoryParser {
   private sendMeta(out: ParseEvent[]) {
     if (this.metaSent) return;
     this.metaSent = true;
-    out.push({ type: 'meta', title: this.title || 'Tonight’s Story', hook: this.hook, premise: this.premise });
+    out.push({ type: 'meta', title: this.title || 'Tonight’s Story', hook: this.hook, premise: this.premise, cast: this.cast });
   }
 
   private closePage(out: ParseEvent[]) {
     if (!this.page) return;
     const text = tidy(this.page.body);
-    if (text) out.push({ type: 'page', index: this.page.index, heading: this.page.heading, text });
+    if (text) out.push({ type: 'page', index: this.page.index, heading: this.page.heading, text, ...(this.page.art ? { art: this.page.art } : {}) });
     this.page = null;
   }
 }
