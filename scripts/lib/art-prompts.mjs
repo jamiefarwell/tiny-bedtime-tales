@@ -26,11 +26,16 @@ const MOOD_LIGHT = {
 };
 
 /**
- * Find which cast members appear in a page's picture. Uses the art direction
- * when present (the story text mentions characters who are not in the shot),
- * else the alt text, else the story text.
+ * Find which cast members appear in a page's picture. An explicit
+ * `page.art.cast` list of cast ids wins (use [] for a scene with nobody in it).
+ * Otherwise uses the art direction when present (the story text mentions
+ * characters who are not in the shot), else the alt text, else the story text.
  */
 export function castForPage(book, page, maxCharacters = 4) {
+  if (Array.isArray(page.art?.cast)) {
+    const chosen = book.cast.filter((c) => page.art.cast.includes(c.id));
+    return { chosen: chosen.slice(0, maxCharacters), dropped: chosen.slice(maxCharacters), inferred: false };
+  }
   const source = page.art?.prompt ? [page.art.prompt, page.art.shot] : page.imageAlt ? [page.imageAlt] : [page.text];
   const hay = source.filter(Boolean).join(' \n ').toLowerCase();
   const mentioned = book.cast.filter((c) => {
@@ -102,8 +107,12 @@ export function pagePrompt({ book, page, pageNumber, members, refIndexByCastId, 
   if (book.world) lines.push('', `WORLD / SETTING BIBLE: ${book.world}`);
   lines.push(
     '',
-    'CHARACTERS IN THIS SCENE. They must look IDENTICAL to their attached reference sheets: same face, head shape, proportions, skin/fur/colours, hair, clothing, markings and accessories. Do not redesign, restyle, age or recolour them. Show only the characters the scene calls for:',
-    castBlock(members, refIndexByCastId),
+    ...(members.length
+      ? [
+          'CHARACTERS IN THIS SCENE. They must look IDENTICAL to their attached reference sheets: same face, head shape, proportions, skin/fur/colours, hair, clothing, markings and accessories. Do not redesign, restyle, age or recolour them. Show only the characters the scene calls for:',
+          castBlock(members, refIndexByCastId),
+        ]
+      : ['CHARACTERS: none. This picture shows only the setting; do not add any people or animals.']),
     '',
     `SCENE: ${scene}`,
     `CAMERA / SHOT: ${shot}`,

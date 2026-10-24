@@ -30,3 +30,27 @@
     padding: 18px;
   }
 }
+
+.ages {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+.ages :global(.chip) {
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+}
+.shelf {
+  scroll-margin-top: 16px;
+}
+.shelfHead {
+  display: grid;
+  gap: 2px;
+  margin-bottom: 14px;
+}
+.shelfHead > p:last-child {
+  color: var(--mist);
+  font-size: 14px;
+}

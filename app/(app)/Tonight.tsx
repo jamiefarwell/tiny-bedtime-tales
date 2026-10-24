@@ -7,6 +7,7 @@ import { BookTile } from '@/components/BookTile';
 import { BookCover } from '@/components/BookCover';
 import { Icon } from '@/components/reader/icons';
 import { suggestWorlds } from './create/options';
+import { booksForAge } from '@/lib/shelves';
 import { WorldTile } from '@/components/WorldTile';
 import { WalletChip } from '@/components/WalletChip';
 import ui from './pages.module.css';
@@ -128,7 +129,7 @@ export function Tonight({ books }: { books: Book[] }) {
           <Link href="/library">Library</Link>
         </div>
         <div className={ui.rail}>
-          {books.map((b, i) => (
+          {booksForAge(books, hydrated ? child?.ageBand : undefined).map((b, i) => (
             <BookTile key={b.slug} book={b} priority={i === 0} />
           ))}
         </div>

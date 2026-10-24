@@ -19,8 +19,7 @@ Agreed items to revisit, newest first. Move to done with a date when shipped.
 
 ## Library
 - **Proper art for *Lily and the Lantern Feather*.** It still uses the earlier test images (`artStatus: interim`). It needs a cast bible and per-page `art` directions, then the pipeline (about 45p).
-- **More books:**
-  - 10 starter titles (5 for ages 2–4, 5 for ages 5–8), written in-house.
+- **More books:** 8 titles now, across four age shelves (0–2, 2–5, 4–7, 7–9). Next: fill the thin shelves (one book each for babies and bigger kids).
   - Illustrations cost about 45p per book.
   - Narration costs about 6,000 ElevenLabs credits per book; the Starter plan includes 30,000 a month.
 
@@ -38,3 +37,4 @@ Agreed items to revisit, newest first. Move to done with a date when shipped.
 
 ## Done
 - **24 Oct 2026:** Pictures starring the child in personalised stories (see `ARCHITECTURE.md`).
+- **24 Oct 2026:** Five new library books, one per age band, with age shelves in the library: *Shh, Says the Snow* (0–2), *One More, Says Dot* (2–4), *The Moon Has the Hiccups* (3–5), *The Lost Property Dragon* (5–7), *The Secret Night Bakers* (7–9). About $2.10 of art and 17,500 narration credits.

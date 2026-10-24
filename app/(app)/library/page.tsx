@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { allBooks } from '@/lib/books';
+import { SHELVES, shelfOf } from '@/lib/shelves';
 import { BookTile } from '@/components/BookTile';
 import { BookCover } from '@/components/BookCover';
 import ui from '../pages.module.css';
@@ -11,7 +12,7 @@ export const metadata: Metadata = { title: 'Library' };
 export default function LibraryPage() {
   const books = allBooks();
   const featured = books.find((b) => b.cover) ?? books[0];
-  const rest = books.filter((b) => b !== featured);
+  const shelves = SHELVES.map((s) => ({ ...s, books: books.filter((b) => shelfOf(b) === s.id) })).filter((s) => s.books.length);
 
   return (
     <main>
@@ -19,6 +20,13 @@ export default function LibraryPage() {
         <p className="eyebrow">Ready to read</p>
         <h1>The library</h1>
         <p>Finished, illustrated books for the nights you just want to press play. Hand-picked, read aloud, no setup.</p>
+        <nav className={styles.ages} aria-label="Shelves by age">
+          {shelves.map((s) => (
+            <a key={s.id} href={`#${s.id}`} className="chip">
+              {s.label} · {s.ages}
+            </a>
+          ))}
+        </nav>
       </header>
 
       <Link href={`/library/${featured.slug}`} className={styles.feature}>
@@ -41,16 +49,20 @@ export default function LibraryPage() {
         </div>
       </Link>
 
-      <section className={ui.section}>
-        <div className={ui.sectionHead}>
-          <h2>New on the shelf</h2>
-        </div>
-        <div className={ui.grid}>
-          {rest.map((b) => (
-            <BookTile key={b.slug} book={b} />
-          ))}
-        </div>
-      </section>
+      {shelves.map((s) => (
+        <section key={s.id} id={s.id} className={`${ui.section} ${styles.shelf}`}>
+          <div className={styles.shelfHead}>
+            <p className="eyebrow">Ages {s.ages}</p>
+            <h2>{s.label}</h2>
+            <p>{s.note}</p>
+          </div>
+          <div className={ui.grid}>
+            {s.books.map((b) => (
+              <BookTile key={b.slug} book={b} />
+            ))}
+          </div>
+        </section>
+      ))}
     </main>
   );
 }

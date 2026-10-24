@@ -93,6 +93,15 @@ test('fixture validates; cast detection uses art direction', () => {
   validateBook(fixture);
   const { chosen } = castForPage(fixture, fixture.pages[0]);
   assert.deepEqual(chosen.map((c) => c.id), ['otto', 'moon']);
+  // An explicit cast list wins; [] means a scene with nobody in it.
+  const only = { ...fixture.pages[0], art: { ...fixture.pages[0].art, cast: ['moon'] } };
+  assert.deepEqual(castForPage(fixture, only).chosen.map((c) => c.id), ['moon']);
+  const empty = { ...fixture.pages[0], art: { ...fixture.pages[0].art, cast: [] } };
+  const none = castForPage(fixture, empty);
+  assert.equal(none.chosen.length, 0);
+  assert.equal(none.inferred, false);
+  const prompt = pagePrompt({ book: fixture, page: empty, pageNumber: 1, members: [], refIndexByCastId: new Map(), previousImageIndex: null, aspectRatio: '4:5' });
+  assert.ok(prompt.includes('CHARACTERS: none'));
 });
 
 test('page prompt locks cast looks, forbids text, keeps the bottom calm', () => {
@@ -113,7 +122,7 @@ test('Gemini request shapes (interactions + generateContent) and response parsin
   const a = buildImageRequest({ model: 'm', parts, aspectRatio: '4:5', imageSize: '1K' });
   assert.equal(a.url, 'https://generativelanguage.googleapis.com/v1beta/interactions');
   assert.deepEqual(a.body.input[1], { type: 'image', mime_type: 'image/webp', data: 'AAAA' });
-  assert.deepEqual(a.body.response_format, { type: 'image', mime_type: 'image/png', aspect_ratio: '4:5', image_size: '1K' });
+  assert.deepEqual(a.body.response_format, { type: 'image', mime_type: 'image/jpeg', aspect_ratio: '4:5', image_size: '1K' });
   assert.equal(a.body.store, false);
   const g = buildImageRequest({ api: 'generateContent', model: 'm', parts, aspectRatio: '4:5', imageSize: '1K' });
   assert.match(g.url, /models\/m:generateContent$/);
@@ -179,7 +188,7 @@ test('narrate-book --dry-run on the fixture: no key, no writes; openai rejected'
   assert.equal(r.status, 0, r.stderr);
   assert.match(r.stdout, /would narrate 2 page\(s\)/);
   assert.match(r.stdout, /xi-api-key: <redacted>/);
-  assert.match(r.stdout, /with-timestamps\?output_format=mp3_44100_128/);
+  assert.match(r.stdout, /with-timestamps\?output_format=mp3_44100_64/);
   assert.equal(readFileSync(FIXTURE, 'utf8'), before);
   const o = runScript('narrate-book.mjs', ['tiny-test-book', '--book', FIXTURE, '--dry-run', '--provider', 'openai']);
   assert.equal(o.status, 1);
@@ -220,7 +229,8 @@ test('json-patch: round-trips every real book in content/books', async () => {
     const a = src.split('\n');
     const b = text.split('\n');
     // Everything outside the patched fields is identical line-for-line.
-    const untouched = a.filter((l) => !/"(audio|timings|cover)":/.test(l));
+    // (Multi-line timing arrays are the patched value too.)
+    const untouched = a.filter((l) => !/"(audio|timings|cover)":/.test(l) && !/^\s*\{"w":\d+/.test(l));
     for (const l of untouched) assert.ok(b.includes(l), `${f}: lost line ${l.slice(0, 80)}`);
   }
 });

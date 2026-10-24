@@ -43,14 +43,13 @@ Optional settings (all have defaults):
 | `ILLUSTRATION_PRICE_PER_IMAGE` | from the price table | Overrides the price used for the cost estimate |
 | `NARRATION_MODEL` | `eleven_multilingual_v2` | ElevenLabs model id |
 | `NARRATION_STABILITY` / `_SIMILARITY` / `_STYLE` / `_SPEED` | `0.55` / `0.75` / `0.15` / `0.90` | Bedtime delivery |
-| `NARRATION_OUTPUT_FORMAT` | `mp3_44100_128` | Any `mp3_*` format |
+| `NARRATION_OUTPUT_FORMAT` | `mp3_44100_64` (speech; half the size of 128) | Any `mp3_*` format |
 | `NARRATION_PRICE_PER_1K` | from the price table | Overrides the price used for the cost estimate |
 | `GEMINI_API_BASE` / `ELEVENLABS_API_BASE` | official hosts | Point the scripts at a proxy, an ElevenLabs regional host, or the tests' mock server |
 | `PIPELINE_ASSET_ROOT` | `public/books` | Redirects asset output to another folder (used by the tests) |
 
-**Dependencies.** The only optional one is `sharp`, which converts Gemini's PNG output to WebP. It is in
-`node_modules` today only as a transitive dependency of `next` (0.35.x). To make that explicit, run
-`npm i -D sharp`. If `sharp` can't be loaded, the script saves the PNG or JPEG that Gemini returns and points the
+**Dependencies.** The only one is `sharp` (a direct dependency, also used by the app's picture route), which converts
+Gemini's JPEG output to WebP. If `sharp` can't be loaded, the script saves the PNG or JPEG that Gemini returns and points the
 JSON at that file instead. Nothing else is needed.
 
 ---
@@ -76,7 +75,8 @@ This pipeline instead locks the characters first and attaches them to every requ
    ```
 4. **Pages.** Each page is generated from `page.art.prompt` + `page.art.shot` + the verbatim looks of the characters
    in the shot + `style` + `world`. The request also attaches **as image inputs** the reference sheet for each
-   character in the shot (detected by name in the art direction) and the **previous page**, for continuity. Every
+   character in the shot (detected by name in the art direction, or listed explicitly in `art.cast` as cast ids;
+   `"cast": []` means a scene with nobody in it) and the **previous page**, for continuity. Every
    image gets a numbered text label ("Image 2: reference sheet for Pip…"). The prompt asks for: no text, letters,
    numbers, signs or UI of any kind; a single full-bleed portrait frame; and a calm, low-detail bottom ~15% so the
    app's fade into the text panel looks clean.
@@ -188,14 +188,14 @@ node scripts/narrate-book.mjs <slug> --dry-run                # print payloads a
 - **Idempotent.** A page is skipped when `page-NN.mp3` exists **and** its `timings` length matches the current
   word count **and** the text hasn't changed since it was narrated (checked against the manifest). An edited page
   is regenerated automatically, because its old timings would highlight the wrong words.
-- **Output.** `public/books/<slug>/page-NN.mp3` (`mp3_44100_128`). `pages[].audio` and `pages[].timings` are
+- **Output.** `public/books/<slug>/page-NN.mp3` (`mp3_44100_64`). `pages[].audio` and `pages[].timings` are
   written into the book JSON after each page. The provenance entry in `pipeline-manifest.json` records voice,
   model, settings, alignment coverage and duration.
 
 ### Model and endpoint (verified 2026-10-20)
 
 ```
-POST https://api.elevenlabs.io/v1/text-to-speech/{voice_id}/with-timestamps?output_format=mp3_44100_128
+POST https://api.elevenlabs.io/v1/text-to-speech/{voice_id}/with-timestamps?output_format=mp3_44100_64
 xi-api-key: $ELEVENLABS_API_KEY
 { "text", "model_id", "voice_settings": { "stability", "similarity_boost", "style", "speed", "use_speaker_boost" },
   "previous_text", "next_text", "previous_request_ids" (max 3), "seed", "apply_text_normalization": "auto" }

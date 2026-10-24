@@ -22,7 +22,7 @@ export interface Page {
   /** Drives the placeholder palette and the wind-down dimming curve. */
   mood?: 'warm' | 'curious' | 'funny' | 'tense' | 'wonder' | 'sleepy';
   /** Art direction for the illustration pipeline. Never rendered in the app. */
-  art?: { shot: string; prompt: string };
+  art?: { shot: string; prompt: string; /** Cast ids in the picture; overrides name detection ([] = nobody). */ cast?: string[] };
   /** Personalised stories: server signature over `art`, so only scenes our storyteller wrote get drawn. */
   artSig?: string;
 }
